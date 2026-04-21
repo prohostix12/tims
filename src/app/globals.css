@@ -1,15 +1,20 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
 :root {
-  --background: #0a0a0b;
-  --foreground: #f8fafc;
-  --primary: #6366f1;
-  --primary-hover: #4f46e5;
-  --secondary: #1e293b;
-  --accent: #06b6d4;
-  --card: #111827;
-  --card-border: #1f2937;
-  --text-muted: #94a3b8;
-  --glass: rgba(255, 255, 255, 0.03);
-  --glass-border: rgba(255, 255, 255, 0.08);
+  --background: #ffffff;
+  --foreground: #001f3f;
+  --primary: #001f3f; /* Navy Blue */
+  --primary-hover: #003366;
+  --accent: #d90429; /* Red */
+  --accent-hover: #ef233c;
+  --secondary: #edf2f4; /* Light Gray/White */
+  --card: #ffffff;
+  --card-border: #e2e8f0;
+  --text-primary: #001f3f;
+  --text-muted: #64748b;
+  --glass: rgba(0, 31, 63, 0.03);
+  --glass-border: rgba(0, 31, 63, 0.08);
+  --navbar-bg: rgba(255, 255, 255, 0.8);
 }
 
 * {

@@ -1,0 +1,153 @@
+.container {
+  min-height: 100vh;
+  background-color: #ffffff;
+}
+
+/* ===== Hero Section ===== */
+.heroHeader {
+  width: 100%;
+  height: 60vh;
+  min-height: 450px;
+  background-color: #00122e;
+  background-image: linear-gradient(rgba(0, 18, 46, 0.8), rgba(0, 18, 46, 0.9)), url('https://images.unsplash.com/photo-1523050853063-bdbf83f6562b?auto=format&fit=crop&q=80');
+  background-size: cover;
+  background-position: center;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-top: 90px;
+}
+
+.heroContent {
+  text-align: center;
+  z-index: 2;
+  color: white;
+  padding: 0 2rem;
+}
+
+.heroTitle {
+  font-size: 3.5rem;
+  font-weight: 800;
+  margin-bottom: 1.5rem;
+  letter-spacing: -1.5px;
+}
+
+.heroSubtitle {
+  font-size: 1.1rem;
+  color: #94a3b8;
+  max-width: 600px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+/* ===== Content Section ===== */
+.contentSection {
+  padding: 8rem 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.serviceIntro {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: 6rem;
+  align-items: center;
+  margin-bottom: 10rem;
+}
+
+.textCol {
+  display: flex;
+  flex-direction: column;
+}
+
+.sectionTitle {
+  font-size: 2.5rem;
+  color: #00122e;
+  margin-bottom: 2.5rem;
+  line-height: 1.2;
+}
+
+.descriptionText {
+  font-size: 1.1rem;
+  color: #475569;
+  line-height: 1.9;
+  margin-bottom: 2rem;
+}
+
+.imageCol {
+  border-radius: 40px;
+  overflow: hidden;
+  box-shadow: 0 30px 60px rgba(0, 18, 46, 0.12);
+  height: 600px;
+}
+
+.focalImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* ===== Process Section ===== */
+.processSection {
+  background-color: #f1f5f9;
+  padding: 8rem 2rem;
+  border-radius: 60px;
+}
+
+.processContainer {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.processGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 3rem;
+}
+
+.processCard {
+  background: white;
+  padding: 4rem 3rem;
+  border-radius: 40px;
+  text-align: center;
+  transition: all 0.4s ease;
+  border: 1px solid #e2e8f0;
+}
+
+.processCard:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 30px 60px rgba(0, 18, 46, 0.08);
+  border-color: var(--accent);
+}
+
+.stepIcon {
+  width: 60px;
+  height: 60px;
+  background: #00122e;
+  color: white;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 2rem;
+}
+
+.processCard h3 {
+  font-size: 1.5rem;
+  color: #00122e;
+  margin-bottom: 1.25rem;
+  font-weight: 800;
+}
+
+.processCard p {
+  color: #64748b;
+  line-height: 1.6;
+  font-size: 1rem;
+}
+
+@media (max-width: 900px) {
+  .serviceIntro { grid-template-columns: 1fr; gap: 4rem; text-align: center; }
+  .imageCol { height: 400px; }
+  .heroTitle { font-size: 2.5rem; }
+}

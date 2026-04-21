@@ -1,0 +1,264 @@
+
+'use client';
+
+import styles from './about.module.css';
+import Link from 'next/link';
+
+export default function About() {
+  return (
+    <main className={styles.container}>
+
+      {/* ===== Hero Header Section ===== */}
+      <section className={styles.heroHeader}>
+        <div className={styles.heroOverlay} />
+        <div className={styles.heroContent}>
+          <p className={styles.heroCrumb}>
+            <Link href="/">Home</Link> / About
+          </p>
+          <h1 className={styles.heroTitle}>About</h1>
+        </div>
+      </section>
+
+      {/* ===== About Content Section ===== */}
+      <section className={styles.aboutSection}>
+        <div className={styles.aboutGrid}>
+          <div className={`${styles.aboutTextContent} ${styles.slideInLeft}`}>
+            <span className={styles.badge}>Get to know us</span>
+            <h2 className={styles.sectionHeading}>Welcome to <span className={styles.redText}>TIMS Education</span></h2>
+            <p className={styles.bodyText}>
+              Founded in 2009, Tirur Institute of Management Studies (TIMS) is dedicated to providing high-quality education that's accessible to all segments of society. Our institution believes that every individual deserves the chance to pursue academic and career excellence, regardless of financial background. To support this vision, we offer scholarships for financially disadvantaged and high-achieving students, ensuring that cost is not a barrier to quality education.
+            </p>
+            <p className={styles.bodyText}>
+              TIMS focuses on personalized guidance and counseling, helping students navigate their academic paths with clarity and confidence. Our programs aim to cultivate skilled professionals, blending theoretical knowledge with practical application, preparing students to meet the challenges of the modern world.
+            </p>
+            <p className={styles.bodyText}>
+              Our faculty and staff are deeply committed to nurturing each student's potential, fostering an environment that promotes lifelong learning, integrity, and professionalism. At TIMS, we empower students not only to excel academically but also to make meaningful contributions to society.
+            </p>
+          </div>
+
+          <div className={`${styles.aboutImageContainer} ${styles.slideInRight}`} style={{ animationDelay: '0.2s' }}>
+            <div className={styles.aboutImgGlow} />
+            <img
+              src="/images/about-students.png"
+              alt="TIMS students collaborating in a modern learning environment"
+              className={styles.aboutImg}
+            />
+          </div>
+        </div>
+      </section>
+
+      {/* ===== Stats Counter Section ===== */}
+      <section className={styles.statsSection}>
+        <div className={styles.statsGrid}>
+          {[
+            { number: "15+", label: "Years of Excellence" },
+            { number: "10K+", label: "Students Enrolled" },
+            { number: "50+", label: "Courses Offered" },
+            { number: "20+", label: "University Partners" },
+          ].map((stat, idx) => (
+            <div key={idx} className={`${styles.statCard} ${styles.zoomIn}`} style={{ animationDelay: `${0.1 + idx * 0.15}s` }}>
+              <span className={styles.statNumber}>{stat.number}</span>
+              <span className={styles.statLabel}>{stat.label}</span>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* ===== Mission & Vision Section (Spiral Book Layout) ===== */}
+      <section className={styles.missionSection}>
+        <div className={`${styles.missionBookContainer} ${styles.fadeInUp}`}>
+          <div className={styles.missionBook}>
+            <div className={styles.bookSpine}></div>
+            
+            {/* Left Page - Mission */}
+            <div className={`${styles.bookPage} ${styles.pageLeft}`}>
+              <div className={styles.pageContent}>
+                <div className={styles.missionIcon}>
+                  <svg viewBox="0 0 24 24" width="36" height="36" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <circle cx="12" cy="12" r="10" />
+                    <path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20" />
+                    <path d="M2 12h20" />
+                  </svg>
+                </div>
+                <h3 className={styles.missionTitle}>Our Mission</h3>
+                <p className={styles.missionText}>
+                  To provide affordable, flexible, and high-quality education to learners across all backgrounds. We aim to bridge the gap between aspiration and achievement by offering personalized academic guidance, robust university partnerships, and career-focused programs that prepare students for a global workforce.
+                </p>
+                <div className={styles.pageMarker}>1</div>
+              </div>
+            </div>
+
+            {/* Right Page - Vision */}
+            <div className={`${styles.bookPage} ${styles.pageRight}`}>
+              <div className={styles.pageContent}>
+                <div className={styles.missionIcon}>
+                  <svg viewBox="0 0 24 24" width="36" height="36" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                    <circle cx="12" cy="12" r="3" />
+                  </svg>
+                </div>
+                <h3 className={styles.missionTitle}>Our Vision</h3>
+                <p className={styles.missionText}>
+                  To become the most trusted and accessible distance education centre in India, empowering every learner — regardless of location, age, or financial status — to unlock their full academic and professional potential. We envision a future where quality education knows no boundaries.
+                </p>
+                <div className={styles.pageMarker}>2</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ===== Testimonials Section ===== */}
+      <section className={styles.testimonialsSection}>
+        <div className={styles.testimonialsHeader}>
+          <span className={styles.badge} style={{ color: 'var(--accent)', background: 'rgba(217,4,41,0.05)' }}>Success Stories</span>
+          <h2 className={styles.sectionHeading}>What our <span className={styles.redText}>Students say</span></h2>
+          <p className={styles.bodyText} style={{ textAlign: 'center', margin: '1rem auto 0' }}>
+            Empowering thousands of learners across Kerala to achieve their professional dreams through flexible education.
+          </p>
+        </div>
+
+        <div className={styles.testimonialsContainer}>
+          {[
+            {
+              text: "TIMS Education provided the perfect bridge between my professional life and academic goals. The flexibility of the MBA program was life-changing.",
+              name: "Rahul Krishnan",
+              role: "MBA Graduate",
+              img: "https://i.pravatar.cc/150?u=rahul"
+            },
+            {
+              text: "The guidance I received for my credit transfer was seamless. The staff truly understands the needs of distance learners in Kerala.",
+              name: "Anjali Menon",
+              role: "B.Com Student",
+              img: "https://i.pravatar.cc/150?u=anjali"
+            },
+            {
+              text: "From admission to final certification, TIMS was supportive at every step. Highly recommend for anyone looking for recognized degrees.",
+              name: "Musthafa Ali",
+              role: "PG Diploma Candidate",
+              img: "https://i.pravatar.cc/150?u=musthafa"
+            }
+          ].map((item, idx) => (
+            <div key={idx} className={`${styles.testimonialCard} ${styles.fadeInUp}`} style={{ animationDelay: `${idx * 0.2}s` }}>
+              <div className={styles.quoteIcon}>
+                <svg width="40" height="40" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M14.017 21L14.017 18C14.017 16.8954 14.9124 16 16.017 16H19.017C19.5693 16 20.017 15.5523 20.017 15V9C20.017 8.44772 19.5693 8 19.017 8H15.017C14.4647 8 14.017 8.44772 14.017 9V12C14.017 12.5523 13.5693 13 13.017 13H12.017V21H14.017ZM6.017 21L6.017 18C6.017 16.8954 6.9124 16 8.017 16H11.017C11.5693 16 12.017 15.5523 12.017 15V9C12.017 8.44772 11.5693 8 11.017 8H7.01701C6.46472 8 6.01701 8.44772 6.01701 9V12C6.01701 12.5523 5.5693 13 5.01701 13H4.01701V21H6.017Z" />
+                </svg>
+              </div>
+              <p className={styles.testimonialText}>"{item.text}"</p>
+              <div className={styles.testimonialAuthor}>
+                <img src={item.img} alt={item.name} className={styles.authorAvatar} />
+                <div className={styles.authorInfo}>
+                  <span className={styles.authorName}>{item.name}</span>
+                  <span className={styles.authorRole}>{item.role}</span>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* ===== Trusted Partner Section ===== */}
+      <section className={styles.trustedPartnerSection}>
+        <div className={styles.trustedPartnerWrapper}>
+          <h2 className={`${styles.trustedPartnerTitle} ${styles.fadeInUp}`}>
+            Your Trusted Partner for Management Studies in Kerala
+          </h2>
+          
+          <div className={styles.trustedPartnerGrid}>
+            <div className={`${styles.trustedImageCol} ${styles.slideInLeft}`} style={{ animationDelay: '0.1s' }}>
+              <img 
+                src="/images/trusted-partner.png" 
+                alt="Student smiling" 
+                className={styles.trustedImage}
+              />
+            </div>
+            
+            <div className={`${styles.trustedTextCol} ${styles.slideInRight}`} style={{ animationDelay: '0.2s' }}>
+              <p className={styles.trustedText}>
+                TIMS Education was started with a simple idea — learning should not stop because of work, family, or time limits. Our focus on <strong>management studies in Kerala</strong> grew naturally as more learners looked for practical, career-focused programs that fit into their daily lives.
+              </p>
+              <p className={styles.trustedText}>
+                We try to keep things straightforward: honest guidance, clear communication, and support that actually helps. Many students join because they feel understood here. We work closely with recognised universities so anyone can move forward with confidence.
+              </p>
+              <p className={styles.trustedText}>
+                At TIMS Education, we continue to help learners shape better careers and brighter futures. You'll find a steady and supportive place to begin your journey with us.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ===== FAQ Section ===== */}
+      <section className={styles.faqSection}>
+        <div className={styles.faqHeader}>
+          <h2 className={`${styles.sectionHeading} ${styles.fadeInUp}`}>Frequently asked questions</h2>
+        </div>
+
+        <div className={styles.faqGrid}>
+          <div className={`${styles.faqImageContainer} ${styles.slideInLeft}`} style={{ animationDelay: '0.2s' }}>
+            <img 
+              src="/images/faq-support.png" 
+              alt="Support advisor" 
+              className={styles.faqImage}
+            />
+          </div>
+
+          <div className={`${styles.faqAccordion} ${styles.slideInRight}`} style={{ animationDelay: '0.3s' }}>
+            <details className={styles.faqItem} open>
+              <summary className={styles.faqQuestion}>
+                <span>What is TIMS Education?</span>
+                <span className={styles.faqIcon}></span>
+              </summary>
+              <div className={styles.faqAnswer}>
+                TIMS Education (Tirur Institute of Management Studies) is a distance and online education centre in Kerala focused on providing flexible, accessible academic programs—from SSLC/Plus Two to UG, PG, Diploma, and professional certifications. It also offers guidance for credit transfer and attestation services.
+              </div>
+            </details>
+
+            <details className={styles.faqItem}>
+              <summary className={styles.faqQuestion}>
+                <span>Do you help with university affiliations and recognised degrees?</span>
+                <span className={styles.faqIcon}></span>
+              </summary>
+              <div className={styles.faqAnswer}>
+                Yes. TIMS Education partners with recognised universities (like Aligarh Muslim University, Andhra University, Guru Kashi University and more) to guide students through programme selection and admission.
+              </div>
+            </details>
+
+            <details className={styles.faqItem}>
+              <summary className={styles.faqQuestion}>
+                <span>How does distance education work here?</span>
+                <span className={styles.faqIcon}></span>
+              </summary>
+              <div className={styles.faqAnswer}>
+                Distance education lets you study remotely without attending a physical classroom. You get access to study materials, academic support, and guidance while balancing work or personal responsibilities.
+              </div>
+            </details>
+
+            <details className={styles.faqItem}>
+              <summary className={styles.faqQuestion}>
+                <span>Are your degrees recognized and valid for employment?</span>
+                <span className={styles.faqIcon}></span>
+              </summary>
+              <div className={styles.faqAnswer}>
+                Degrees are valid and recognized if they’re completed from accredited universities partnered with TIMS Education. Recognition depends on the specific university or board.
+              </div>
+            </details>
+          </div>
+        </div>
+      </section>
+
+      {/* ===== CTA Section ===== */}
+      <section className={styles.ctaSection}>
+        <div className={styles.ctaContent}>
+          <h2 className={styles.ctaTitle}>Ready to Start Your Journey?</h2>
+          <div className={styles.ctaButtons}>
+            <Link href="/courses" className={styles.ctaPrimary}>Explore Courses</Link>
+            <Link href="#" className={styles.ctaSecondary}>Contact Us</Link>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  );
+}

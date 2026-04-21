@@ -1,0 +1,189 @@
+
+.container {
+  min-height: 100vh;
+  background-color: #ffffff;
+}
+
+/* ===== Hero Section ===== */
+.heroHeader {
+  width: 100%;
+  height: 45vh;
+  min-height: 350px;
+  background: linear-gradient(135deg, #00122e 0%, #001f3f 100%);
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-top: 90px;
+}
+
+.heroContent {
+  text-align: center;
+  z-index: 2;
+  color: white;
+}
+
+.heroTitle {
+  font-size: 4rem;
+  font-weight: 800;
+  letter-spacing: -2px;
+  background: linear-gradient(to bottom, #ffffff, #e2e8f0);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 0.5rem;
+}
+
+.heroSubtitle {
+  font-size: 1.1rem;
+  color: #94a3b8;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  font-weight: 600;
+}
+
+/* ===== Chairman Message Section ===== */
+.chairmanSection {
+  padding: 8rem 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.chairmanGrid {
+  display: grid;
+  grid-template-columns: 1fr 1.5fr;
+  gap: 5rem;
+  align-items: center;
+}
+
+.chairmanImageWrapper {
+  position: relative;
+}
+
+.chairmanImgBox {
+  width: 100%;
+  aspect-ratio: 4/5;
+  background-color: #f1f5f9;
+  border-radius: 40px;
+  overflow: hidden;
+  box-shadow: 0 40px 100px rgba(0, 31, 63, 0.15);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.chairmanImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.chairmanFrame {
+  position: absolute;
+  top: -20px;
+  left: -20px;
+  width: 100%;
+  height: 100%;
+  border: 2px solid var(--accent);
+  border-radius: 40px;
+  z-index: -1;
+  opacity: 0.2;
+}
+
+.chairmanTitle {
+  font-size: 1rem;
+  color: var(--accent);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  font-weight: 800;
+  margin-bottom: 1rem;
+  display: block;
+}
+
+.chairmanName {
+  font-size: 3rem;
+  color: #00122e;
+  font-weight: 800;
+  margin-bottom: 2rem;
+  line-height: 1.1;
+}
+
+.chairmanMessage {
+  font-size: 1.15rem;
+  line-height: 1.9;
+  color: #475569;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+/* ===== Directors Grid ===== */
+.directorsGridSection {
+  background-color: #f8fafc;
+  padding: 8rem 2rem;
+}
+
+.sectionHeader {
+  text-align: center;
+  max-width: 700px;
+  margin: 0 auto 5rem;
+}
+
+.sectionHeading {
+  font-size: 2.5rem;
+  color: #00122e;
+  font-weight: 800;
+  margin-bottom: 1rem;
+}
+
+.directorsGrid {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 3rem;
+}
+
+.directorCard {
+  background: white;
+  border-radius: 30px;
+  padding: 2.5rem;
+  transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  border: 1px solid #e2e8f0;
+  text-align: center;
+}
+
+.directorCard:hover {
+  transform: translateY(-15px);
+  box-shadow: 0 40px 80px rgba(0, 31, 63, 0.1);
+  border-color: var(--accent);
+}
+
+.directorAvatar {
+  width: 180px;
+  height: 180px;
+  border-radius: 50%;
+  margin: 0 auto 2rem;
+  background-color: #f1f5f9;
+  overflow: hidden;
+  border: 4px solid #f8fafc;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+}
+
+.directorInfo h3 {
+  font-size: 1.5rem;
+  color: #00122e;
+  margin-bottom: 0.5rem;
+  font-weight: 700;
+}
+
+.directorInfo p {
+  font-weight: 600;
+  color: var(--accent);
+  font-size: 0.95rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+@media (max-width: 1024px) {
+  .heroTitle { font-size: 3rem; }
+  .chairmanGrid { grid-template-columns: 1fr; gap: 3rem; text-align: center; }
+  .chairmanMessage { text-align: left; }
+}
