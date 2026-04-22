@@ -1,179 +1,400 @@
+
+'use client';
+
+import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import styles from './page.module.css';
+import { 
+  ArrowRight,
+  Award, 
+  BookOpen, 
+  Globe,
+} from 'lucide-react';
+
+const NEWS_PLACEHOLDER = '/images/news-hero-bg.png';
+
+interface NewsItem {
+  _id: string;
+  title: string;
+  excerpt: string;
+  image?: string;
+  category?: string;
+  publishedAt: string;
+  status: string;
+}
+
+const UNI_PLACEHOLDER = '/images/university-success.png';
+
+interface University {
+  _id: string;
+  name: string;
+  image?: string;
+  status: string;
+}
 
 export default function Home() {
+  const [universities, setUniversities] = useState<University[]>([]);
+  const [newsItems, setNewsItems] = useState<NewsItem[]>([]);
+
+  // Fetch universities from API
+  useEffect(() => {
+    fetch('/api/admin/universities')
+      .then((r) => r.json())
+      .then((data) => {
+        if (Array.isArray(data)) {
+          setUniversities(data.filter((u) => u.status === 'active').slice(0, 6));
+        }
+      })
+      .catch(() => {});
+  }, []);
+
+  // Fetch news from API
+  useEffect(() => {
+    fetch('/api/admin/news')
+      .then((r) => r.json())
+      .then((data) => {
+        if (Array.isArray(data)) {
+          setNewsItems(data.filter((n) => n.status === 'published').slice(0, 6));
+        }
+      })
+      .catch(() => {});
+  }, []);
+  // Scroll animations for Get To Know Us section
+  useEffect(() => {
+    const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    // Stat cards stagger
+    const cards = document.querySelectorAll(`.${styles.statCard}`);
+    if (prefersReduced) {
+      cards.forEach((c) => c.classList.add(styles.statCardVisible));
+    }
+
+    // Get To Know Us — columns slide in from sides
+    const imageCol = document.querySelector(`.${styles.getKnowImageCol}`);
+    const contentCol = document.querySelector(`.${styles.getKnowContentCol}`);
+    const listItems = document.querySelectorAll(`.${styles.getKnowList} li`);
+
+    if (prefersReduced) {
+      imageCol?.classList.add(styles.getKnowVisible);
+      contentCol?.classList.add(styles.getKnowVisible);
+      listItems.forEach((li) => li.classList.add(styles.getKnowItemVisible));
+      cards.forEach((c) => c.classList.add(styles.statCardVisible));
+      document.querySelectorAll(`.${styles.uniCard}`).forEach((c) => c.classList.add(styles.uniCardVisible));
+      document.querySelectorAll(`.${styles.dreamCard}`).forEach((c) => c.classList.add(styles.dreamCardVisible));
+      document.querySelectorAll(`.${styles.newsCard}`).forEach((c) => c.classList.add(styles.newsCardVisible));
+      document.querySelectorAll(`.${styles.testimonialCard}`).forEach((c) => c.classList.add(styles.testimonialCardVisible));
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+          const el = entry.target;
+
+          if (el.classList.contains(styles.statCard)) {
+            el.classList.add(styles.statCardVisible);
+          }
+          if (el.classList.contains(styles.getKnowImageCol)) {
+            el.classList.add(styles.getKnowVisible);
+          }
+          if (el.classList.contains(styles.getKnowContentCol)) {
+            el.classList.add(styles.getKnowVisible);
+            listItems.forEach((li) => li.classList.add(styles.getKnowItemVisible));
+          }
+          if (el.classList.contains(styles.uniCard)) {
+            el.classList.add(styles.uniCardVisible);
+          }
+          if (el.classList.contains(styles.dreamCard)) {
+            el.classList.add(styles.dreamCardVisible);
+          }
+          if (el.classList.contains(styles.newsCard)) {
+            el.classList.add(styles.newsCardVisible);
+          }
+          if (el.classList.contains(styles.testimonialCard)) {
+            el.classList.add(styles.testimonialCardVisible);
+          }
+          observer.unobserve(el);
+        });
+      },
+      { threshold: 0.2 }
+    );
+
+    cards.forEach((c) => observer.observe(c));
+    if (imageCol)  observer.observe(imageCol);
+    if (contentCol) observer.observe(contentCol);
+
+    // University cards
+    const uniCards = document.querySelectorAll(`.${styles.uniCard}`);
+    uniCards.forEach((c) => observer.observe(c));
+
+    // Dream service cards
+    const dreamCards = document.querySelectorAll(`.${styles.dreamCard}`);
+    dreamCards.forEach((c) => observer.observe(c));
+
+    // News cards
+    const newsCards = document.querySelectorAll(`.${styles.newsCard}`);
+    newsCards.forEach((c) => observer.observe(c));
+
+    // Testimonial cards
+    const testimonialCards = document.querySelectorAll(`.${styles.testimonialCard}`);
+    testimonialCards.forEach((c) => observer.observe(c));
+
+    return () => observer.disconnect();
+  }, []);
+
   return (
     <main className={styles.container}>
       {/* ===== Hero Section ===== */}
-      <div className={styles.heroWrapper}>
-        <div className={styles.heroOverlay}></div>
-        <div className={styles.heroSection}>
-          <h1 className={styles.title}>
-            {[
-              "Your", "Way", "to", "Success", "Begins", "With", "Us"
-            ].map((word, i) => (
-              <span key={i} className={styles.wordWrapper}>
-                <span 
-                  className={`${styles.word} ${["Way", "to", "Success"].includes(word) ? styles.redText : ''}`} 
-                  style={{ animationDelay: `${0.2 + (i * 0.1)}s` }}
-                >
-                  {word}{" "}
-                </span>
-              </span>
-            ))}
+      <section className={styles.heroWrapper}>
+        <div className={styles.heroBgImage} aria-hidden="true" />
+        {/* Animated background particles */}
+        <div className={styles.heroBgOverlay} aria-hidden="true" />
+
+        <div className={styles.heroContent}>
+          {/* Badge */}
+          <div className={styles.heroBadge}>
+            <span className={styles.heroBadgeDot} />
+            Trusted by 15,000+ Students Globally
+          </div>
+
+          {/* Headline */}
+          <h1 className={styles.heroTitle}>
+            <span className={styles.heroLine1}>Your Future Starts</span>
+            <span className={styles.heroLine2}>
+              With the <em className={styles.heroAccent}>Right</em> Education
+            </span>
           </h1>
-          <p className={`${styles.subtitle} ${styles.premiumFadeUp}`} style={{ animationDelay: '1.2s' }}>
-            Discover top programs and personalized pathways to elevate your career. 
-            Unlock a brighter future and achieve your dreams today with TIMS.
+
+          {/* Subtext */}
+          <p className={styles.heroSub}>
+            TIMS connects ambitious students with accredited universities, 
+            seamless credit transfers, and expert attestation services — 
+            all under one roof.
           </p>
 
-          <div className={`${styles.ctaGroup} ${styles.premiumFadeUp}`} style={{ animationDelay: '1.4s' }}>
-            <Link href="/courses" className={styles.primaryBtn}>
-              Browse Courses
+          {/* CTA row */}
+          <div className={styles.heroActions}>
+            <Link href="/courses" className={styles.heroPrimaryBtn}>
+              Explore Programs <ArrowRight size={18} />
             </Link>
-            <Link href="/universities" className={styles.secondaryBtn}>
-              View Universities
+            <Link href="/contact" className={styles.heroSecondaryBtn}>
+              Talk to an Advisor
             </Link>
           </div>
         </div>
-      </div>
+      </section>
 
-      {/* ===== Service Cards Section ===== */}
-      <div className={styles.serviceCardsWrapper}>
-        <div className={styles.serviceGrid}>
-          {[
-            { 
-              title: "Online Degree", 
-              icon: <svg viewBox="0 0 24 24" width="40" height="40" fill="currentColor"><path d="M12 3L1 9l11 6 9.22-5.03V18h2V9L12 3zm.45 10.49l-8.45-4.61 8-4.36 8 4.36-7.55 4.61zM4.1 12.04l1.32.72 6.58 3.59 6.58-3.59 1.32-.72V15l-1.32.72-6.58 3.59-6.58-3.59-1.32-.72v-2.96z"/></svg> 
-            },
-            { 
-              title: "UG / PG", 
-              icon: <svg viewBox="0 0 24 24" width="40" height="40" fill="currentColor"><path d="M12 2L1 7l11 5 11-5-11-5zM2 7l10 4.5L22 7l-10-4.5L2 7zm10 8.5c-2.33 0-4.4-.81-6-2.12V18c0 .55.45 1 1 1h10c.55 0 1-.45 1-1v-4.62c-1.6 1.31-3.67 2.12-6 2.12z"/></svg> 
-            },
-            { 
-              title: "SSLC/PLUS TWO", 
-              icon: <svg viewBox="0 0 24 24" width="40" height="40" fill="currentColor"><path d="M12 3L1 9l4 2.18v6L12 21l7-3.82v-6l2-1.09V17h2V9L12 3zm5 14.09l-5 2.73-5-2.73v-4.73L12 15l5-2.73v4.82zM12 13l-8-4.36 8-4.37 8 4.37L12 13z"/></svg> 
-            },
-            { 
-              title: "Diploma", 
-              icon: <svg viewBox="0 0 24 24" width="40" height="40" fill="currentColor"><path d="M12 2 1 7l11 5 11-5L12 2Zm0 2.22 7.74 3.52L12 11.27 4.26 7.74 12 4.22ZM12 14c-2.33 0-4.4-.81-6-2.12V16.5c0 .55.45 1 1 1h10c.55 0 1-.45 1-1v-4.62c-1.6 1.31-3.67 2.12-6 2.12Z"/></svg> 
-            },
-            { 
-              title: "Credit Transfer", 
-              icon: <svg viewBox="0 0 24 24" width="40" height="40" fill="currentColor"><path d="M11 15h2v2h-2v-2zm0-8h2v6h-2V7zm1-5C6.47 2 2 6.47 2 12s4.47 10 10 10 10-4.47 10-10S17.53 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/></svg> 
-            }
-          ].map((service, idx) => (
-            <div 
-              key={idx} 
-              className={styles.serviceCard} 
-              style={{ animationDelay: `${2.0 + (idx * 0.15)}s` }}
-            >
-              <div className={styles.serviceIcon}>{service.icon}</div>
-              <div className={styles.serviceText}>{service.title}</div>
+      {/* ===== Floating Stats Section ===== */}
+      <section className={styles.statsSection}>
+        <h2 className={styles.srOnly}>Our Impact in Numbers</h2>
+        <div className={styles.statsGrid}>
+          <div className={styles.statCard}>
+            <span className={styles.statNumber}>15K+</span>
+            <span className={styles.statLabel}>Global Alumni</span>
+          </div>
+          <div className={styles.statCard}>
+            <span className={styles.statNumber}>25+</span>
+            <span className={styles.statLabel}>Partner Universities</span>
+          </div>
+          <div className={styles.statCard}>
+            <span className={styles.statNumber}>98%</span>
+            <span className={styles.statLabel}>Success Rate</span>
+          </div>
+          <div className={styles.statCard}>
+            <span className={styles.statNumber}>100%</span>
+            <span className={styles.statLabel}>Accreditation</span>
+          </div>
+        </div>
+      </section>
+
+      {/* ===== Get To Know Us Section ===== */}
+      <section className={styles.getKnowSection}>
+        <div className={styles.getKnowGrid}>
+          <div className={styles.getKnowImageCol}>
+            <Image
+              src="/images/tims poster.jpg"
+              alt="Honored with Excellence"
+              width={600}
+              height={500}
+              className={styles.getKnowImage}
+            />
+          </div>
+          <div className={styles.getKnowContentCol}>
+            <span className={styles.getKnowSub}>GET TO KNOW US</span>
+            <h2 className={styles.getKnowTitle}>Learning Anytime,<br/>Anywhere for Success</h2>
+            <p className={styles.getKnowText}>
+              Providing accessible, high-quality education and guidance, Tirur Institute of Management Studies fosters academic excellence, professional growth, and societal impact for every learner.
+            </p>
+            <ul className={styles.getKnowList}>
+              <li>
+                <span className={styles.checkIcon}>
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                </span>
+                <span className={styles.listItemText}>Accredited Attestation and Certification Services</span>
+              </li>
+              <li>
+                <span className={styles.checkIcon}>
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                </span>
+                <span className={styles.listItemText}>Flexible Online and Credit Transfer Options</span>
+              </li>
+              <li>
+                <span className={styles.checkIcon}>
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                </span>
+                <span className={styles.listItemText}>Comprehensive Course and Degree Programs</span>
+              </li>
+            </ul>
+            <Link href="/about" className={styles.getKnowBtn}>
+              Discover More
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* ===== Partner Universities Section ===== */}
+      <section className={styles.uniSection}>
+        <div className={styles.uniSectionHeader}>
+          <span className={styles.uniSectionTag}>Our Network</span>
+          <h2 className={styles.uniSectionTitle}>Partner Universities</h2>
+          <p className={styles.uniSectionSub}>
+            We connect you with world-class institutions across the globe — accredited, reputed, and career-focused.
+          </p>
+        </div>
+
+        <div className={styles.uniGrid}>
+          {(universities.length > 0 ? universities : [
+            { _id: '1', name: "Amrita Vishwa Vidyapeetham", status: 'active' },
+            { _id: '2', name: "University of Greenwich", status: 'active' },
+            { _id: '3', name: "Arizona State University", status: 'active' },
+            { _id: '4', name: "Monash University", status: 'active' },
+            { _id: '5', name: "University of Toronto", status: 'active' },
+            { _id: '6', name: "TU Munich", status: 'active' },
+          ] as University[]).map((uni, i) => (
+            <div key={uni._id} className={styles.uniCard} style={{ '--i': i } as React.CSSProperties}>
+              <div className={styles.uniCardImgWrapper}>
+                <Image
+                  src={uni.image || UNI_PLACEHOLDER}
+                  alt={uni.name}
+                  fill
+                  style={{ objectFit: 'cover' }}
+                />
+              </div>
+              <div className={styles.uniCardBody}>
+                <h3 className={styles.uniCardName}>{uni.name}</h3>
+                <Link href="/universities" className={styles.uniCardBtn}>
+                  View Details <ArrowRight size={14} />
+                </Link>
+              </div>
             </div>
           ))}
         </div>
-      </div>
 
-      {/* ===== About / Get to Know Us Section ===== */}
-      <div className={styles.aboutGridWrapper}>
-        <div className={styles.aboutContent}>
-          <div className={`${styles.badgeSmall} ${styles.premiumFadeUp}`}>
-            Get to know us
-          </div>
-          <h2 className={`${styles.aboutTitle} ${styles.premiumFadeUp}`} style={{ animationDelay: '0.2s' }}>
-            Learning <span className={styles.redText}>Anytime, Anywhere</span> for Success
-          </h2>
-          <p className={`${styles.aboutDescription} ${styles.premiumFadeUp}`} style={{ animationDelay: '0.4s' }}>
-            Providing accessible, high-quality education and guidance, Tirur Institute of Management Studies fosters academic excellence, professional growth, and societal impact for every learner.
-          </p>
-          
-          <ul className={styles.aboutList}>
-            <li className={styles.premiumFadeUp} style={{ animationDelay: '0.5s' }}>
-              <div className={styles.listIcon}>✓</div>
-              Accredited Attestation and Certification Services
-            </li>
-            <li className={styles.premiumFadeUp} style={{ animationDelay: '0.6s' }}>
-              <div className={styles.listIcon}>✓</div>
-              Flexible Online and Credit Transfer Options
-            </li>
-            <li className={styles.premiumFadeUp} style={{ animationDelay: '0.7s' }}>
-              <div className={styles.listIcon}>✓</div>
-              Comprehensive Course and Degree Programs
-            </li>
-          </ul>
+        <div className={styles.uniSectionFooter}>
+          <Link href="/universities" className={styles.uniViewAllBtn}>
+            View All Universities <ArrowRight size={18} />
+          </Link>
         </div>
-        
-        <div className={`${styles.aboutImageContainer} ${styles.premiumFadeUp}`} style={{ animationDelay: '0.9s' }}>
-           <div className={styles.aboutImgGlow}></div>
-           <div className={styles.imageFrame}>
-              <img 
-                src="https://timseducation.com/wp-content/uploads/2026/01/503763549_1160511306089086_2462340164066734349_n.jpg" 
-                alt="TIMS Education - Learning Excellence" 
-                className={styles.aboutMainImg}
-              />
-           </div>
-        </div>
-      </div>
+      </section>
 
-      {/* ===== Dream Section (Core Services) ===== */}
-      <div className={styles.dreamSection}>
+      {/* ===== Services Dream Section ===== */}
+      <section className={styles.dreamSection}>
         <div className={styles.dreamHeader}>
           <h2 className={styles.dreamTitle}>Make Your Dream Come True!</h2>
-          <p className={styles.dreamSubtitle}>Provide better education to the society in an affordable cost</p>
+          <p className={styles.dreamSub}>Provide better education to the society at an affordable cost</p>
         </div>
-        
+
         <div className={styles.dreamGrid}>
-          <div className={`${styles.dreamCard} ${styles.redCard} ${styles.animateDreamCard}`} style={{ animationDelay: '0.1s' }}>
-            <h3>Embassy Attestation</h3>
-            <p>Attest your educational and non-educational documents.</p>
-          </div>
-          
-          <div className={`${styles.dreamCard} ${styles.navyCard} ${styles.animateDreamCard}`} style={{ animationDelay: '0.3s' }}>
-            <h3>Online Studies</h3>
-            <p>Assistance for Admission in Best Institutes of India and Abroad.</p>
-          </div>
-          
-          <div className={`${styles.dreamCard} ${styles.redCard} ${styles.animateDreamCard}`} style={{ animationDelay: '0.5s' }}>
-            <h3>Distance Education</h3>
-            <p>We provide educational services to students all across World.</p>
-          </div>
+          {[
+            {
+              icon: <Award size={36} />,
+              title: 'Embassy Attestation',
+              desc: 'Attest your educational and non-educational documents with speed and reliability.',
+              href: '/services/attestation',
+              accent: true,
+            },
+            {
+              icon: <Globe size={36} />,
+              title: 'Online Studies',
+              desc: 'Assistance for admission in the best institutes of India and abroad.',
+              href: '/courses',
+              accent: false,
+            },
+            {
+              icon: <BookOpen size={36} />,
+              title: 'Distance Education',
+              desc: 'We provide educational services to students all across the world.',
+              href: '/services/distance-education',
+              accent: true,
+            },
+          ].map((item, i) => (
+            <Link
+              key={i}
+              href={item.href}
+              className={`${styles.dreamCard} ${item.accent ? styles.dreamCardAccent : styles.dreamCardDark}`}
+              style={{ '--di': i } as React.CSSProperties}
+            >
+              <div className={styles.dreamCardIcon}>{item.icon}</div>
+              <h3 className={styles.dreamCardTitle}>{item.title}</h3>
+              <p className={styles.dreamCardDesc}>{item.desc}</p>
+            </Link>
+          ))}
         </div>
-      </div>
+      </section>
 
-      {/* ===== Deep Dive Section ===== */}
-      <div className={styles.deepDiveWrapper}>
-        <div className={styles.deepDiveInner}>
-          {/* Centered heading at top */}
-          <h2 className={styles.deepDiveTitle}>
-            Best Distance Education Centre in Kerala – Building Futures with <span className={styles.redText}>Flexible Learning</span>
-          </h2>
-
-          {/* Two-column: image left, text right */}
-          <div className={styles.deepDiveGrid}>
-            <div className={styles.deepDiveImgCol}>
-              <img
-                src="/images/student-white-v2.png"
-                alt="Successful TIMS Student"
-                className={styles.deepDiveImg}
-              />
-            </div>
-
-            <div className={styles.deepDiveTextCol}>
-              <p className={styles.deepDiveText}>
-                TIMS Education has grown by helping students and working professionals complete their studies without disturbing their daily routine. Over the years, many learners have trusted us because they feel comfortable learning at their own pace with the right guidance beside them. That's one of the reasons people often call us the <strong>best distance education centre in Kerala</strong>.
-              </p>
-              <p className={styles.deepDiveText}>
-                We focus on simple admission procedures, clear support, and courses that genuinely help in building a career. We try to make the process as easy as possible for people who want to finish a degree they dropped years ago or get a better job by getting a higher level of education. Many who studied with us say they chose TIMS because it felt like the <strong>best distance education centre in Kerala</strong> for their needs.
-              </p>
-              <p className={styles.deepDiveText}>
-                With experienced mentors and reliable university tie-ups, we continue to be the <strong>best distance education centre in Kerala</strong> for learners who want steady progress. If you're planning your next step, you'll understand why so many consider us the best distance education centre in Kerala.
-              </p>
-            </div>
-          </div>
+      {/* ===== Latest News Section ===== */}
+      <section className={styles.newsSection}>
+        <div className={styles.uniSectionHeader}>
+          <span className={styles.uniSectionTag}>Stay Updated</span>
+          <h2 className={styles.uniSectionTitle}>Latest News</h2>
+          <p className={styles.uniSectionSub}>
+            Stay informed with the latest updates, announcements, and insights from TIMS.
+          </p>
         </div>
-      </div>
 
+        <div className={styles.newsGrid}>
+          {(newsItems.length > 0 ? newsItems : [
+            { _id: '1', title: 'TIMS Awarded Best Admission Partner 2024', excerpt: 'Tirur Institute of Management Studies has been recognized as the Best Admission Partner by Swami Vivekanand Subharti University.', category: 'Awards', publishedAt: '2024-03-15', status: 'published' },
+            { _id: '2', title: 'New Distance Learning Programs Launched', excerpt: 'TIMS introduces new UG and PG distance learning programs in partnership with top accredited universities across India.', category: 'Programs', publishedAt: '2024-02-20', status: 'published' },
+            { _id: '3', title: 'Embassy Attestation Services Now Faster', excerpt: 'Our attestation team has streamlined the process, reducing turnaround time to just 3-5 working days for most documents.', category: 'Services', publishedAt: '2024-01-10', status: 'published' },
+            { _id: '4', title: 'Credit Transfer Program Expansion', excerpt: 'TIMS expands its credit transfer program with 5 new partner universities, giving students more flexibility in completing their degrees.', category: 'Programs', publishedAt: '2023-12-05', status: 'published' },
+            { _id: '5', title: 'Student Success Stories 2023', excerpt: 'Over 2,000 students successfully completed their degree programs through TIMS guidance in 2023, achieving career milestones.', category: 'Success', publishedAt: '2023-11-18', status: 'published' },
+            { _id: '6', title: 'TIMS Joins Global Education Network', excerpt: 'TIMS becomes a member of the Global Education Network, opening doors to international university partnerships and student exchange programs.', category: 'Partnerships', publishedAt: '2023-10-22', status: 'published' },
+          ] as NewsItem[]).map((item, i) => (
+            <div key={item._id} className={styles.newsCard} style={{ '--i': i } as React.CSSProperties}>
+              <div className={styles.newsCardImgWrapper}>
+                <Image
+                  src={item.image || NEWS_PLACEHOLDER}
+                  alt={item.title}
+                  fill
+                  style={{ objectFit: 'cover' }}
+                />
+                {item.category && (
+                  <span className={styles.newsCardCategory}>{item.category}</span>
+                )}
+              </div>
+              <div className={styles.newsCardBody}>
+                <p className={styles.newsCardDate}>
+                  {new Date(item.publishedAt).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}
+                </p>
+                <h3 className={styles.newsCardTitle}>{item.title}</h3>
+                <p className={styles.newsCardExcerpt}>{item.excerpt}</p>
+                <Link href="/news" className={styles.newsCardBtn}>
+                  Read More <ArrowRight size={14} />
+                </Link>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <div className={styles.uniSectionFooter}>
+          <Link href="/news" className={styles.uniViewAllBtn}>
+            View All News <ArrowRight size={18} />
+          </Link>
+        </div>
+      </section>
 
     </main>
   );

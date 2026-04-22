@@ -11,9 +11,9 @@ export default function NavigationWrapper({
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
-  const isAdminPath = pathname?.startsWith('/admin');
+  const isAuthPath = pathname?.startsWith('/admin') || pathname === '/login';
 
-  if (isAdminPath) {
+  if (isAuthPath) {
     return <>{children}</>;
   }
 

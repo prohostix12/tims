@@ -4,55 +4,94 @@
   background-color: #ffffff;
 }
 
-/* ===== Hero Section ===== */
+/* ===== Cinematic Directors Hero Section ===== */
 .heroHeader {
   width: 100%;
-  height: 45vh;
-  min-height: 350px;
-  background: linear-gradient(135deg, #00122e 0%, #001f3f 100%);
+  height: 80vh;
+  min-height: 500px;
   position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding-top: 90px;
+  overflow: hidden;
+  background-color: #00122e;
+}
+
+.heroBgImage {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.5;
+  z-index: 1;
+}
+
+.heroOverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(180deg, rgba(0, 18, 46, 0.4) 0%, rgba(0, 18, 46, 0.9) 100%);
+  z-index: 2;
 }
 
 .heroContent {
+  position: relative;
+  z-index: 10;
   text-align: center;
-  z-index: 2;
-  color: white;
-}
-
-.heroTitle {
-  font-size: 4rem;
-  font-weight: 800;
-  letter-spacing: -2px;
-  background: linear-gradient(to bottom, #ffffff, #e2e8f0);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  margin-bottom: 0.5rem;
+  color: #ffffff;
+  padding: 0 2rem;
+  max-width: 1000px;
 }
 
 .heroSubtitle {
-  font-size: 1.1rem;
-  color: #94a3b8;
-  letter-spacing: 2px;
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.8);
+  font-weight: 700;
+  letter-spacing: 3px;
   text-transform: uppercase;
-  font-weight: 600;
+  margin-bottom: 2rem;
+  opacity: 0;
+  animation: fadeIn 0.8s ease-out forwards;
 }
 
-/* ===== Chairman Message Section ===== */
+.heroTitle {
+  font-size: clamp(3rem, 8vw, 6rem);
+  font-weight: 200;
+  line-height: 1.1;
+  margin-bottom: 2rem;
+  letter-spacing: -2px;
+  color: #ffffff;
+  opacity: 0;
+  animation: slideInUp 1s cubic-bezier(0.19, 1, 0.22, 1) 0.2s forwards;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideInUp {
+  from { opacity: 0; transform: translateY(50px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ===== Chairman Section ===== */
 .chairmanSection {
-  padding: 8rem 2rem;
-  max-width: 1200px;
-  margin: 0 auto;
+  padding: 10rem 5%;
+  background: #f8fafc;
 }
 
 .chairmanGrid {
   display: grid;
-  grid-template-columns: 1fr 1.5fr;
-  gap: 5rem;
+  grid-template-columns: 1fr 1.2fr;
+  gap: 8rem;
   align-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
 .chairmanImageWrapper {
@@ -60,13 +99,11 @@
 }
 
 .chairmanImgBox {
-  width: 100%;
-  aspect-ratio: 4/5;
-  background-color: #f1f5f9;
+  position: relative;
+  z-index: 2;
   border-radius: 40px;
   overflow: hidden;
-  box-shadow: 0 40px 100px rgba(0, 31, 63, 0.15);
-  border: 1px solid rgba(0, 0, 0, 0.05);
+  box-shadow: 0 40px 100px rgba(0,0,0,0.15);
 }
 
 .chairmanImg {
@@ -79,111 +116,111 @@
   position: absolute;
   top: -20px;
   left: -20px;
-  width: 100%;
-  height: 100%;
+  right: -20px;
+  bottom: -20px;
   border: 2px solid var(--accent);
-  border-radius: 40px;
-  z-index: -1;
+  border-radius: 50px;
   opacity: 0.2;
+  z-index: 1;
+}
+
+.chairmanContent {
+  display: flex;
+  flex-direction: column;
 }
 
 .chairmanTitle {
-  font-size: 1rem;
-  color: var(--accent);
+  font-size: 0.9rem;
   text-transform: uppercase;
-  letter-spacing: 2px;
+  letter-spacing: 3px;
+  color: var(--accent);
   font-weight: 800;
-  margin-bottom: 1rem;
-  display: block;
+  margin-bottom: 2rem;
 }
 
 .chairmanName {
-  font-size: 3rem;
-  color: #00122e;
-  font-weight: 800;
-  margin-bottom: 2rem;
+  font-size: 3.5rem;
   line-height: 1.1;
+  margin-bottom: 3rem;
+  color: var(--primary);
 }
 
 .chairmanMessage {
-  font-size: 1.15rem;
-  line-height: 1.9;
-  color: #475569;
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: 2rem;
+}
+
+.chairmanMessage p {
+  font-size: 1.1rem;
+  line-height: 1.8;
+  color: #475569;
 }
 
 /* ===== Directors Grid ===== */
 .directorsGridSection {
-  background-color: #f8fafc;
-  padding: 8rem 2rem;
+  padding: 10rem 5%;
+  background: white;
 }
 
 .sectionHeader {
   text-align: center;
-  max-width: 700px;
-  margin: 0 auto 5rem;
+  margin-bottom: 6rem;
 }
 
 .sectionHeading {
-  font-size: 2.5rem;
-  color: #00122e;
-  font-weight: 800;
-  margin-bottom: 1rem;
+  font-size: 3.5rem;
+  margin-bottom: 1.5rem;
+  color: var(--primary);
 }
 
 .directorsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 4rem;
   max-width: 1200px;
   margin: 0 auto;
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 3rem;
 }
 
 .directorCard {
-  background: white;
-  border-radius: 30px;
-  padding: 2.5rem;
-  transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  background: #f8fafc;
+  padding: 3rem;
+  border-radius: 40px;
+  transition: all 0.4s ease;
   border: 1px solid #e2e8f0;
-  text-align: center;
 }
 
 .directorCard:hover {
   transform: translateY(-15px);
-  box-shadow: 0 40px 80px rgba(0, 31, 63, 0.1);
+  background: white;
+  box-shadow: 0 30px 70px rgba(0,0,0,0.08);
   border-color: var(--accent);
 }
 
 .directorAvatar {
-  width: 180px;
-  height: 180px;
-  border-radius: 50%;
-  margin: 0 auto 2rem;
-  background-color: #f1f5f9;
+  width: 100px;
+  height: 100px;
+  border-radius: 24px;
   overflow: hidden;
-  border: 4px solid #f8fafc;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+  margin-bottom: 2.5rem;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
 }
 
 .directorInfo h3 {
-  font-size: 1.5rem;
-  color: #00122e;
+  font-size: 1.75rem;
   margin-bottom: 0.5rem;
-  font-weight: 700;
+  color: var(--primary);
 }
 
 .directorInfo p {
-  font-weight: 600;
-  color: var(--accent);
-  font-size: 0.95rem;
   text-transform: uppercase;
+  font-size: 0.85rem;
+  font-weight: 800;
+  color: var(--accent);
   letter-spacing: 1px;
 }
 
 @media (max-width: 1024px) {
-  .heroTitle { font-size: 3rem; }
-  .chairmanGrid { grid-template-columns: 1fr; gap: 3rem; text-align: center; }
-  .chairmanMessage { text-align: left; }
+  .chairmanGrid { grid-template-columns: 1fr; gap: 4rem; }
+  .chairmanName { font-size: 2.5rem; }
 }

@@ -16,46 +16,52 @@ export default function AttestationPage() {
   const [isExpanded, setIsExpanded] = React.useState(false);
 
   const allCerts = [
-    "10th Certificate Attestation", "AMIE Certificate Attestation", "Apprentice ship Certificate Attestation",
-    "B.Com Certificate Attestation", "B.Ed Certificate Attestation", "B.Sc Nursing Certificate Attestation",
-    "B.Tech Certificate Attestation", "BA Certificate Attestation", "BBA Certificate Attestation",
-    "BCA Certificate Attestation", "BDS Certificate Attestation", "BE Certificate Attestation",
-    "Birth Certificate Attestation", "Bonafied Certificate Attestation", "B.Sc Certificate Attestation",
-    "CA Certificate Attestation", "CBSE Certificate Attestation", "Computer Diploma Certificate Attestation",
-    "Course and Conduct Certificate Attestation", "Course Completion Certificate Attestation",
-    "Death Certificate Attestation", "Divorce Certificate Attestation", "Engineering Diploma Certificate Attestation",
-    "Foreign Certificate Attestation", "Heirship Certificate Attestation", "High School Certificate Attestation",
-    "House Surgeon Certificate Attestation", "HSE Certificate Attestation", "Intermediate Certificate Attestation",
-    "Internship Certificate Attestation", "ITI Certificate Attestation", "M.Tech Certificate Attestation",
-    "M.Com Certificate Attestation", "M.Ed Certificate Attestation", "M.Sc Certificate Attestation",
-    "M.Sc Nursing Certificate Attestation", "MA Certificate Attestation", "Marriage Certificate Attestation",
-    "MBA Certificate Attestation", "MBBS Certificate Attestation", "MCA Certificate Attestation",
-    "ME Certificate Attestation", "Medical Certificate Attestation", "Metric Certificate Attestation",
-    "Migration Certificate Attestation", "MS Certificate Attestation", "NTC Certificate Attestation",
-    "Nursing Diploma Certificate Attestation", "PCC Certificate Attestation", "PDC Certificate Attestation",
-    "Plus Two Certificate Attestation", "Powerof Attorney Certificate Attestation", "Private Diploma Certificate Attestation",
-    "PUC Certificate Attestation", "SSC Certificate Attestation", "SSLC Certificate Attestation",
-    "Technicians Certificate Attestation", "Training Certificate Attestation", "Transfer Certificate Attestation",
-    "Translated Certificate Attestation", "TTC Certificate Attestation", "VHSE Certificate Attestation"
+    "10th Attestation", "AMIE Attestation", "Apprentice ship Attestation",
+    "B.Com Attestation", "B.Ed Attestation", "B.Sc Nursing Attestation",
+    "B.Tech Attestation", "BA Attestation", "BBA Attestation",
+    "BCA Attestation", "BDS Attestation", "BE Attestation",
+    "Birth Attestation", "Bonafied Attestation", "B.Sc Attestation",
+    "CA Attestation", "CBSE Attestation", "Computer Diploma Attestation",
+    "Course and Conduct Attestation", "Course Completion Attestation",
+    "Death Attestation", "Divorce Attestation", "Engineering Diploma Attestation",
+    "Foreign Attestation", "Heirship Attestation", "High School Attestation",
+    "House Surgeon Attestation", "HSE Attestation", "Intermediate Attestation",
+    "Internship Attestation", "ITI Attestation", "M.Tech Attestation",
+    "M.Com Attestation", "M.Ed Attestation", "M.Sc Attestation",
+    "M.Sc Nursing Attestation", "MA Attestation", "Marriage Attestation",
+    "MBA Attestation", "MBBS Attestation", "MCA Attestation",
+    "ME Attestation", "Medical Attestation", "Metric Attestation",
+    "Migration Attestation", "MS Attestation", "NTC Attestation",
+    "Nursing Diploma Attestation", "PCC Attestation", "PDC Attestation",
+    "Plus Two Attestation", "Powerof Attorney Attestation", "Private Diploma Attestation",
+    "PUC Attestation", "SSC Attestation", "SSLC Attestation",
+    "Technicians Attestation", "Training Attestation", "Transfer Attestation",
+    "Translated Attestation", "TTC Attestation", "VHSE Attestation"
   ].sort();
 
-  const displayedCerts = isListExpanded ? allCerts : allCerts.slice(0, 10);
+  const displayedCerts = isListExpanded ? allCerts : allCerts.slice(0, 12);
 
   return (
     <main className={styles.container}>
-      {/* ===== Hero Section (Restored for Navbar Visibility) ===== */}
+      {/* ===== Cinematic Attestation Hero Section ===== */}
       <section className={styles.heroHeader}>
+        <img 
+          src="https://images.unsplash.com/photo-1450101499163-c8848c66ca85?q=80&w=2000&auto=format&fit=crop" 
+          alt="Certificate Attestation" 
+          className={`${styles.heroBgImage} ${styles.parallaxImage}`}
+        />
+        <div className={styles.heroOverlay} />
         <div className={styles.heroContent}>
-          <h1 className={styles.heroTitle}>Certificate Attestation</h1>
           <p className={styles.heroSubtitle}>Professional Legalization & Authentication</p>
+          <h1 className={`${styles.heroTitle} ${styles.revealText}`}>Attestation</h1>
         </div>
       </section>
 
       <section className={styles.contentSection}>
         <div className={styles.serviceIntro}>
-          <div className={styles.textCol}>
-            <h2 className={styles.sectionTitle} style={{ color: '#00122e', fontSize: '2.4rem', fontWeight: 800, marginBottom: '2.5rem' }}>
-              CERTIFICATE ATTESTATIONS SERVICES
+          <div className={`${styles.textCol} ${styles.textSideEntry}`}>
+            <h2 className={`${styles.sectionTitle} ${styles.revealText}`} style={{ color: '#00122e', fontSize: '2.4rem', fontWeight: 800, marginBottom: '2.5rem' }}>
+              ATTESTATIONS SERVICES
             </h2>
             
             <p className={styles.descriptionText}>
@@ -63,7 +69,7 @@ export default function AttestationPage() {
             </p>
 
             <p className={styles.descriptionText}>
-              We provide certificate attestation services for Bahrain, Kuwait, Oman, Qatar, , and United Arab Emirates (UAE) from various departments like Notary, GAD, State Home Ministry, SDM, Human Resource Development Department(HRD), Ministry of External Affairs (MEA), Embassy and Consulate for all kind of certificate attestation requirements like business visit visa, employment visa or family visit visa or family resident visa, Driving License, etc…….
+              We provide attestation services for Bahrain, Kuwait, Oman, Qatar, and United Arab Emirates (UAE) from various departments like Notary, GAD, State Home Ministry, SDM, Human Resource Development Department(HRD), Ministry of External Affairs (MEA), Embassy and Consulate for all kind of attestation requirements like business visit visa, employment visa or family visit visa or family resident visa, Driving License, etc…….
             </p>
 
             {isExpanded && (
@@ -92,11 +98,11 @@ export default function AttestationPage() {
             </button>
           </div>
 
-          <div className={styles.imageCol}>
+          <div className={`${styles.imageCol} ${styles.floating} ${styles.imageSideEntry}`}>
              <img 
                src="/images/attestation-premium.jpg" 
                alt="Award diploma attestation" 
-               className={styles.focalImage}
+               className={`${styles.focalImage} ${styles.glowEffect}`}
              />
           </div>
         </div>
@@ -105,35 +111,36 @@ export default function AttestationPage() {
       {/* ===== Trust Section ===== */}
       <section style={{ padding: '8rem 2rem', borderTop: '1px solid #e2e8f0', background: 'white' }}>
         <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
-          <h2 className={styles.sectionTitle} style={{ textAlign: 'center', marginBottom: '4rem' }}>
-            Trusted Certificate Attestation Services <br /> 
+          <h2 className={`${styles.sectionTitle} ${styles.revealText}`} style={{ textAlign: 'center', marginBottom: '4rem' }}>
+            Trusted Attestation Services <br /> 
             <span style={{ color: 'var(--accent)' }}>for Students and Professionals</span>
           </h2>
 
           <div className={styles.trustSplit}>
-            <div className={styles.trustSplitText}>
+            <div className={`${styles.trustSplitText} ${styles.textSideEntry}`}>
               <p>
                 For a lot of students and professionals, the attestation process is the first thing they have to do before they can go abroad. 
                 It can be a bit tough process, especially if you don’t know which office to go to or what each stamp means. 
-                That’s why we make sure that our certificate attestation services are quick and easy. We help to get things done right, 
+                That’s why we make sure that our attestation services are quick and easy. We help to get things done right, 
                 which helps to avoid all related problems.
               </p>
               <p>
-                At <span style={{ color: 'var(--accent)', fontWeight: 700 }}>TIMS Education</span>, we meet a lot of people who need certificate 
+                At <span style={{ color: 'var(--accent)', fontWeight: 700 }}>TIMS Education</span>, we meet a lot of people who need 
                 attestation services for higher studies, job placement, or immigration procedures. Most of them simply want someone trustworthy 
                 to handle the paperwork without delays. We collect the documents, process them through the right departments, and make sure everything is completed properly.
               </p>
               <p>
-                If you’re unsure where to begin, our certificate attestation services give you a steady starting point. 
-                With careful handling and clear updates, our certificate attestation services help you move ahead with confidence.
+                If you’re unsure where to begin, our attestation services give you a steady starting point. 
+                With careful handling and clear updates, our attestation services help you move ahead with confidence.
               </p>
             </div>
             
-            <div className={styles.trustSplitImgBox}>
+            <div className={`${styles.trustSplitImgBox} ${styles.floating} ${styles.imageSideEntry}`}>
                <img 
                  src="/images/attestation-user-final.png" 
                  alt="Professional guidance for attestation" 
-                 className={styles.trustSplitImg}
+                 className={`${styles.trustSplitImg} ${styles.glowEffect}`}
+                 style={{ animationDelay: '1s' }}
                />
             </div>
           </div>
@@ -143,10 +150,14 @@ export default function AttestationPage() {
       {/* ===== Comprehensive List Section ===== */}
       <section className={styles.listSection}>
         <div className={styles.listContainer}>
-          <h2 className={styles.listTitle}>CERTIFICATE ATTESTATION TYPES</h2>
+          <h2 className={`${styles.listTitle} ${styles.revealText}`}>ATTESTATION TYPES</h2>
           <div className={styles.certificatesGrid}>
             {displayedCerts.map((cert, i) => (
-              <div key={i} className={styles.certItem}>
+              <div 
+                key={i} 
+                className={`${styles.certItem} ${styles.staggerFadeIn}`}
+                style={{ animationDelay: `${0.1 + i * 0.05}s` }}
+              >
                 <span className={styles.itemBullet}>•</span> {cert}
               </div>
             ))}
@@ -157,22 +168,14 @@ export default function AttestationPage() {
               className={styles.viewMoreBtn}
               onClick={() => setIsListExpanded(!isListExpanded)}
             >
-              {isListExpanded ? 'VIEW LESS' : 'VIEW ALL SERVICES'}
+              {isListExpanded ? 'VIEW LESS ↑' : 'VIEW ALL SERVICES ↓'}
             </button>
           </div>
+
+
         </div>
       </section>
 
-      {/* ===== Footer CTA ===== */}
-      <section style={{ padding: '6rem 2rem', textAlign: 'center', background: 'linear-gradient(135deg, #00122e 0%, #001f3f 100%)', color: 'white' }}>
-        <h2 style={{ fontSize: '2.5rem', marginBottom: '1.5rem' }}>Need Attestation Assistance?</h2>
-        <p style={{ color: '#94a3b8', marginBottom: '3rem', maxWidth: '600px', margin: '0 auto 3rem' }}>
-          Contact our specialist team today for a free consultation on your document legalization needs.
-        </p>
-        <Link href="/contact" style={{ backgroundColor: 'var(--accent)', color: 'white', padding: '1rem 3rem', borderRadius: '50px', fontWeight: 700, fontSize: '1.1rem' }}>
-          REQUEST A QUOTE
-        </Link>
-      </section>
     </main>
   );
 }

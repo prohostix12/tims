@@ -67,12 +67,18 @@ export default function UniversitiesPage() {
 
   return (
     <main className={styles.container}>
-      {/* ===== Hero Section ===== */}
+      {/* ===== Cinematic Universities Hero Section ===== */}
       <section className={styles.heroHeader}>
+        <img 
+          src="https://images.unsplash.com/photo-1541339907198-e08756ebafe1?q=80&w=2000&auto=format&fit=crop" 
+          alt="Global University Partners" 
+          className={styles.heroBgImage}
+        />
+        <div className={styles.heroOverlay} />
         <div className={styles.heroContent}>
           <h1 className={styles.heroTitle}>Our University Partners</h1>
-          <p style={{ color: '#94a3b8', fontSize: '1.2rem', maxWidth: '700px', margin: '0 auto' }}>
-            Explore our network of world-class educational institutions across the globe
+          <p style={{ color: 'rgba(255,255,255,0.8)', fontSize: '1.25rem', maxWidth: '700px', margin: '0 auto', fontWeight: 300 }}>
+            Explore our global network of world-class educational institutions.
           </p>
         </div>
       </section>

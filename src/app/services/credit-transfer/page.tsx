@@ -3,108 +3,173 @@
 import React from 'react';
 import styles from './credit-transfer.module.css';
 import Link from 'next/link';
+import { ArrowRight } from 'lucide-react';
 
 export default function CreditTransferPage() {
   const benefits = [
     { 
-      title: "Prior Learning Recognition", 
-      description: "We acknowledge the academic efforts you’ve put into your previous studies. Credit transfer ensures you don’t have to start from scratch.",
+      title: "Recognizing Your Prior Learning:", 
+      description: "We acknowledge the academic efforts you've put into your previous studies. Credit transfer allows recognition of your prior learning, ensuring you don't have to start from scratch.",
       icon: (
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        <svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="40" /></svg>
       )
     },
     { 
-      title: "Accelerating Your Progress", 
-      description: "By transferring credits, you can accelerate your academic progress, completing your program faster and reaching your goals efficiently.",
+      title: "Cost-Efficient Education:", 
+      description: "Credit transfer can result in significant cost savings. You won't need to pay for courses you've already studied, making education more affordable and accessible.",
       icon: (
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+        <svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="40" /></svg>
       )
     },
     { 
-      title: "Higher Degree Pursuits", 
-      description: "Credit transfer makes pursuing master's or higher-level programs more feasible by providing a solid stepping stone for advancement.",
+      title: "Accelerating Your Progress:", 
+      description: "By transferring credits, you can accelerate your academic progress. This means completing your program faster and moving closer to your educational goals efficiently.",
       icon: (
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
+        <svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="40" /></svg>
       )
     },
     { 
-      title: "Cost-Efficient Education", 
-      description: "Save significantly on tuition. You won’t need to pay for courses you’ve already studied, making your education more affordable.",
+      title: "Tailored Academic Pathways:", 
+      description: "Transfer credits strategically to tailor your academic pathway. Choose courses that align with your interests and career aspirations, creating a personalized learning journey.",
       icon: (
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
-      )
-    },
-    { 
-      title: "Tailored Academic Pathways", 
-      description: "Strategically transfer credits to choose courses that align with your career aspirations, creating a personalized learning journey.",
-      icon: (
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+        <svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="40" /></svg>
       )
     }
   ];
 
   return (
     <main className={styles.container}>
-      {/* ===== Hero Section ===== */}
+      {/* ===== Cinematic Hero (Matched to Attestation) ===== */}
       <section className={styles.heroHeader}>
+        <img 
+          src="https://images.unsplash.com/photo-1450101499163-c8848c66ca85?q=80&w=2000&auto=format&fit=crop" 
+          alt="Credit Transfer" 
+          className={styles.heroBgImage}
+        />
+        <div className={styles.heroOverlay} />
         <div className={styles.heroContent}>
-          <h1 className={styles.heroTitle}>Credit Transfer Services</h1>
-          <p className={styles.heroSubtitle}>Seamlessly Continue Your Academic Journey</p>
+          <p className={styles.heroSubtitle}>Professional Academic Mobility & Recognition</p>
+          <h1 className={styles.heroTitle}>Credit Transfer</h1>
         </div>
       </section>
 
-      {/* ===== Intro Section ===== */}
-      <section className={styles.contentSection}>
-        <div className={styles.serviceIntro}>
-          <div className={styles.textCol}>
-            <h2 className={styles.sectionTitle}>Unlocking the Potential of Credit Transfer</h2>
-            <p className={styles.descriptionText}>
-              Credit transfer allows you to make the most of your educational investments. At <span style={{ color: 'var(--accent)', fontWeight: 700 }}>TIMS Education</span>, we ensure that your previous academic achievements pave the way for your future success.
-            </p>
-            <p className={styles.descriptionText}>
-              Whether you are bridging between institutions or moving toward international degree completion, our mapping services identify the most efficient pathway for your progression.
-            </p>
-          </div>
-
-          <div className={styles.imageCol}>
-             <img 
-               src="/images/credit-transfer-hero.png" 
-               alt="Global academic progression" 
-               className={styles.focalImage}
-             />
-          </div>
+      {/* ===== Institutional Header Section with Background ===== */}
+      <section style={{ 
+        padding: '6rem 0 0', 
+        backgroundImage: 'linear-gradient(rgba(255,255,255,0.92), rgba(255,255,255,0.92)), url("https://images.unsplash.com/photo-1523050335102-c325091d53fb?q=80&w=2000&auto=format&fit=crop")',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundAttachment: 'fixed',
+      }}>
+        <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 5%', textAlign: 'left' }}>
+          <h2 style={{ fontSize: '2.5rem', color: '#00122e', fontWeight: 900, marginBottom: '0.5rem', lineHeight: 1.1 }}>
+            Strategic Credit Transfer for Global Academic Mobility
+          </h2>
+          <p className={styles.descriptionText} style={{ fontSize: '1.1rem', color: '#475569', lineHeight: 1.8, maxWidth: '850px' }}>
+            Leverage your previous academic accomplishments to accelerate your progress toward a degree with our professional credit evaluation and transfer services.
+          </p>
         </div>
+      </section>
 
-        {/* ===== Benefits Section ===== */}
-        <div className={styles.processSection}>
-           <div className={styles.processContainer}>
-              <h2 className={styles.sectionTitle} style={{ textAlign: 'center', marginBottom: '4rem' }}>
-                Why It Matters
-              </h2>
-              <div className={styles.processGrid}>
-                 {benefits.map((benefit, i) => (
-                   <div key={i} className={styles.processCard}>
-                     <div className={styles.stepIcon}>
-                        {benefit.icon}
-                     </div>
-                     <h3>{benefit.title}</h3>
-                     <p>{benefit.description}</p>
-                   </div>
-                 ))}
+      {/* ===== The Journey Section (Aligned & Tightened) ===== */}
+      <section style={{ padding: '4rem 0 2rem', backgroundColor: '#f8fafc' }}>
+        <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 5%' }}>
+          <div className={styles.journeyGrid}>
+            {benefits.map((benefit, i) => (
+              <div 
+                key={i} 
+                className={styles.journeyCard}
+                style={{ animationDelay: `${0.2 + i * 0.1}s` }}
+              >
+                <span className={styles.cardNum}>0{i + 1}</span>
+                <div className={styles.iconBox}>
+                   <svg viewBox="0 0 100 100" fill="var(--accent)"><circle cx="50" cy="50" r="40" /></svg>
+                </div>
+                <h3 style={{ fontSize: '1.2rem', marginTop: '1rem' }}>{benefit.title.replace(':', '')}</h3>
+                <p style={{ fontSize: '0.9rem' }}>{benefit.description}</p>
               </div>
-           </div>
+            ))}
+          </div>
         </div>
       </section>
 
-      {/* ===== Footer CTA ===== */}
-      <section style={{ padding: '8rem 2rem', textAlign: 'center', background: 'linear-gradient(135deg, #00122e 0%, #001f3f 100%)', color: 'white' }}>
-        <h2 style={{ fontSize: '2.5rem', marginBottom: '1.5rem' }}>Ready to Take the Next Step?</h2>
-        <p style={{ color: '#94a3b8', marginBottom: '3rem', maxWidth: '600px', margin: '0 auto' }}>
-          Schedule a consultation with our academic advisors to evaluate your credits today.
-        </p>
-        <Link href="/contact" style={{ backgroundColor: 'var(--accent)', color: 'white', padding: '1rem 3rem', borderRadius: '50px', fontWeight: 700, fontSize: '1.1rem' }}>
-          REQUEST EVALUATION
-        </Link>
+      {/* ===== How Our Credit Transfer Services Work (Deconstructed) ===== */}
+      <section style={{ padding: '6rem 0', backgroundColor: '#ffffff' }}>
+        <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 5%' }}>
+          <div className={styles.splitSection} style={{ background: 'transparent' }}>
+            <div className={styles.imageSide} style={{ borderRadius: '24px' }}>
+              <img 
+                src="https://images.pexels.com/photos/3762800/pexels-photo-3762800.jpeg?auto=compress&cs=tinysrgb&w=2000" 
+                alt="Student Success"
+                style={{ borderRadius: '24px' }}
+              />
+            </div>
+            <div className={styles.contentSide} style={{ padding: '0 0 0 4rem' }}>
+              <span className={styles.sectionTag} style={{ fontSize: '0.75rem' }}>PROCEDURAL EXCELLENCE</span>
+              <h2 style={{ fontSize: '2.2rem', color: '#00122e', fontWeight: 900, lineHeight: 1.2 }}>
+                How Our Credit Transfer Services Work
+              </h2>
+              <p style={{ color: '#64748b', marginTop: '1rem', fontSize: '1rem', lineHeight: 1.7 }}>
+                Our Credit Transfer Services follow a streamlined process to ensure maximum recognition of your prior learning.
+              </p>
+
+              <div className={styles.stepList} style={{ marginTop: '2.5rem' }}>
+                <div className={styles.stepItem}>
+                  <h4>1. Credit Evaluation:</h4>
+                  <ul>
+                    <li>Submit your academic transcripts and relevant documents for evaluation.</li>
+                    <li>Our expert team will review your credits and determine the transferable courses.</li>
+                  </ul>
+                </div>
+
+                <div className={styles.stepItem}>
+                  <h4>2. Credit Approval and Mapping:</h4>
+                  <ul>
+                    <li>Once evaluated, we'll approve the transferable credits and map them to equivalent courses in your chosen program.</li>
+                  </ul>
+                </div>
+
+                <div className={styles.stepItem}>
+                  <h4>3. Customized Academic Plan:</h4>
+                  <ul>
+                    <li>Receive a customized academic plan detailing the courses you need to complete to fulfill the program requirements.</li>
+                  </ul>
+                </div>
+
+                <div className={styles.stepItem}>
+                  <h4>4. Seamless Integration:</h4>
+                  <ul>
+                    <li>Your approved credits seamlessly integrate into your academic journey, allowing you to progress efficiently.</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      {/* ===== Institutional Closing Section (Aligned) ===== */}
+      <section style={{ padding: '6rem 0 10rem', backgroundColor: '#ffffff', color: '#00122e' }}>
+        <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 5%', textAlign: 'left' }}>
+          <h2 style={{ fontSize: '2.5rem', fontWeight: 900, marginBottom: '1.5rem', lineHeight: 1.2 }}>
+            Partner with TIMS Education <br/> for a Smooth Transition
+          </h2>
+          <p style={{ fontSize: '1.2rem', color: '#475569', lineHeight: 1.8, marginBottom: '2rem', maxWidth: '900px' }}>
+            At TIMS Education, we’re committed to making your academic journey as seamless as possible. Our Credit Transfer Services are tailored to ensure that your prior learning is recognized and contributes to your current educational pursuits.
+          </p>
+          <p style={{ fontSize: '1.2rem', color: '#00122e', fontWeight: 600, lineHeight: 1.8, maxWidth: '900px' }}>
+            Explore our Credit Transfer Services and make the most of your academic achievements. Your progress matters, and we’re here to support your educational aspirations!
+          </p>
+          <div style={{ marginTop: '3rem' }}>
+             <Link 
+               href="https://www.glocaluniversity.edu.in/" 
+               target="_blank" 
+               rel="noopener noreferrer" 
+               className={styles.primaryBtn}
+             >
+               GLOCAL UNIVERSITY <ArrowRight size={20} style={{ marginLeft: '10px' }} />
+             </Link>
+          </div>
+        </div>
       </section>
     </main>
   );

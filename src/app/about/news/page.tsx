@@ -1,12 +1,38 @@
 
 'use client';
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import styles from './news.module.css';
 import Link from 'next/link';
 
 export default function NewsPage() {
   const [showAll, setShowAll] = React.useState(false);
+
+  // ── Scroll-in animation for news items ──
+  useEffect(() => {
+    const items = document.querySelectorAll(`.${styles.newsItem}`);
+    const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    if (prefersReduced) {
+      items.forEach((el) => el.classList.add(styles.visible));
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add(styles.visible);
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.15 }
+    );
+
+    items.forEach((el) => observer.observe(el));
+    return () => observer.disconnect();
+  }, [showAll]); // re-run when 'showAll' changes so new items get observed
 
   const newsItems = [
     {

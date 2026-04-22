@@ -1,67 +1,152 @@
+
 'use client';
 
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import styles from './Navbar.module.css';
+import { ChevronDown, Menu, X, ArrowRight } from 'lucide-react';
 
-export default function Navbar() {
-  const [isScrolled, setIsScrolled] = useState(false);
+const Navbar = () => {
+  const [scrolled, setScrolled] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const pathname = usePathname();
 
   useEffect(() => {
     const handleScroll = () => {
-      if (window.scrollY > 20) {
-        setIsScrolled(true);
-      } else {
-        setIsScrolled(false);
-      }
+      setScrolled(window.scrollY > 50);
     };
-
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  const navLinks = [
+    { name: 'Home', path: '/' },
+    { 
+      name: 'About', 
+      path: '/about',
+      submenu: [
+        { name: 'Latest News', path: '/about/news' },
+        { name: 'Academic Blog', path: '/about/blog' },
+      ]
+    },
+    { 
+      name: 'Services', 
+      path: '/services',
+      submenu: [
+        { name: 'Attestation', path: '/services/attestation' },
+        { name: 'Credit Transfer', path: '/services/credit-transfer' },
+      ]
+    },
+    { name: 'Courses', path: '/courses' },
+    { name: 'Universities', path: '/universities' },
+    { 
+      name: 'Students', 
+      path: '/students',
+      submenu: [
+        { name: 'Success Stories', path: '/students' },
+        { name: 'Student Portal', path: '/login' },
+        { name: 'FAQ', path: '/contact' },
+      ]
+    },
+    { name: 'Contact', path: '/contact' },
+  ];
+
   return (
-    <header className={`${styles.header} ${isScrolled ? styles.scrolled : ''}`}>
-      <div className={styles.container}>
-        <Link href="/" className={`${styles.logo} ${styles.animateSlideDown} ${styles.delay0}`}>
-          TIMS<span className={styles.dot}>.</span>
+    <div className={`${styles.navWrapper} ${scrolled ? styles.scrolled : ''}`}>
+      <nav className={styles.navbar}>
+        <Link href="/" className={styles.logo}>
+          TIMS<span>.</span>
         </Link>
-        
-        <ul className={styles.navLinks}>
-          <li className={`${styles.animateSlideDown} ${styles.delay1}`}><Link href="/">Home</Link></li>
-          <li className={`${styles.dropdownContainer} ${styles.animateSlideDown} ${styles.delay2}`}>
-            <Link href="/about">About ▾</Link>
-            <ul className={styles.dropdownMenu}>
 
-              <li><Link href="/about/blog">Blog</Link></li>
-              <li><Link href="/about/news">News</Link></li>
-            </ul>
-          </li>
-          <li className={`${styles.animateSlideDown} ${styles.delay3}`}><Link href="/courses">Courses</Link></li>
-          <li className={`${styles.dropdownContainer} ${styles.animateSlideDown} ${styles.delay4}`}>
-            <Link href="/services">Services ▾</Link>
-            <ul className={styles.dropdownMenu}>
-              <li><Link href="/services/attestation">Attestation</Link></li>
-              <li><Link href="/services/credit-transfer">Credit Transfer</Link></li>
-            </ul>
-          </li>
-          <li className={`${styles.animateSlideDown} ${styles.delay5}`}><Link href="/universities">Universities</Link></li>
-          <li className={`${styles.dropdownContainer} ${styles.animateSlideDown} ${styles.delay6}`}>
-            <Link href="/students">Students ▾</Link>
-            <ul className={styles.dropdownMenu}>
-              <li><Link href="/students/syllabus">Syllabus</Link></li>
+        {/* Desktop Nav */}
+        <div className={styles.navLinks}>
+          {navLinks.map((link) => (
+            <div key={link.name} className={styles.navItemWrapper}>
+              {link.name === 'Services' ? (
+                <div 
+                  className={`${styles.navLink} ${pathname.startsWith(link.path) ? styles.activeLink : ''}`}
+                  style={{ cursor: 'default' }}
+                >
+                  {link.name}
+                  <ChevronDown size={14} className={styles.chevron} />
+                </div>
+              ) : (
+                <Link 
+                  href={link.path} 
+                  className={`${styles.navLink} ${pathname === link.path || (link.submenu && pathname.startsWith(link.path)) ? styles.activeLink : ''}`}
+                >
+                  {link.name}
+                  {link.submenu && <ChevronDown size={14} className={styles.chevron} />}
+                </Link>
+              )}
+              
+              {link.submenu && (
+                <div className={styles.dropdown}>
+                  {link.submenu.map((sub) => (
+                    <Link key={sub.path} href={sub.path} className={styles.dropdownItem}>
+                      {sub.name}
+                      <ArrowRight size={14} className={styles.subChevron} />
+                    </Link>
+                  ))}
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
 
-            </ul>
-          </li>
-          <li className={`${styles.animateSlideDown} ${styles.delay6}`}><Link href="/contact">Contact</Link></li>
-        </ul>
-        
-        <div className={`${styles.actions} ${styles.animateSlideDown} ${styles.delay6}`}>
-          <Link href="/course-finder" className={`${styles.courseFinderBtn} ${styles.pulseEffect}`}>
+        <div className={styles.actions}>
+          <Link href="/course-finder" className={styles.secondaryAction}>
             Course Finder
           </Link>
+          <Link href="/login" className={styles.primaryAction}>
+            Login
+          </Link>
+          <button 
+            className={styles.menuToggle} 
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+          >
+            {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+          </button>
         </div>
+      </nav>
+
+      {/* Mobile Menu */}
+      <div className={`${styles.mobileMenu} ${mobileMenuOpen ? styles.mobileOpen : ''}`}>
+        {navLinks.map((link) => (
+          <div key={link.name} className={styles.mobileItem}>
+            {link.name === 'Services' ? (
+              <div className={styles.mobileLink}>
+                {link.name}
+              </div>
+            ) : (
+              <Link 
+                href={link.path} 
+                className={styles.mobileLink}
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                {link.name}
+              </Link>
+            )}
+            {link.submenu && (
+              <div className={styles.mobileSub}>
+                {link.submenu.map((sub) => (
+                  <Link 
+                    key={sub.path} 
+                    href={sub.path} 
+                    className={styles.mobileSubLink}
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    {sub.name}
+                  </Link>
+                ))}
+              </div>
+            )}
+          </div>
+        ))}
       </div>
-    </header>
+    </div>
   );
-}
+};
+
+export default Navbar;

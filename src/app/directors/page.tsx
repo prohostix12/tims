@@ -29,10 +29,16 @@ export default function DirectorsPage() {
 
   return (
     <main className={styles.container}>
-      {/* ===== Hero Section ===== */}
+      {/* ===== Cinematic Directors Hero Section ===== */}
       <section className={styles.heroHeader}>
+        <img 
+          src="https://images.unsplash.com/photo-1507679799987-c73779587ccf?q=80&w=2000&auto=format&fit=crop" 
+          alt="Our Leadership" 
+          className={styles.heroBgImage}
+        />
+        <div className={styles.heroOverlay} />
         <div className={styles.heroContent}>
-          <p className={styles.heroSubtitle}>Leading with Vision</p>
+          <p className={styles.heroSubtitle}>Leading with Vision & Integrity</p>
           <h1 className={styles.heroTitle}>Our Leadership</h1>
         </div>
       </section>

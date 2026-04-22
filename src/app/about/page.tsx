@@ -8,14 +8,13 @@ export default function About() {
   return (
     <main className={styles.container}>
 
-      {/* ===== Hero Header Section ===== */}
+      {/* ===== Cinematic About Hero Section ===== */}
       <section className={styles.heroHeader}>
-        <div className={styles.heroOverlay} />
         <div className={styles.heroContent}>
           <p className={styles.heroCrumb}>
             <Link href="/">Home</Link> / About
           </p>
-          <h1 className={styles.heroTitle}>About</h1>
+          <h1 className={styles.heroTitle}>About Us</h1>
         </div>
       </section>
 
@@ -113,48 +112,119 @@ export default function About() {
         <div className={styles.testimonialsHeader}>
           <span className={styles.badge} style={{ color: 'var(--accent)', background: 'rgba(217,4,41,0.05)' }}>Success Stories</span>
           <h2 className={styles.sectionHeading}>What our <span className={styles.redText}>Students say</span></h2>
-          <p className={styles.bodyText} style={{ textAlign: 'center', margin: '1rem auto 0' }}>
+          <p className={styles.bodyText} style={{ textAlign: 'center', margin: '1rem auto 1.5rem' }}>
             Empowering thousands of learners across Kerala to achieve their professional dreams through flexible education.
           </p>
+          <a href="https://admin.trustindex.io/api/googleWriteReview?place-id=ChIJ42gGBe6xpzsRfUBsYiL8KeQ" target="_blank" rel="noopener noreferrer" className={styles.writeReviewBtn}>
+            Write a Review on Google
+          </a>
         </div>
 
-        <div className={styles.testimonialsContainer}>
-          {[
-            {
-              text: "TIMS Education provided the perfect bridge between my professional life and academic goals. The flexibility of the MBA program was life-changing.",
-              name: "Rahul Krishnan",
-              role: "MBA Graduate",
-              img: "https://i.pravatar.cc/150?u=rahul"
-            },
-            {
-              text: "The guidance I received for my credit transfer was seamless. The staff truly understands the needs of distance learners in Kerala.",
-              name: "Anjali Menon",
-              role: "B.Com Student",
-              img: "https://i.pravatar.cc/150?u=anjali"
-            },
-            {
-              text: "From admission to final certification, TIMS was supportive at every step. Highly recommend for anyone looking for recognized degrees.",
-              name: "Musthafa Ali",
-              role: "PG Diploma Candidate",
-              img: "https://i.pravatar.cc/150?u=musthafa"
-            }
-          ].map((item, idx) => (
-            <div key={idx} className={`${styles.testimonialCard} ${styles.fadeInUp}`} style={{ animationDelay: `${idx * 0.2}s` }}>
-              <div className={styles.quoteIcon}>
-                <svg width="40" height="40" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M14.017 21L14.017 18C14.017 16.8954 14.9124 16 16.017 16H19.017C19.5693 16 20.017 15.5523 20.017 15V9C20.017 8.44772 19.5693 8 19.017 8H15.017C14.4647 8 14.017 8.44772 14.017 9V12C14.017 12.5523 13.5693 13 13.017 13H12.017V21H14.017ZM6.017 21L6.017 18C6.017 16.8954 6.9124 16 8.017 16H11.017C11.5693 16 12.017 15.5523 12.017 15V9C12.017 8.44772 11.5693 8 11.017 8H7.01701C6.46472 8 6.01701 8.44772 6.01701 9V12C6.01701 12.5523 5.5693 13 5.01701 13H4.01701V21H6.017Z" />
-                </svg>
-              </div>
-              <p className={styles.testimonialText}>"{item.text}"</p>
-              <div className={styles.testimonialAuthor}>
-                <img src={item.img} alt={item.name} className={styles.authorAvatar} />
-                <div className={styles.authorInfo}>
-                  <span className={styles.authorName}>{item.name}</span>
-                  <span className={styles.authorRole}>{item.role}</span>
+        <div className={styles.testimonialsScrollWrapper}>
+          <div className={styles.testimonialsContainer}>
+            {[
+              {
+                text: "TIMS Education provided the perfect bridge between my professional life and academic goals. The flexibility of the MBA program was life-changing.",
+                name: "Rahul Krishnan",
+                role: "MBA Graduate",
+                img: "https://i.pravatar.cc/150?u=rahul"
+              },
+              {
+                text: "The guidance I received for my credit transfer was seamless. The staff truly understands the needs of distance learners in Kerala.",
+                name: "Anjali Menon",
+                role: "B.Com Student",
+                img: "https://i.pravatar.cc/150?u=anjali"
+              },
+              {
+                text: "From admission to final certification, TIMS was supportive at every step. Highly recommend for anyone looking for recognized degrees.",
+                name: "Musthafa Ali",
+                role: "PG Diploma Candidate",
+                img: "https://i.pravatar.cc/150?u=musthafa"
+              },
+              {
+                text: "As a working professional, I never thought I could complete my degree. TIMS made it possible with their excellent online support.",
+                name: "Sneha Nair",
+                role: "BBA Graduate",
+                img: "https://i.pravatar.cc/150?u=sneha"
+              },
+              {
+                text: "The faculty is extremely knowledgeable and supportive. Their study materials are top-notch and very easy to follow.",
+                name: "Arun Reghunath",
+                role: "M.Com Student",
+                img: "https://i.pravatar.cc/150?u=arun"
+              }
+            ].map((item, idx) => (
+              <div key={idx} className={`${styles.testimonialCard} ${styles.fadeInUp}`} style={{ animationDelay: `${idx * 0.15}s` }}>
+                <div className={styles.quoteIcon}>
+                  <svg width="40" height="40" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M14.017 21L14.017 18C14.017 16.8954 14.9124 16 16.017 16H19.017C19.5693 16 20.017 15.5523 20.017 15V9C20.017 8.44772 19.5693 8 19.017 8H15.017C14.4647 8 14.017 8.44772 14.017 9V12C14.017 12.5523 13.5693 13 13.017 13H12.017V21H14.017ZM6.017 21L6.017 18C6.017 16.8954 6.9124 16 8.017 16H11.017C11.5693 16 12.017 15.5523 12.017 15V9C12.017 8.44772 11.5693 8 11.017 8H7.01701C6.46472 8 6.01701 8.44772 6.01701 9V12C6.01701 12.5523 5.5693 13 5.01701 13H4.01701V21H6.017Z" />
+                  </svg>
+                </div>
+                <p className={styles.testimonialText}>"{item.text}"</p>
+                <div className={styles.testimonialAuthor}>
+                  <img src={item.img} alt={item.name} className={styles.authorAvatar} />
+                  <div className={styles.authorInfo}>
+                    <span className={styles.authorName}>{item.name}</span>
+                    <span className={styles.authorRole}>{item.role}</span>
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ===== Our Directors Section ===== */}
+      <section className={styles.directorsSection}>
+        <div className={styles.directorsWrapper}>
+          <div className={styles.directorsHeader}>
+            <span className={styles.badge} style={{ color: 'var(--accent)', background: 'rgba(217,4,41,0.05)' }}>Leadership</span>
+            <h2 className={styles.sectionHeading}>Meet Our <span className={styles.redText}>Directors</span></h2>
+            <p className={styles.bodyText} style={{ textAlign: 'center', maxWidth: '600px', margin: '0 auto 3rem' }}>
+              The visionary leaders who built TIMS Education from the ground up — committed to making quality education accessible to all.
+            </p>
+          </div>
+
+          <div className={styles.directorsGrid}>
+            {[
+              {
+                name: "Adv. ShoukathAli Pootheri",
+                role: "Founder & Director",
+                img: "/images/Adv-ShoukathAli-pootheri.jpg",
+                bio: "A visionary legal professional and educator, Adv. ShoukathAli Pootheri founded TIMS Education in 2009 with a bold mission — to make higher education accessible to every segment of society in Kerala.",
+                accentDelay: "0s"
+              },
+              {
+                name: "Nabeel CM",
+                role: "Managing Director",
+                img: "/images/Nabeel-cm.jpg",
+                bio: "Driving the day-to-day operations and strategic growth of TIMS Education, Nabeel CM brings exceptional leadership in institutional management and student success initiatives.",
+                accentDelay: "0.15s"
+              },
+              {
+                name: "Mohamed Shameem",
+                role: "CEO & Director",
+                img: "/images/Mohamed-shameem.jpg",
+                bio: "As CEO, Mohamed Shameem leads TIMS Education's expansion and innovation efforts, forging partnerships with renowned universities to deliver career-focused programs across Kerala.",
+                accentDelay: "0.3s"
+              },
+            ].map((director, idx) => (
+              <div key={idx} className={`${styles.directorCard} ${styles.fadeInUp}`} style={{ animationDelay: director.accentDelay }}>
+                <div className={styles.directorAvatarWrap}>
+                  <div className={styles.directorAvatar}>
+                    <img src={director.img} alt={director.name} className={styles.directorPhoto} />
+                  </div>
+                  <div className={styles.directorAvatarRing} />
+                </div>
+                <div className={styles.directorInfo}>
+                  <h3 className={styles.directorName}>{director.name}</h3>
+                  <span className={styles.directorRole}>{director.role}</span>
+                  <div className={styles.directorDivider} />
+                  <p className={styles.directorBio}>{director.bio}</p>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 
