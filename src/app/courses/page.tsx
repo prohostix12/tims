@@ -148,15 +148,36 @@ export default function CoursesPage() {
 
   return (
     <main className={styles.container}>
-      {/* ===== Hero Section ===== */}
       <section className={styles.heroHeader}>
         <div className={styles.heroContent}>
           <p className={styles.heroCrumb}>
             <Link href="/">Home</Link> / Courses
           </p>
           <span className={styles.heroTag}>Programs</span>
-          <h1 className={styles.heroTitle}>Courses</h1>
+          <h1 className={styles.heroTitle}>Explore Our Courses</h1>
           <p className={styles.heroSub}>Discover our comprehensive range of academic and professional programs tailored for your success.</p>
+
+          {/* Quick stats */}
+          <div className={styles.heroStats}>
+            <div className={styles.heroStat}>
+              <span className={styles.heroStatNum}>50+</span>
+              <span className={styles.heroStatLabel}>Programs</span>
+            </div>
+            <div className={styles.heroStatDivider} />
+            <div className={styles.heroStat}>
+              <span className={styles.heroStatNum}>98%</span>
+              <span className={styles.heroStatLabel}>Success Rate</span>
+            </div>
+            <div className={styles.heroStatDivider} />
+            <div className={styles.heroStat}>
+              <span className={styles.heroStatNum}>24/7</span>
+              <span className={styles.heroStatLabel}>Student Support</span>
+            </div>
+          </div>
+
+          <Link href="/contact" className={styles.heroCta}>
+            Talk to an Advisor <ArrowRight size={16} />
+          </Link>
         </div>
       </section>
 

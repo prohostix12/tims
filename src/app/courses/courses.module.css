@@ -74,9 +74,84 @@
   font-size: 1.1rem;
   color: rgba(255, 255, 255, 0.8);
   max-width: 700px;
-  margin: 0 auto;
+  margin: 0 auto 2.5rem;
   line-height: 1.6;
   animation: fadeInUp 1s cubic-bezier(0.16, 1, 0.3, 1) 0.2s backwards;
+}
+
+/* ---- Hero stats row ---- */
+.heroStats {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 100px;
+  padding: 1rem 2.5rem;
+  margin-bottom: 2rem;
+  animation: fadeInUp 1s cubic-bezier(0.16, 1, 0.3, 1) 0.35s backwards;
+}
+
+.heroStat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.15rem;
+}
+
+.heroStatNum {
+  font-size: 1.4rem;
+  font-weight: 900;
+  color: #ffffff;
+  line-height: 1;
+}
+
+.heroStatLabel {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.65);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.heroStatDivider {
+  width: 1px;
+  height: 36px;
+  background: rgba(255, 255, 255, 0.2);
+  flex-shrink: 0;
+}
+
+/* ---- Hero CTA button ---- */
+.heroCta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: #ef233c;
+  color: #ffffff;
+  font-size: 0.9rem;
+  font-weight: 700;
+  padding: 0.8rem 2rem;
+  border-radius: 100px;
+  text-decoration: none;
+  transition: background 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+  animation: fadeInUp 1s cubic-bezier(0.16, 1, 0.3, 1) 0.5s backwards;
+}
+
+.heroCta:hover {
+  background: #c81a2e;
+  transform: translateY(-2px);
+  box-shadow: 0 10px 24px rgba(239, 35, 60, 0.35);
+}
+
+@media (max-width: 600px) {
+  .heroStats {
+    gap: 1.25rem;
+    padding: 0.85rem 1.5rem;
+  }
+
+  .heroStatNum {
+    font-size: 1.1rem;
+  }
 }
 
 /* ===== Explorer Section ===== */

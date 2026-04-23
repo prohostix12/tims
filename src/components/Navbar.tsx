@@ -126,14 +126,15 @@ const Navbar = () => {
                 role="none"
               >
                 {link.submenu ? (
-                  <span
+                  <Link
+                    href={link.path}
                     className={`${styles.navLink} ${isActive(link) ? styles.activeLink : ''}`}
                     role="menuitem"
                     aria-haspopup="true"
                   >
                     {link.name}
                     <ChevronDown size={14} className={styles.chevron} aria-hidden="true" />
-                  </span>
+                  </Link>
                 ) : (
                   <Link
                     href={link.path}
