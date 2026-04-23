@@ -1,18 +1,13 @@
 import mongoose from 'mongoose';
 import dns from 'node:dns';
+import { setDefaultResultOrder } from 'node:dns';
 
-// Force use of Google DNS if local DNS cannot resolve MongoDB SRV records
-dns.setServers(['8.8.8.8', '8.8.4.4']);
+// Force Google DNS — local DNS blocks SRV queries on this network
+dns.setServers(['8.8.8.8', '8.8.4.4', '1.1.1.1']);
+setDefaultResultOrder('ipv4first');
 
 const MONGODB_URI = process.env.MONGODB_URI;
 
-// Only throw at runtime, not during build
-
-/**
- * Global is used here to maintain a cached connection across hot reloads
- * in development. This prevents connections from growing exponentially
- * during API Route usage.
- */
 declare global {
   var mongoose: {
     conn: mongoose.Mongoose | null;
@@ -42,11 +37,11 @@ async function connectDB() {
   if (!cached.promise) {
     const opts = {
       bufferCommands: false,
+      serverSelectionTimeoutMS: 10000,
+      family: 4, // Force IPv4 — fixes SRV resolution issues on some networks
     };
 
-    cached.promise = mongoose.connect(MONGODB_URI!, opts).then((mongoose) => {
-      return mongoose;
-    });
+    cached.promise = mongoose.connect(MONGODB_URI, opts).then((m) => m);
   }
 
   try {
