@@ -39,14 +39,27 @@ const Navbar = () => {
       ]
     },
     { name: 'Courses', path: '/courses' },
-    { name: 'Universities', path: '/universities' },
+    { 
+      name: 'Universities', 
+      path: '/universities',
+      submenu: [
+        { name: 'All Universities', path: '/universities' },
+        { name: 'Study Material', path: '/universities/study-material' },
+        { 
+          name: 'Examination', 
+          path: '/universities/examination',
+          submenu: [
+            { name: 'Time Table', path: '/universities/examination/timetable' },
+            { name: 'Results', path: '/universities/examination/results' },
+          ]
+        },
+      ]
+    },
     { 
       name: 'Students', 
       path: '/students',
       submenu: [
-        { name: 'Success Stories', path: '/students' },
-        { name: 'Student Portal', path: '/login' },
-        { name: 'FAQ', path: '/contact' },
+        { name: 'Syllabus', path: '/students/syllabus' },
       ]
     },
     { name: 'Contact', path: '/contact' },
@@ -84,10 +97,22 @@ const Navbar = () => {
               {link.submenu && (
                 <div className={styles.dropdown}>
                   {link.submenu.map((sub) => (
-                    <Link key={sub.path} href={sub.path} className={styles.dropdownItem}>
-                      {sub.name}
-                      <ArrowRight size={14} className={styles.subChevron} />
-                    </Link>
+                    <div key={sub.path} className={styles.dropdownItemWrapper}>
+                      <Link href={sub.path} className={styles.dropdownItem}>
+                        {sub.name}
+                        {sub.submenu ? <ChevronDown size={13} style={{ marginLeft: 'auto' }} /> : <ArrowRight size={14} className={styles.subChevron} />}
+                      </Link>
+                      {sub.submenu && (
+                        <div className={styles.subDropdown}>
+                          {sub.submenu.map((child) => (
+                            <Link key={child.path} href={child.path} className={styles.dropdownItem}>
+                              {child.name}
+                              <ArrowRight size={14} className={styles.subChevron} />
+                            </Link>
+                          ))}
+                        </div>
+                      )}
+                    </div>
                   ))}
                 </div>
               )}

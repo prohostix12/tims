@@ -98,7 +98,8 @@ export default function CoursesPage() {
       duration: "2 Years",
       eligibility: "SSLC / 10th",
       description: "Higher secondary education with a focus on core subjects for university preparation.",
-      image: "https://images.pexels.com/photos/5212345/pexels-photo-5212345.jpeg?auto=compress&cs=tinysrgb&w=800"
+      image: "https://images.pexels.com/photos/5212345/pexels-photo-5212345.jpeg?auto=compress&cs=tinysrgb&w=800",
+      path: "/courses/plus-two"
     },
     {
       title: "Secondary School Leaving Certificate",

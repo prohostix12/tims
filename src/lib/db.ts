@@ -6,9 +6,7 @@ dns.setServers(['8.8.8.8', '8.8.4.4']);
 
 const MONGODB_URI = process.env.MONGODB_URI;
 
-if (!MONGODB_URI) {
-  throw new Error('Please define the MONGODB_URI environment variable inside .env.local');
-}
+// Only throw at runtime, not during build
 
 /**
  * Global is used here to maintain a cached connection across hot reloads
@@ -29,6 +27,10 @@ if (!cached) {
 }
 
 async function connectDB() {
+  if (!MONGODB_URI) {
+    throw new Error('Please define the MONGODB_URI environment variable inside .env.local');
+  }
+
   if (!cached) {
     cached = global.mongoose = { conn: null, promise: null };
   }

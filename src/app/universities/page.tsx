@@ -1,138 +1,194 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import styles from './universities.module.css';
 import Link from 'next/link';
+import Image from 'next/image';
+import { MapPin, ArrowRight, GraduationCap } from 'lucide-react';
+
+const universities = [
+  {
+    name: "Amrita Vishwa Vidyapeetham",
+    location: "Coimbatore, India",
+    description: "A multi-disciplinary, research-intensive university ranked among the best in India.",
+    features: ["NAAC A++", "UGC Approved", "Global Research"],
+    programs: ["UG", "PG", "UG/PG"],
+    image: "https://images.unsplash.com/photo-1562774053-701939374585?q=80&w=600&auto=format&fit=crop"
+  },
+  {
+    name: "University of Greenwich",
+    location: "London, United Kingdom",
+    description: "Renowned for its academic excellence and stunning historic campus in the heart of London.",
+    features: ["TEF Silver", "International Faculty", "Business Leader"],
+    programs: ["UG", "PG", "UG/PG"],
+    image: "https://images.unsplash.com/photo-1607237138185-eedd9c632b0b?q=80&w=600&auto=format&fit=crop"
+  },
+  {
+    name: "Arizona State University",
+    location: "Phoenix, USA",
+    description: "Consistently ranked as the #1 university for innovation in the United States.",
+    features: ["#1 in Innovation", "Large Alumni", "Tech Hub"],
+    programs: ["UG", "PG", "UG/PG"],
+    image: "https://images.unsplash.com/photo-1541339907198-e08756ebafe1?q=80&w=600&auto=format&fit=crop"
+  },
+  {
+    name: "Monash University",
+    location: "Melbourne, Australia",
+    description: "A member of the Group of Eight, recognized for its global outlook and research impact.",
+    features: ["Top 100 Global", "Group of Eight", "Career Ready"],
+    programs: ["UG", "PG", "UG/PG"],
+    image: "https://images.unsplash.com/photo-1523050854058-8df90110c9f1?q=80&w=600&auto=format&fit=crop"
+  },
+  {
+    name: "University of Toronto",
+    location: "Toronto, Canada",
+    description: "Canada's top-ranked university and a global leader in higher education and research.",
+    features: ["Diverse Culture", "Research Powerhouse", "Top Ranked"],
+    programs: ["UG", "PG", "UG/PG"],
+    image: "https://images.unsplash.com/photo-1498243691581-b145c3f54a5a?q=80&w=600&auto=format&fit=crop"
+  },
+  {
+    name: "Technical University of Munich",
+    location: "Munich, Germany",
+    description: "One of Europe's top universities for engineering, technology, and applied sciences.",
+    features: ["STEM Leader", "Partner of Industry", "Top Ranked"],
+    programs: ["UG", "PG", "UG/PG"],
+    image: "https://images.unsplash.com/photo-1592280771190-3e2e4d571952?q=80&w=600&auto=format&fit=crop"
+  },
+  {
+    name: "Manipal Academy of Higher Education",
+    location: "Manipal, India",
+    description: "A pioneer in private higher education with a world-class campus and global partnerships.",
+    features: ["Green Campus", "Top Medical", "NRI Favorite"],
+    programs: ["UG", "PG", "UG/PG"],
+    image: "https://images.unsplash.com/photo-1580582932707-520aed937b7b?q=80&w=600&auto=format&fit=crop"
+  },
+  {
+    name: "Lovely Professional University",
+    location: "Punjab, India",
+    description: "India's largest private university offering diverse programs with strong placement records.",
+    features: ["NAAC A+", "Largest Private", "Strong Placements"],
+    programs: ["10th/+2", "UG", "PG", "UG/PG"],
+    image: "https://images.unsplash.com/photo-1571260899304-425eee4c7efc?q=80&w=600&auto=format&fit=crop"
+  },
+  {
+    name: "Swami Vivekanand Subharti University",
+    location: "Meerut, India",
+    description: "A UGC-recognized university offering distance and regular programs across disciplines.",
+    features: ["UGC Approved", "Distance Learning", "Affordable"],
+    programs: ["10th/+2", "UG", "PG", "UG/PG"],
+    image: "https://images.unsplash.com/photo-1607237138185-eedd9c632b0b?q=80&w=600&auto=format&fit=crop"
+  },
+];
+
+const filters = ['All', '10th/+2', 'UG', 'PG', 'UG/PG'];
 
 export default function UniversitiesPage() {
-  const [activeRegion, setActiveRegion] = useState('All');
+  const [activeFilter, setActiveFilter] = useState('All');
+  const [visible, setVisible] = useState(false);
+  const gridRef = useRef<HTMLDivElement>(null);
 
-  const regions = ['All', 'India', 'UK', 'USA', 'Australia', 'Canada', 'Europe'];
+  const filtered = activeFilter === 'All'
+    ? universities
+    : universities.filter(u => u.programs.includes(activeFilter));
 
-  const universities = [
-    {
-      name: "Amrita Vishwa Vidyapeetham",
-      region: "India",
-      location: "Coimbatore, India",
-      description: "A multi-disciplinary, research-intensive university ranked among the best in India.",
-      features: ["NAAC A++", "UGC Approved", "Global Research"]
-    },
-    {
-      name: "University of Greenwich",
-      region: "UK",
-      location: "London, United Kingdom",
-      description: "Renowned for its academic excellence and stunning historic campus in the heart of London.",
-      features: ["TEF Silver", "International Faculty", "Business Leader"]
-    },
-    {
-      name: "Arizona State University",
-      region: "USA",
-      location: "Phoenix, USA",
-      description: "Consistently ranked as the #1 university for innovation in the United States.",
-      features: ["#1 in Innovation", "Large Alumni", "Tech Hub"]
-    },
-    {
-      name: "Monash University",
-      region: "Australia",
-      location: "Melbourne, Australia",
-      description: "A member of the Group of Eight, recognized for its global outlook and research impact.",
-      features: ["Top 100 Global", "Group of Eight", "Career Ready"]
-    },
-    {
-      name: "University of Toronto",
-      region: "Canada",
-      location: "Toronto, Canada",
-      description: "Canada's top-ranked university and a global leader in higher education and research.",
-      features: ["Diverse Culture", "Research Powerhouse", "Top Ranked"]
-    },
-    {
-      name: "Technical University of Munich",
-      region: "Europe",
-      location: "Munich, Germany",
-      description: "One of Europe's top universities for engineering, technology, and applied sciences.",
-      features: ["STEM Leader", "Partner of Industry", "No Tuition (mostly)"]
-    },
-    {
-      name: "Manipal Academy of Higher Education",
-      region: "India",
-      location: "Manipal, India",
-      description: "A pioneer in private higher education with a world-class campus and global partnerships.",
-      features: ["Green Campus", "Top Medical", "NRI Favorite"]
-    }
-  ];
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => { if (entry.isIntersecting) setVisible(true); },
+      { threshold: 0.1 }
+    );
+    if (gridRef.current) observer.observe(gridRef.current);
+    return () => observer.disconnect();
+  }, []);
 
-  const filteredUnis = activeRegion === 'All' 
-    ? universities 
-    : universities.filter(uni => uni.region === activeRegion);
+  useEffect(() => {
+    setVisible(false);
+    const t = setTimeout(() => setVisible(true), 50);
+    return () => clearTimeout(t);
+  }, [activeFilter]);
 
   return (
     <main className={styles.container}>
-      {/* ===== Cinematic Universities Hero Section ===== */}
-      <section className={styles.heroHeader}>
-        <img 
-          src="https://images.unsplash.com/photo-1541339907198-e08756ebafe1?q=80&w=2000&auto=format&fit=crop" 
-          alt="Global University Partners" 
-          className={styles.heroBgImage}
-        />
-        <div className={styles.heroOverlay} />
+
+      {/* ===== Hero ===== */}
+      <section className={styles.hero}>
+        <div className={styles.heroBg} />
         <div className={styles.heroContent}>
-          <h1 className={styles.heroTitle}>Our University Partners</h1>
-          <p style={{ color: 'rgba(255,255,255,0.8)', fontSize: '1.25rem', maxWidth: '700px', margin: '0 auto', fontWeight: 300 }}>
-            Explore our global network of world-class educational institutions.
+          <span className={styles.heroTag}>Global Network</span>
+          <h1 className={styles.heroTitle}>Our Partner Universities</h1>
+          <p className={styles.heroSub}>
+            Explore our worldwide network of accredited, reputed institutions — handpicked to match your academic and career goals.
           </p>
         </div>
       </section>
 
-      {/* ===== Filters Section ===== */}
-      <section className={styles.filterSection}>
-        <div className={styles.countryGrid}>
-          {regions.map(region => (
-            <button 
-              key={region} 
-              className={`${styles.countryBtn} ${activeRegion === region ? styles.active : ''}`}
-              onClick={() => setActiveRegion(region)}
-            >
-              {region}
-            </button>
-          ))}
+      {/* ===== Filter Bar ===== */}
+      <section className={styles.filterBar}>
+        <div className={styles.filterInner}>
+          <span className={styles.filterLabel}><GraduationCap size={16} /> Filter by Program</span>
+          <div className={styles.filterBtns}>
+            {filters.map(f => (
+              <button
+                key={f}
+                className={`${styles.filterBtn} ${activeFilter === f ? styles.filterBtnActive : ''}`}
+                onClick={() => setActiveFilter(f)}
+              >
+                {f}
+              </button>
+            ))}
+          </div>
         </div>
       </section>
 
       {/* ===== University Grid ===== */}
-      <section className={styles.uniGrid}>
-        {filteredUnis.map((uni, i) => (
-          <div key={i} className={styles.uniCard}>
-            <div className={styles.uniLogoBox}>
-               <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
+      <section className={styles.gridSection}>
+        <div className={styles.gridWrap} ref={gridRef}>
+          {filtered.map((uni, i) => (
+            <div
+              key={uni.name}
+              className={`${styles.card} ${visible ? styles.cardVisible : ''}`}
+              style={{ '--ci': i } as React.CSSProperties}
+            >
+              <div className={styles.cardImg}>
+                <Image
+                  src={uni.image}
+                  alt={uni.name}
+                  fill
+                  style={{ objectFit: 'cover' }}
+                />
+                <span className={styles.cardRegion}>{uni.programs[0]}</span>
+              </div>
+              <div className={styles.cardBody}>
+                <p className={styles.cardLocation}>
+                  <MapPin size={13} /> {uni.location}
+                </p>
+                <h3 className={styles.cardName}>{uni.name}</h3>
+                <p className={styles.cardDesc}>{uni.description}</p>
+                <div className={styles.cardTags}>
+                  {uni.features.map((f, fi) => (
+                    <span key={fi} className={styles.cardTag}>{f}</span>
+                  ))}
+                </div>
+                <Link href="/contact" className={styles.cardBtn}>
+                  Enquire Now <ArrowRight size={14} />
+                </Link>
+              </div>
             </div>
-            
-            <div className={styles.uniLocation}>
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-              {uni.location}
-            </div>
-            
-            <h3 className={styles.uniName}>{uni.name}</h3>
-            <p className={styles.uniDescription}>{uni.description}</p>
-            
-            <div className={styles.uniFeatures}>
-               {uni.features.map((feature, fidx) => (
-                 <span key={fidx} className={styles.featureTag}>{feature}</span>
-               ))}
-            </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </section>
 
-      {/* ===== Footer CTA ===== */}
-      <section style={{ padding: '8rem 2rem', textAlign: 'center', background: '#00122e', color: 'white' }}>
-        <h2 style={{ fontSize: '2.5rem', marginBottom: '1.5rem' }}>Your Journey Starts Here</h2>
-        <p style={{ color: '#94a3b8', marginBottom: '3rem', maxWidth: '600px', margin: '0 auto' }}>
-          Consult with our experts to find the right university that fits your profile and career goals.
-        </p>
-        <Link href="/contact" style={{ backgroundColor: 'var(--accent)', color: 'white', padding: '1rem 3rem', borderRadius: '50px', fontWeight: 700, fontSize: '1.1rem' }}>
-          FREE CONSULTATION
-        </Link>
+      {/* ===== CTA ===== */}
+      <section className={styles.ctaBanner}>
+        <div className={styles.ctaInner}>
+          <h2 className={styles.ctaTitle}>Can't find the right university?</h2>
+          <p className={styles.ctaSub}>Our counselors will match you with the perfect institution based on your profile, budget, and career goals.</p>
+          <Link href="/contact" className={styles.ctaBtn}>
+            Get Free Counseling <ArrowRight size={18} />
+          </Link>
+        </div>
       </section>
+
     </main>
   );
 }
