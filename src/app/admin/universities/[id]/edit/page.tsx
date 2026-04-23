@@ -29,7 +29,6 @@ export default function EditUniversity() {
     contactEmail: '',
     image: '',
     logo: '',
-    logo: '',
     features: ''
   });
 

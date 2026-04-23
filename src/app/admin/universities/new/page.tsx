@@ -26,7 +26,6 @@ export default function NewUniversity() {
     contactEmail: '',
     image: '',
     logo: '',
-    logo: '',
     features: ''
   });
 
