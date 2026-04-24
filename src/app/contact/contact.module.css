@@ -6,22 +6,21 @@
 /* ===== Hero Section ===== */
 .heroHeader {
   width: 100%;
-  height: 100vh;
-  background-color: #00122e;
-  background-image: linear-gradient(rgba(0, 18, 46, 0.8), rgba(0, 18, 46, 0.9)), url('https://images.unsplash.com/photo-1516321318423-f06f85e504b3?q=80&w=1200&auto=format&fit=crop');
-  background-size: cover;
-  background-position: center;
+  min-height: 50vh;
+  background-color: #ffffff;
   display: flex;
   justify-content: center;
   align-items: center;
-  padding-top: 90px;
+  padding-top: 100px;
+  border-bottom: 1px solid #e5e7eb;
 }
 
 .heroTitle {
   font-size: 3.5rem;
   font-weight: 800;
-  color: white;
+  color: #1a1a1a;
   margin-bottom: 1rem;
+  letter-spacing: -1.5px;
 }
 
 .heroCrumb {
@@ -62,7 +61,7 @@
 
 .heroSub {
   font-size: 1.1rem;
-  color: rgba(255, 255, 255, 0.8);
+  color: #4b5563;
   line-height: 1.6;
   margin: 0;
   max-width: 600px;
@@ -83,9 +82,10 @@
 /* ===== Form Card ===== */
 .formCard {
   background: white;
-  padding: 4rem 3rem;
-  border-radius: 40px;
-  box-shadow: 0 30px 60px rgba(0, 18, 46, 0.08);
+  padding: 3rem;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
 }
 
 .formGroup {
@@ -116,22 +116,21 @@
 
 .submitBtn {
   width: 100%;
-  padding: 1.25rem;
-  background: var(--accent);
+  padding: 1rem;
+  background: #ef233c;
   color: white;
   border: none;
-  border-radius: 50px;
-  font-size: 1.1rem;
+  border-radius: 4px;
+  font-size: 1rem;
   font-weight: 700;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all 0.2s ease;
   margin-top: 1rem;
 }
 
 .submitBtn:hover {
-  background: #b00320;
-  transform: translateY(-3px);
-  box-shadow: 0 10px 20px rgba(217, 4, 41, 0.2);
+  background: #c81a2e;
+  transform: translateY(-2px);
 }
 
 /* ===== Info Section ===== */

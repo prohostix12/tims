@@ -1,184 +1,143 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { BookOpen, Download, Search, FileText, Video, ChevronRight } from 'lucide-react';
+import { BookOpen, Download, Search, FileText, ChevronRight, Loader2 } from 'lucide-react';
 import styles from './study-material.module.css';
+import Navbar from '@/components/Navbar';
+import Footer from '@/components/Footer';
 
-const materials = [
-  {
-    university: "Amrita Vishwa Vidyapeetham",
-    program: "BBA",
-    semester: "Semester 1",
-    subject: "Business Communication",
-    type: "PDF",
-    size: "2.4 MB",
-    url: "#"
-  },
-  {
-    university: "Lovely Professional University",
-    program: "MBA",
-    semester: "Semester 2",
-    subject: "Marketing Management",
-    type: "PDF",
-    size: "3.1 MB",
-    url: "#"
-  },
-  {
-    university: "Manipal Academy",
-    program: "BCA",
-    semester: "Semester 1",
-    subject: "Introduction to Programming",
-    type: "PDF",
-    size: "1.8 MB",
-    url: "#"
-  },
-  {
-    university: "Swami Vivekanand Subharti University",
-    program: "BA",
-    semester: "Semester 3",
-    subject: "English Literature",
-    type: "PDF",
-    size: "2.2 MB",
-    url: "#"
-  },
-  {
-    university: "Amrita Vishwa Vidyapeetham",
-    program: "MCA",
-    semester: "Semester 1",
-    subject: "Data Structures",
-    type: "PDF",
-    size: "4.0 MB",
-    url: "#"
-  },
-  {
-    university: "Lovely Professional University",
-    program: "BBA",
-    semester: "Semester 2",
-    subject: "Financial Accounting",
-    type: "PDF",
-    size: "2.7 MB",
-    url: "#"
-  },
-  {
-    university: "Manipal Academy",
-    program: "MBA",
-    semester: "Semester 1",
-    subject: "Organizational Behaviour",
-    type: "PDF",
-    size: "3.5 MB",
-    url: "#"
-  },
-  {
-    university: "Swami Vivekanand Subharti University",
-    program: "BCom",
-    semester: "Semester 2",
-    subject: "Business Law",
-    type: "PDF",
-    size: "2.0 MB",
-    url: "#"
-  },
-];
-
-const universities = ['All', 'Amrita Vishwa Vidyapeetham', 'Lovely Professional University', 'Manipal Academy', 'Swami Vivekanand Subharti University'];
+interface StudyMaterial {
+  _id: string;
+  subject: string;
+  fileUrl: string;
+  createdAt: string;
+}
 
 export default function StudyMaterialPage() {
   const [search, setSearch] = useState('');
-  const [activeUniversity, setActiveUniversity] = useState('All');
+  const [materials, setMaterials] = useState<StudyMaterial[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
 
-  const filtered = materials.filter(m => {
-    const matchUniversity = activeUniversity === 'All' || m.university === activeUniversity;
-    const matchSearch = search === '' ||
-      m.subject.toLowerCase().includes(search.toLowerCase()) ||
-      m.university.toLowerCase().includes(search.toLowerCase()) ||
-      m.program.toLowerCase().includes(search.toLowerCase());
-    return matchUniversity && matchSearch;
-  });
+  useEffect(() => {
+    const fetchMaterials = async () => {
+      try {
+        const res = await fetch('/api/admin/study-materials');
+        const data = await res.json();
+        if (Array.isArray(data)) {
+          setMaterials(data);
+        }
+      } catch (err) {
+        setError('Failed to load study materials.');
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchMaterials();
+  }, []);
+
+  const filtered = materials.filter(m => 
+    m.subject.toLowerCase().includes(search.toLowerCase())
+  );
 
   return (
-    <main className={styles.container}>
+    <>
+      <Navbar />
+      <main className={styles.container}>
 
-      {/* Hero */}
-      <section className={styles.hero}>
-        <div className={styles.heroContent}>
-          <p className={styles.heroCrumb}>
-            <Link href="/">Home</Link> / <Link href="/universities">Universities</Link> / Study Material
-          </p>
-          <span className={styles.heroTag}>Resources</span>
-          <h1 className={styles.heroTitle}>Study Materials</h1>
-          <p className={styles.heroSub}>
-            Download subject-wise study materials, notes, and guides for your enrolled university programs.
-          </p>
-        </div>
-      </section>
-
-      {/* Search + Filter */}
-      <section className={styles.filterSection}>
-        <div className={styles.filterInner}>
-          <div className={styles.searchBox}>
-            <Search size={18} className={styles.searchIcon} />
-            <input
-              type="text"
-              placeholder="Search by subject, university or program..."
-              value={search}
-              onChange={e => setSearch(e.target.value)}
-              className={styles.searchInput}
-            />
+        {/* Hero */}
+        <section className={styles.hero}>
+          <div className={styles.heroContent}>
+            <p className={styles.heroCrumb}>
+              <Link href="/">Home</Link> / <Link href="/universities">Universities</Link> / Study Material
+            </p>
+            <span className={styles.heroTag}>Academic Support</span>
+            <h1 className={styles.heroTitle}>Study Materials</h1>
+            <p className={styles.heroSub}>
+              Access a comprehensive library of academic resources, subject notes, and guides designed to help you excel in your studies.
+            </p>
           </div>
-          <div className={styles.programFilters}>
-            {universities.map(u => (
-              <button
-                key={u}
-                className={`${styles.filterBtn} ${activeUniversity === u ? styles.filterBtnActive : ''}`}
-                onClick={() => setActiveUniversity(u)}
-              >
-                {u === 'All' ? 'All Universities' : u}
-              </button>
-            ))}
+        </section>
+
+        {/* Search */}
+        <section className={styles.filterSection}>
+          <div className={styles.filterInner}>
+            <div className={styles.searchBox} style={{ maxWidth: '600px', margin: '0 auto', width: '100%' }}>
+              <Search size={18} className={styles.searchIcon} />
+              <input
+                type="text"
+                placeholder="Search by subject name..."
+                value={search}
+                onChange={e => setSearch(e.target.value)}
+                className={styles.searchInput}
+              />
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* Materials Grid */}
-      <section className={styles.gridSection}>
-        <div className={styles.grid}>
-          {filtered.length === 0 ? (
-            <div className={styles.empty}>
-              <BookOpen size={48} />
-              <p>No materials found. Try a different search or filter.</p>
-            </div>
-          ) : filtered.map((m, i) => (
-            <div key={i} className={styles.card}>
-              <div className={styles.cardIcon}>
-                <FileText size={28} />
+        {/* Materials Grid */}
+        <section className={styles.gridSection}>
+          <div className={styles.grid}>
+            {loading ? (
+              <div style={{ gridColumn: '1 / -1', textAlign: 'center', padding: '5rem' }}>
+                <Loader2 className="animate-spin" size={40} style={{ color: '#ef233c', marginBottom: '1rem' }} />
+                <p style={{ color: '#64748b' }}>Fetching academic resources...</p>
               </div>
-              <div className={styles.cardBody}>
-                <span className={styles.cardProgram}>{m.program} · {m.semester}</span>
-                <h3 className={styles.cardSubject}>{m.subject}</h3>
-                <p className={styles.cardUniversity}>{m.university}</p>
+            ) : error ? (
+              <div style={{ gridColumn: '1 / -1', textAlign: 'center', padding: '5rem' }}>
+                <p style={{ color: '#ef4444' }}>{error}</p>
               </div>
-              <div className={styles.cardFooter}>
-                <span className={styles.cardSize}>{m.type} · {m.size}</span>
-                <a href={m.url} className={styles.downloadBtn} download>
-                  <Download size={15} /> Download
-                </a>
+            ) : filtered.length === 0 ? (
+              <div className={styles.empty}>
+                <BookOpen size={48} style={{ opacity: 0.2, marginBottom: '1.5rem' }} />
+                <h3>No Materials Available</h3>
+                <p>The study material repository is currently empty. Our team is working on uploading new resources.</p>
+                <Link href="/contact" style={{ color: '#ef233c', fontWeight: 700, textDecoration: 'none', marginTop: '1.5rem', display: 'inline-block' }}>
+                   Request specific material →
+                </Link>
               </div>
-            </div>
-          ))}
-        </div>
-      </section>
+            ) : (
+              filtered.map((m) => (
+                <div key={m._id} className={styles.card}>
+                  <div className={styles.cardIcon}>
+                    <FileText size={28} />
+                  </div>
+                  <div className={styles.cardBody}>
+                    <span className={styles.cardProgram}>Educational Resource</span>
+                    <h3 className={styles.cardSubject}>{m.subject}</h3>
+                    <p className={styles.cardUniversity}>TIMS Official Material</p>
+                  </div>
+                  <div className={styles.cardFooter}>
+                    <span className={styles.cardSize}>DOC/PDF</span>
+                    <a 
+                      href={m.fileUrl} 
+                      target="_blank" 
+                      rel="noopener noreferrer" 
+                      className={styles.downloadBtn}
+                    >
+                      <Download size={15} /> View / Download
+                    </a>
+                  </div>
+                </div>
+              ))
+            )}
+          </div>
+        </section>
 
-      {/* CTA */}
-      <section className={styles.cta}>
-        <div className={styles.ctaInner}>
-          <h2>Can't find your material?</h2>
-          <p>Contact our academic team and we'll provide the study material for your specific program and university.</p>
-          <Link href="/contact" className={styles.ctaBtn}>
-            Request Material <ChevronRight size={18} />
-          </Link>
-        </div>
-      </section>
+        {/* CTA */}
+        <section className={styles.cta}>
+          <div className={styles.ctaInner}>
+            <h2>Can't find your material?</h2>
+            <p>Our academic counselors can provide personalized study guides and resources for your specific program.</p>
+            <Link href="/contact" className={styles.ctaBtn}>
+              Talk to a Counselor <ChevronRight size={18} />
+            </Link>
+          </div>
+        </section>
 
-    </main>
+      </main>
+      <Footer />
+    </>
   );
 }

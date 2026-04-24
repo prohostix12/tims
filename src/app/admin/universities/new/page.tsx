@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import styles from '@/app/admin/admin.module.css';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { Loader2, Plus, X } from 'lucide-react';
+import { Loader2, Plus, X, ArrowLeft, GraduationCap, Globe, Mail, MapPin, Award } from 'lucide-react';
 
 export default function NewUniversity() {
   const router = useRouter();
@@ -32,21 +32,6 @@ export default function NewUniversity() {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
-  };
-
-  const handleFacilityChange = (index: number, value: string) => {
-    const newFacilities = [...facilitiesList];
-    newFacilities[index] = value;
-    setFacilitiesList(newFacilities);
-  };
-
-  const addFacility = () => {
-    setFacilitiesList([...facilitiesList, '']);
-  };
-
-  const removeFacility = (index: number) => {
-    const newFacilities = facilitiesList.filter((_, i) => i !== index);
-    setFacilitiesList(newFacilities);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -83,241 +68,202 @@ export default function NewUniversity() {
 
   return (
     <div className={styles.pageContainer}>
-      <div className={styles.header}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-          <Link href="/admin/universities" style={{ color: '#64748b' }}>← Back</Link>
-          <h2 className={styles.tableTitle}>Add New University</h2>
+      <header className={styles.header}>
+        <div>
+          <Link href="/admin/universities" style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', color: '#64748b', textDecoration: 'none', marginBottom: '0.5rem', fontWeight: 600 }}>
+            <ArrowLeft size={18} /> Back to Universities
+          </Link>
+          <h1 className={styles.title}>Add New University</h1>
         </div>
-      </div>
+      </header>
 
       {error && (
-        <div style={{ padding: '1rem', background: '#fee2e2', color: '#b91c1c', borderRadius: '10px', marginBottom: '1.5rem', maxWidth: '800px' }}>
-          {error}
+        <div style={{ padding: '1rem', background: '#fee2e2', color: '#b91c1c', borderRadius: '12px', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '10px', border: '1px solid #fecaca' }}>
+          <X size={18} /> {error}
         </div>
       )}
 
-      <form className={styles.form} onSubmit={handleSubmit}>
-        <div className={styles.formGrid}>
-          <div className={styles.formGroup}>
-            <label>University Name</label>
-            <input 
-              name="name"
-              type="text" 
-              placeholder="e.g. Aligarh Muslim University" 
-              className={styles.input} 
-              required
-              value={formData.name}
-              onChange={handleChange}
-            />
-          </div>
-          <div className={styles.formGroup}>
-            <label>Short Code</label>
-            <input 
-              name="code"
-              type="text" 
-              placeholder="e.g. AMU" 
-              className={styles.input} 
-              required
-              value={formData.code}
-              onChange={handleChange}
-            />
-          </div>
-        </div>
+      <div className={styles.modalContent} style={{ maxWidth: '1000px', margin: '0 auto' }}>
+        <form onSubmit={handleSubmit}>
+          <div className={styles.modalBody} style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
+            
+            <div className={styles.formGrid} style={{ padding: 0 }}>
+              <div>
+                <label className={styles.label}><GraduationCap size={16} /> University Name</label>
+                <input 
+                  name="name"
+                  type="text" 
+                  placeholder="e.g. Aligarh Muslim University" 
+                  className={styles.input} 
+                  required
+                  value={formData.name}
+                  onChange={handleChange}
+                />
+              </div>
+              <div>
+                <label className={styles.label}>Short Code</label>
+                <input 
+                  name="code"
+                  type="text" 
+                  placeholder="e.g. AMU" 
+                  className={styles.input} 
+                  required
+                  value={formData.code}
+                  onChange={handleChange}
+                />
+              </div>
+            </div>
 
-        <div className={styles.formGroup}>
-          <label>Description</label>
-          <textarea 
-            name="description"
-            rows={4} 
-            placeholder="Brief introduction of the university..." 
-            className={styles.textarea}
-            value={formData.description}
-            onChange={handleChange}
-          ></textarea>
-        </div>
+            <div>
+              <label className={styles.label}>Description</label>
+              <textarea 
+                name="description"
+                rows={4} 
+                placeholder="Brief introduction of the university..." 
+                className={styles.textarea}
+                value={formData.description}
+                onChange={handleChange}
+              ></textarea>
+            </div>
 
-        <div className={styles.formGrid}>
-          <div className={styles.formGroup}>
-            <label>Location</label>
-            <input 
-              name="location"
-              type="text" 
-              placeholder="City, State" 
-              className={styles.input}
-              value={formData.location}
-              onChange={handleChange}
-            />
-          </div>
-          <div className={styles.formGroup}>
-            <label>Establishing Year</label>
-            <input 
-              name="establishedYear"
-              type="number" 
-              placeholder="e.g. 1920" 
-              className={styles.input}
-              value={formData.establishedYear}
-              onChange={handleChange}
-            />
-          </div>
-        </div>
+            <div className={styles.formGrid} style={{ padding: 0 }}>
+              <div>
+                <label className={styles.label}><MapPin size={16} /> Location</label>
+                <input 
+                  name="location"
+                  type="text" 
+                  placeholder="City, State" 
+                  className={styles.input}
+                  value={formData.location}
+                  onChange={handleChange}
+                />
+              </div>
+              <div>
+                <label className={styles.label}>Establishing Year</label>
+                <input 
+                  name="establishedYear"
+                  type="number" 
+                  placeholder="e.g. 1920" 
+                  className={styles.input}
+                  value={formData.establishedYear}
+                  onChange={handleChange}
+                />
+              </div>
+            </div>
 
-        <div className={styles.formGrid}>
-          <div className={styles.formGroup}>
-            <label>Status</label>
-            <select 
-              name="status"
-              className={styles.select}
-              value={formData.status}
-              onChange={handleChange}
-            >
-              <option value="active">Active</option>
-              <option value="pending">Pending</option>
-              <option value="inactive">Inactive</option>
-            </select>
-          </div>
-          <div className={styles.formGroup}>
-            <label>Website URL</label>
-            <input 
-              name="website"
-              type="url" 
-              placeholder="https://example.edu" 
-              className={styles.input}
-              value={formData.website}
-              onChange={handleChange}
-            />
-          </div>
-        </div>
-
-        <div className={styles.formGrid}>
-          <div className={styles.formGroup}>
-            <label>Ranking</label>
-            <input 
-              name="ranking"
-              type="text" 
-              placeholder="e.g. NIRF Rank 15" 
-              className={styles.input}
-              value={formData.ranking}
-              onChange={handleChange}
-            />
-          </div>
-          <div className={styles.formGroup}>
-            <label>Accreditations</label>
-            <input 
-              name="accreditations"
-              type="text" 
-              placeholder="e.g. NAAC A++, UGC Approved" 
-              className={styles.input}
-              value={formData.accreditations}
-              onChange={handleChange}
-            />
-          </div>
-        </div>
-
-        <div className={styles.formGrid}>
-          <div className={styles.formGroup}>
-            <label>Institution Type</label>
-            <select 
-              name="type"
-              className={styles.select}
-              value={formData.type}
-              onChange={handleChange}
-            >
-              <option value="private">Private</option>
-              <option value="public">Public</option>
-              <option value="deemed">Deemed-to-be</option>
-              <option value="state">State</option>
-            </select>
-          </div>
-          <div className={styles.formGroup}>
-            <label>Contact Email</label>
-            <input 
-              name="contactEmail"
-              type="email" 
-              placeholder="e.g. admissions@example.edu" 
-              className={styles.input}
-              value={formData.contactEmail}
-              onChange={handleChange}
-            />
-          </div>
-        </div>
-
-        <div className={styles.formGrid}>
-          <div className={styles.formGroup}>
-            <label>Main Image URL</label>
-            <input 
-              name="image"
-              type="url" 
-              placeholder="https://example.edu/image.jpg" 
-              className={styles.input}
-              value={formData.image}
-              onChange={handleChange}
-            />
-          </div>
-          <div className={styles.formGroup}>
-            <label>Logo URL</label>
-            <input 
-              name="logo"
-              type="url" 
-              placeholder="https://example.edu/logo.png" 
-              className={styles.input}
-              value={formData.logo}
-              onChange={handleChange}
-            />
-          </div>
-        </div>
-
-        <div className={styles.formGroup}>
-          <label>Features (Comma separated)</label>
-          <textarea 
-            name="features"
-            rows={3} 
-            placeholder="e.g. Smart Classrooms, Library, Wi-Fi Campus..." 
-            className={styles.textarea}
-            value={formData.features}
-            onChange={handleChange}
-          ></textarea>
-        </div>
-
-        <div className={styles.formGroup}>
-          <label>Facilities</label>
-          {facilitiesList.map((facility, index) => (
-            <div key={index} style={{ display: 'flex', gap: '10px', marginBottom: '10px' }}>
-              <input
-                type="text"
-                placeholder="e.g. Hostel, Transport..."
-                className={styles.input}
-                value={facility}
-                onChange={(e) => handleFacilityChange(index, e.target.value)}
-              />
-              {facilitiesList.length > 1 && (
-                <button
-                  type="button"
-                  onClick={() => removeFacility(index)}
-                  style={{ padding: '0.5rem', background: '#fee2e2', color: '#b91c1c', border: 'none', borderRadius: '5px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+            <div className={styles.formGrid} style={{ padding: 0 }}>
+              <div>
+                <label className={styles.label}>Status</label>
+                <select 
+                  name="status"
+                  className={styles.select}
+                  value={formData.status}
+                  onChange={handleChange}
                 >
-                  <X size={20} />
-                </button>
-              )}
+                  <option value="active">Active</option>
+                  <option value="pending">Pending</option>
+                  <option value="inactive">Inactive</option>
+                </select>
+              </div>
+              <div>
+                <label className={styles.label}><Globe size={16} /> Website URL</label>
+                <input 
+                  name="website"
+                  type="url" 
+                  placeholder="https://example.edu" 
+                  className={styles.input}
+                  value={formData.website}
+                  onChange={handleChange}
+                />
+              </div>
             </div>
-          ))}
-          <button
-            type="button"
-            onClick={addFacility}
-            style={{ display: 'flex', alignItems: 'center', gap: '5px', padding: '0.5rem 1rem', background: '#f1f5f9', color: '#334155', border: 'none', borderRadius: '5px', cursor: 'pointer', width: 'fit-content', marginTop: '0.5rem', fontSize: '14px' }}
-          >
-            <Plus size={16} /> Add Facility
-          </button>
-        </div>
 
-        <button type="submit" className={styles.submitBtn} disabled={loading}>
-          {loading ? (
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }}>
-              <Loader2 className="animate-spin" size={20} />
-              <span>Saving...</span>
+            <div className={styles.formGrid} style={{ padding: 0 }}>
+              <div>
+                <label className={styles.label}>Ranking</label>
+                <input 
+                  name="ranking"
+                  type="text" 
+                  placeholder="e.g. NIRF Rank 15" 
+                  className={styles.input}
+                  value={formData.ranking}
+                  onChange={handleChange}
+                />
+              </div>
+              <div>
+                <label className={styles.label}><Award size={16} /> Accreditations</label>
+                <input 
+                  name="accreditations"
+                  type="text" 
+                  placeholder="e.g. NAAC A++, UGC Approved" 
+                  className={styles.input}
+                  value={formData.accreditations}
+                  onChange={handleChange}
+                />
+              </div>
             </div>
-          ) : 'Create University Profile'}
-        </button>
-      </form>
+
+            <div className={styles.formGrid} style={{ padding: 0 }}>
+              <div>
+                <label className={styles.label}>Institution Type</label>
+                <select 
+                  name="type"
+                  className={styles.select}
+                  value={formData.type}
+                  onChange={handleChange}
+                >
+                  <option value="private">Private</option>
+                  <option value="public">Public</option>
+                  <option value="deemed">Deemed-to-be</option>
+                  <option value="state">State</option>
+                </select>
+              </div>
+              <div>
+                <label className={styles.label}><Mail size={16} /> Contact Email</label>
+                <input 
+                  name="contactEmail"
+                  type="email" 
+                  placeholder="admissions@example.edu" 
+                  className={styles.input}
+                  value={formData.contactEmail}
+                  onChange={handleChange}
+                />
+              </div>
+            </div>
+
+            <div className={styles.formGrid} style={{ padding: 0 }}>
+              <div>
+                <label className={styles.label}>Main Image URL</label>
+                <input 
+                  name="image"
+                  type="url" 
+                  placeholder="https://example.edu/image.jpg" 
+                  className={styles.input}
+                  value={formData.image}
+                  onChange={handleChange}
+                />
+              </div>
+              <div>
+                <label className={styles.label}>Logo URL</label>
+                <input 
+                  name="logo"
+                  type="url" 
+                  placeholder="https://example.edu/logo.png" 
+                  className={styles.input}
+                  value={formData.logo}
+                  onChange={handleChange}
+                />
+              </div>
+            </div>
+          </div>
+
+          <div className={styles.modalFooter}>
+            <button type="submit" className={styles.saveBtn} disabled={loading} style={{ padding: '0.8rem 3rem' }}>
+              {loading ? <><Loader2 className="animate-spin" size={20} /> Saving...</> : 'Create University Profile'}
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
   );
 }

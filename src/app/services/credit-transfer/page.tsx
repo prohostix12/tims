@@ -39,21 +39,56 @@ export default function CreditTransferPage() {
 
   return (
     <main className={styles.container}>
-      {/* ===== Cinematic Hero (Matched to Attestation) ===== */}
-      <section className={styles.heroHeader}>
-        <img 
-          src="https://images.unsplash.com/photo-1450101499163-c8848c66ca85?q=80&w=2000&auto=format&fit=crop" 
-          alt="Credit Transfer" 
-          className={styles.heroBgImage}
-        />
+      {/* ===== Cinematic Split Hero Section ===== */}
+      <section className={styles.heroSection}>
         <div className={styles.heroOverlay} />
-        <div className={styles.heroContent}>
-          <p className={styles.heroCrumb}>
-            <Link href="/">Home</Link> / <Link href="#">Services</Link> / Credit Transfer
-          </p>
-          <span className={styles.heroTag}>Academic Mobility</span>
-          <h1 className={styles.heroTitle}>Credit Transfer</h1>
-          <p className={styles.heroSub}>Professional academic mobility and recognition of your prior learning efforts.</p>
+        <div className={styles.heroContentGrid}>
+          <div className={styles.heroTextContent}>
+            <div className={styles.heroBreadcrumb}>
+              <Link href="/">Home</Link> <span>/</span> <Link href="#">Services</Link> <span>/</span> Credit Transfer
+            </div>
+            <div className={styles.heroTagline}>
+              <span className={styles.tagLine}>Fast-Track Your Graduation</span>
+            </div>
+            <h1 className={styles.heroMainTitle}>
+              Credit Transfer & <br />
+              <span className={styles.accentText}>Academic Mobility</span>
+            </h1>
+            <p className={styles.heroDescription}>
+              Leverage your previous academic accomplishments and accelerate your progress toward a globally recognized degree with our professional credit evaluation services.
+            </p>
+            <div className={styles.heroActionGroup}>
+              <Link href="/contact" className={styles.heroPrimaryBtn}>
+                Start Your Transfer
+              </Link>
+              <button className={styles.heroSecondaryBtn}>
+                Credit Evaluation
+              </button>
+            </div>
+            <div className={styles.heroTrustInfo}>
+              <div className={styles.trustItem}>
+                <span className={styles.trustNum}>Save up to</span>
+                <span className={styles.trustLab}>2 Years of Study</span>
+              </div>
+              <div className={styles.trustDivider} />
+              <div className={styles.trustItem}>
+                <span className={styles.trustNum}>UGC/AIU</span>
+                <span className={styles.trustLab}>Approved Programs</span>
+              </div>
+            </div>
+          </div>
+          <div className={styles.heroVisualContent}>
+            <div className={styles.visualCard}>
+              <img
+                src="/images/hero-credit-transfer.png"
+                alt="Credit Transfer Student"
+                className={styles.visualImg}
+              />
+              <div className={styles.visualOverlay}>
+                <div className={styles.overlayBadge}>Academic Recognition</div>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 

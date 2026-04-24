@@ -1,170 +1,142 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { Calendar, Clock, BookOpen, ChevronRight, Download } from 'lucide-react';
+import { Calendar, Clock, BookOpen, ChevronRight, Download, Loader2, FileText } from 'lucide-react';
 import styles from './timetable.module.css';
+import Navbar from '@/components/Navbar';
+import Footer from '@/components/Footer';
 
-const sslcTimetable = [
-  { date: "March 3, 2025", day: "Monday",    time: "10:00 AM – 1:00 PM", subject: "First Language (Malayalam/Hindi/English)", code: "101" },
-  { date: "March 5, 2025", day: "Wednesday", time: "10:00 AM – 1:00 PM", subject: "Second Language (English)",                  code: "102" },
-  { date: "March 7, 2025", day: "Friday",    time: "10:00 AM – 1:00 PM", subject: "Mathematics",                                code: "103" },
-  { date: "March 10, 2025", day: "Monday",   time: "10:00 AM – 1:00 PM", subject: "Social Science",                             code: "104" },
-  { date: "March 12, 2025", day: "Wednesday",time: "10:00 AM – 1:00 PM", subject: "Science",                                    code: "105" },
-  { date: "March 14, 2025", day: "Friday",   time: "10:00 AM – 1:00 PM", subject: "IT / Optional Subject",                      code: "106" },
-];
-
-const plusTwoTimetable = [
-  { date: "March 3, 2025",  day: "Monday",    time: "10:00 AM – 1:00 PM", subject: "English (Core)",                            code: "301" },
-  { date: "March 5, 2025",  day: "Wednesday", time: "10:00 AM – 1:00 PM", subject: "Second Language",                           code: "302" },
-  { date: "March 7, 2025",  day: "Friday",    time: "10:00 AM – 1:00 PM", subject: "Mathematics / Business Studies",            code: "303" },
-  { date: "March 10, 2025", day: "Monday",    time: "10:00 AM – 1:00 PM", subject: "Physics / Accountancy / History",           code: "304" },
-  { date: "March 12, 2025", day: "Wednesday", time: "10:00 AM – 1:00 PM", subject: "Chemistry / Economics / Political Science", code: "305" },
-  { date: "March 14, 2025", day: "Friday",    time: "10:00 AM – 1:00 PM", subject: "Biology / Computer Science / Geography",    code: "306" },
-];
+interface Timetable {
+  _id: string;
+  examName: string;
+  type: 'manual' | 'file';
+  entries?: { code: string; subject: string; date: string; time: string; }[];
+  fileUrl?: string;
+  createdAt: string;
+}
 
 export default function TimetablePage() {
-  const [active, setActive] = useState<'sslc' | 'plus2'>('sslc');
-  const timetable = active === 'sslc' ? sslcTimetable : plusTwoTimetable;
-  const title = active === 'sslc' ? 'SSLC (Secondary) — March 2025' : 'Plus Two (Senior Secondary) — March 2025';
+  const [timetables, setTimetables] = useState<Timetable[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
 
-  const handleDownload = () => {
-    const printContent = `
-      <html>
-        <head>
-          <title>${title}</title>
-          <style>
-            body { font-family: Arial, sans-serif; padding: 2rem; color: #000; }
-            h1 { font-size: 1.5rem; margin-bottom: 0.5rem; color: #00122e; }
-            p { font-size: 0.85rem; color: #666; margin-bottom: 1.5rem; }
-            table { width: 100%; border-collapse: collapse; }
-            th { background: #00122e; color: white; padding: 0.75rem 1rem; text-align: left; font-size: 0.85rem; }
-            td { padding: 0.75rem 1rem; border-bottom: 1px solid #e2e8f0; font-size: 0.9rem; }
-            tr:nth-child(even) td { background: #f8fafc; }
-            .code { background: #fff0f0; color: #ef233c; font-weight: bold; padding: 0.2rem 0.5rem; border-radius: 4px; }
-            @media print { body { padding: 1rem; } }
-          </style>
-        </head>
-        <body>
-          <h1>TIMS — ${title}</h1>
-          <p>NIOS Board Examination Schedule · Tirur Institute of Management Studies</p>
-          <table>
-            <thead>
-              <tr><th>Date</th><th>Day</th><th>Time</th><th>Subject</th><th>Code</th></tr>
-            </thead>
-            <tbody>
-              ${timetable.map(row => `
-                <tr>
-                  <td>${row.date}</td>
-                  <td>${row.day}</td>
-                  <td>${row.time}</td>
-                  <td>${row.subject}</td>
-                  <td><span class="code">${row.code}</span></td>
-                </tr>
-              `).join('')}
-            </tbody>
-          </table>
-          <p style="margin-top:1.5rem;font-size:0.8rem;color:#999;">* Timings are subject to change. Please verify with your study centre before the exam date.</p>
-        </body>
-      </html>
-    `;
-    const win = window.open('', '_blank');
-    if (win) {
-      win.document.write(printContent);
-      win.document.close();
-      win.focus();
-      setTimeout(() => { win.print(); win.close(); }, 500);
-    }
-  };
+  useEffect(() => {
+    const fetchTimetables = async () => {
+      try {
+        const res = await fetch('/api/admin/timetable');
+        const data = await res.json();
+        if (Array.isArray(data)) {
+          setTimetables(data);
+        }
+      } catch (err) {
+        setError('Failed to load examination timetables.');
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchTimetables();
+  }, []);
 
   return (
-    <main className={styles.container}>
-
-      {/* Hero */}
-      <section className={styles.hero}>
-        <div className={styles.heroContent}>
-          <p className={styles.heroCrumb}>
-            <Link href="/">Home</Link> / <Link href="/universities">Universities</Link> / Time Table
-          </p>
-          <span className={styles.heroTag}>Examination</span>
-          <h1 className={styles.heroTitle}>Exam Time Table</h1>
-          <p className={styles.heroSub}>
-            NIOS Board examination schedule for SSLC (10th) and Plus Two (+2) — March 2025 session.
-          </p>
-        </div>
-      </section>
-
-      {/* Tab Toggle */}
-      <section className={styles.tabSection}>
-        <div className={styles.tabs}>
-          <button
-            className={`${styles.tab} ${active === 'sslc' ? styles.tabActive : ''}`}
-            onClick={() => setActive('sslc')}
-          >
-            <BookOpen size={16} /> SSLC (10th)
-          </button>
-          <button
-            className={`${styles.tab} ${active === 'plus2' ? styles.tabActive : ''}`}
-            onClick={() => setActive('plus2')}
-          >
-            <BookOpen size={16} /> Plus Two (+2)
-          </button>
-        </div>
-      </section>
-
-      {/* Timetable */}
-      <section className={styles.tableSection}>
-        <div className={styles.tableWrap}>
-          <div className={styles.tableHeader}>
-            <h2 className={styles.tableTitle}>{title}</h2>
-            <button onClick={handleDownload} className={styles.downloadBtn}>
-              <Download size={15} /> Download PDF
-            </button>
+    <>
+      <Navbar />
+      <main className={styles.container}>
+        {/* Hero */}
+        <section className={styles.hero}>
+          <div className={styles.heroContent}>
+            <p className={styles.heroCrumb}>
+              <Link href="/">Home</Link> / <Link href="/universities">Universities</Link> / Time Table
+            </p>
+            <span className={styles.heroTag}>Official Schedule</span>
+            <h1 className={styles.heroTitle}>Examination Time Table</h1>
+            <p className={styles.heroSub}>
+              Stay updated with the latest board and university examination schedules for all our programs.
+            </p>
           </div>
+        </section>
 
-          <div className={styles.table}>
-            {/* Head */}
-            <div className={styles.tableHeadRow}>
-              <span>Date & Day</span>
-              <span>Time</span>
-              <span>Subject</span>
-              <span>Code</span>
-            </div>
-
-            {/* Rows */}
-            {timetable.map((row, i) => (
-              <div key={i} className={`${styles.tableRow} ${i % 2 === 0 ? styles.tableRowAlt : ''}`}>
-                <div className={styles.dateCell}>
-                  <span className={styles.dateMain}>{row.date}</span>
-                  <span className={styles.dateDay}>{row.day}</span>
-                </div>
-                <div className={styles.timeCell}>
-                  <Clock size={14} />
-                  {row.time}
-                </div>
-                <div className={styles.subjectCell}>{row.subject}</div>
-                <div className={styles.codeCell}>{row.code}</div>
+        {/* Timetables */}
+        <section className={styles.tableSection}>
+          <div className={styles.tableWrap}>
+            {loading ? (
+              <div style={{ textAlign: 'center', padding: '5rem' }}>
+                <Loader2 className="animate-spin" size={40} style={{ color: '#ef233c', marginBottom: '1rem' }} />
+                <p style={{ color: '#64748b' }}>Fetching official schedules...</p>
               </div>
-            ))}
+            ) : error ? (
+              <div style={{ textAlign: 'center', padding: '5rem' }}>
+                <p style={{ color: '#ef4444' }}>{error}</p>
+              </div>
+            ) : timetables.length > 0 ? (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '3rem' }}>
+                {timetables.map((tt) => (
+                  <div key={tt._id} style={{ borderBottom: '1px solid #e2e8f0', paddingBottom: '3rem' }}>
+                    <div className={styles.tableHeader}>
+                      <h2 className={styles.tableTitle}>{tt.examName}</h2>
+                      {tt.type === 'file' && (
+                        <a href={tt.fileUrl} target="_blank" rel="noopener noreferrer" className={styles.downloadBtn}>
+                          <Download size={15} /> Download PDF
+                        </a>
+                      )}
+                    </div>
+
+                    {tt.type === 'manual' && tt.entries && (
+                      <div className={styles.table} style={{ marginTop: '1.5rem' }}>
+                        <div className={styles.tableHeadRow}>
+                          <span>Date</span>
+                          <span>Time</span>
+                          <span>Subject</span>
+                          <span>Code</span>
+                        </div>
+                        {tt.entries.map((row, i) => (
+                          <div key={i} className={`${styles.tableRow} ${i % 2 === 0 ? styles.tableRowAlt : ''}`}>
+                            <div className={styles.dateCell}>
+                              <span className={styles.dateMain}>{new Date(row.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</span>
+                            </div>
+                            <div className={styles.timeCell}>
+                              <Clock size={14} />
+                              {row.time}
+                            </div>
+                            <div className={styles.subjectCell}>{row.subject}</div>
+                            <div className={styles.codeCell}>{row.code}</div>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div style={{ textAlign: 'center', padding: '6rem 2rem', background: '#ffffff', borderRadius: '24px', border: '1px dashed #cbd5e1' }}>
+                <div style={{ width: '64px', height: '64px', background: '#f1f5f9', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1rem', color: '#94a3b8' }}>
+                  <Calendar size={32} />
+                </div>
+                <h3>No Examination Schedules Published</h3>
+                <p style={{ color: '#64748b', maxWidth: '400px', margin: '1rem auto' }}>
+                  There are currently no active exam timetables. Once published by the boards or universities, they will appear here.
+                </p>
+              </div>
+            )}
+
+            <p className={styles.note} style={{ marginTop: '2rem' }}>
+              * All examination timings and dates are subject to official university/board confirmations.
+            </p>
           </div>
+        </section>
 
-          <p className={styles.note}>
-            * Timings are subject to change. Please verify with your study centre before the exam date.
-          </p>
-        </div>
-      </section>
-
-      {/* CTA */}
-      <section className={styles.cta}>
-        <div className={styles.ctaInner}>
-          <h2>Need help with exam preparation?</h2>
-          <p>Our expert faculty provides coaching, sample papers, and test series for all NIOS subjects.</p>
-          <Link href="/contact" className={styles.ctaBtn}>
-            Contact Us <ChevronRight size={18} />
-          </Link>
-        </div>
-      </section>
-
-    </main>
+        {/* CTA */}
+        <section className={styles.cta}>
+          <div className={styles.ctaInner}>
+            <h2>Need help with exam preparation?</h2>
+            <p>Our expert faculty provides coaching, sample papers, and test series for all our partner university subjects.</p>
+            <Link href="/contact" className={styles.ctaBtn}>
+              Contact Counselors <ChevronRight size={18} />
+            </Link>
+          </div>
+        </section>
+      </main>
+      <Footer />
+    </>
   );
 }

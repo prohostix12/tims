@@ -5,41 +5,33 @@
 /* ---- Wrapper ---- */
 .navWrapper {
   position: fixed;
-  top: 1rem;
-  left: 50%;
-  transform: translateX(-50%);
-  width: calc(100% - 4rem);
-  max-width: 1300px;
+  top: 0;
+  left: 0;
+  width: 100%;
   z-index: 1000;
-  padding: 0;
-  background: transparent;
-  transition: top 0.4s ease, width 0.4s ease;
+  background: #ffffff;
+  border-bottom: 1px solid #e5e7eb;
+  transition: all 0.3s ease;
 }
 
 .scrolled {
-  top: 0.75rem;
-  width: calc(100% - 3rem);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
 }
 
 /* ---- Inner nav bar ---- */
 .navbar {
   width: 100%;
+  max-width: 1400px;
   margin: 0 auto;
-  padding: 0.65rem 1.75rem;
+  padding: 0.1rem 2rem;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 1rem;
-  background: #ffffff;
-  border-radius: 100px;
-  border: 1px solid rgba(0, 18, 46, 0.1);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
-  transition: box-shadow 0.3s ease, padding 0.3s ease;
+  gap: 2rem;
 }
 
 .scrolled .navbar {
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-  padding: 0.5rem 1.75rem;
+  padding: 0.2rem 2rem;
 }
 
 /* ---- Logo ---- */
@@ -51,8 +43,23 @@
   line-height: 0;
 }
 
+.logoBadge {
+  background: none;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.scrolled .logoBadge {
+  background: none;
+  padding: 0;
+  box-shadow: none;
+}
+
 .logoImage {
-  height: 46px;
+  height: 100px;
   width: auto;
   object-fit: contain;
   display: block;
@@ -77,24 +84,33 @@
 }
 
 .navLink {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.2rem;
-  padding: 0.45rem 0.85rem;
-  border-radius: 50px;
-  font-size: 0.875rem;
-  font-weight: 600;
-  color: #1e293b;
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: #1a1a1a;
   text-decoration: none;
-  cursor: pointer;
-  white-space: nowrap;
-  transition: color 0.2s ease, background 0.2s ease;
-  user-select: none;
+  padding: 0.5rem 0.8rem;
+  transition: all 0.2s ease;
+  position: relative;
 }
 
 .navLink:hover {
   color: #ef233c;
-  background: rgba(239, 35, 60, 0.06);
+}
+
+.navLink::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: 0;
+  height: 2px;
+  background: #ef233c;
+  transition: all 0.3s ease;
+  transform: translateX(-50%);
+}
+
+.navLink:hover::after {
+  width: 100%;
 }
 
 /* Non-navigable label (Services, Students) */
@@ -227,41 +243,39 @@
 }
 
 .secondaryAction {
-  padding: 0.55rem 1.2rem;
-  border-radius: 50px;
-  border: 2px solid #ef233c;
-  background: transparent;
-  color: #ef233c;
-  font-size: 0.85rem;
-  font-weight: 700;
+  padding: 0.6rem 1.2rem;
+  border-radius: 4px;
+  border: 1px solid #e5e7eb;
+  background: #ffffff;
+  color: #1a1a1a;
+  font-size: 0.9rem;
+  font-weight: 500;
   cursor: pointer;
   white-space: nowrap;
-  transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+  transition: all 0.2s ease;
 }
 
 .secondaryAction:hover {
-  background: #ef233c;
-  color: #ffffff;
-  border-color: #ef233c;
+  background: #f9fafb;
+  border-color: #d1d5db;
 }
 
 .primaryAction {
-  padding: 0.6rem 1.4rem;
-  border-radius: 50px;
-  background: #00122e;
+  padding: 0.6rem 1.8rem;
+  border-radius: 4px;
+  background: #ef233c;
   color: #ffffff;
-  font-size: 0.85rem;
-  font-weight: 700;
+  font-size: 0.95rem;
+  font-weight: 600;
   text-decoration: none;
   white-space: nowrap;
-  transition: background 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
-  box-shadow: 0 4px 12px rgba(0, 18, 46, 0.2);
+  transition: all 0.2s ease;
+  border: 1px solid #ef233c;
 }
 
 .primaryAction:hover {
-  background: #ef233c;
-  transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(239, 35, 60, 0.3);
+  background: #ffffff;
+  color: #ef233c;
 }
 
 /* ---- Hamburger button ---- */
@@ -275,7 +289,7 @@
   border-radius: 8px;
   cursor: pointer;
   color: #00122e;
-  transition: color 0.2s ease, background 0.2s ease;
+  transition: all 0.2s ease;
 }
 
 .menuToggle:hover {

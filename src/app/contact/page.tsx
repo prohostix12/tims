@@ -13,6 +13,23 @@ export default function ContactPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setStatus('');
+    
+    // Validate Email
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(formData.email)) {
+      setStatus('invalid_email');
+      return;
+    }
+
+    // Validate Phone (10 digits minimum, optional + and country code)
+    const phoneRegex = /^(\+?\d{1,3}[- ]?)?\d{10}$/;
+    const cleanPhone = formData.phone.replace(/[\s-]/g, '');
+    if (!phoneRegex.test(cleanPhone)) {
+      setStatus('invalid_phone');
+      return;
+    }
+
     setStatus('submitting');
     try {
       const res = await fetch('/api/contact', {
@@ -77,6 +94,8 @@ export default function ContactPage() {
             <button type="submit" disabled={status === 'submitting'} className={styles.submitBtn}>
               {status === 'submitting' ? 'SENDING...' : 'SEND MESSAGE'}
             </button>
+            {status === 'invalid_email' && <p style={{ color: '#ef233c', marginTop: '1rem', fontWeight: 600, textAlign: 'center' }}>Please enter a valid email address.</p>}
+            {status === 'invalid_phone' && <p style={{ color: '#ef233c', marginTop: '1rem', fontWeight: 600, textAlign: 'center' }}>Please enter a valid 10-digit phone number.</p>}
             {status === 'success' && <p style={{ color: 'green', marginTop: '1rem', fontWeight: 600, textAlign: 'center' }}>Message sent successfully!</p>}
             {status === 'error' && <p style={{ color: '#ef233c', marginTop: '1rem', fontWeight: 600, textAlign: 'center' }}>Failed to send message. Please try again.</p>}
           </form>

@@ -11,7 +11,7 @@ const Footer = () => {
     <footer className={styles.footer}>
       <div className={styles.footerGrid}>
         <div className={styles.footerCol}>
-          <h2 style={{ fontSize: '1.75rem', fontWeight: 800, marginBottom: '1.5rem' }}>
+          <h2 style={{ fontSize: '1.75rem', fontWeight: 900, marginBottom: '1.5rem', color: 'white' }}>
             TIMS<span style={{ color: '#ef233c' }}>.</span>
           </h2>
           <p>

@@ -53,9 +53,9 @@ export default function About() {
         <div className={styles.statsGrid}>
           {[
             { number: "15+", label: "Years of Excellence" },
-            { number: "10K+", label: "Students Enrolled" },
-            { number: "50+", label: "Courses Offered" },
-            { number: "20+", label: "University Partners" },
+            { number: "25+", label: "University Partners" },
+            { number: "98%", label: "Success Rate" },
+            { number: "100%", label: "Recognized Degrees" },
           ].map((stat, idx) => (
             <div key={idx} className={`${styles.statCard} ${styles.zoomIn}`} style={{ animationDelay: `${0.1 + idx * 0.15}s` }}>
               <span className={styles.statNumber}>{stat.number}</span>
@@ -124,54 +124,9 @@ export default function About() {
 
         <div className={styles.testimonialsScrollWrapper}>
           <div className={styles.testimonialsContainer}>
-            {[
-              {
-                text: "TIMS Education provided the perfect bridge between my professional life and academic goals. The flexibility of the MBA program was life-changing.",
-                name: "Rahul Krishnan",
-                role: "MBA Graduate",
-                img: "https://i.pravatar.cc/150?u=rahul"
-              },
-              {
-                text: "The guidance I received for my credit transfer was seamless. The staff truly understands the needs of distance learners in Kerala.",
-                name: "Anjali Menon",
-                role: "B.Com Student",
-                img: "https://i.pravatar.cc/150?u=anjali"
-              },
-              {
-                text: "From admission to final certification, TIMS was supportive at every step. Highly recommend for anyone looking for recognized degrees.",
-                name: "Musthafa Ali",
-                role: "PG Diploma Candidate",
-                img: "https://i.pravatar.cc/150?u=musthafa"
-              },
-              {
-                text: "As a working professional, I never thought I could complete my degree. TIMS made it possible with their excellent online support.",
-                name: "Sneha Nair",
-                role: "BBA Graduate",
-                img: "https://i.pravatar.cc/150?u=sneha"
-              },
-              {
-                text: "The faculty is extremely knowledgeable and supportive. Their study materials are top-notch and very easy to follow.",
-                name: "Arun Reghunath",
-                role: "M.Com Student",
-                img: "https://i.pravatar.cc/150?u=arun"
-              }
-            ].map((item, idx) => (
-              <div key={idx} className={`${styles.testimonialCard} ${styles.fadeInUp}`} style={{ animationDelay: `${idx * 0.15}s` }}>
-                <div className={styles.quoteIcon}>
-                  <svg width="40" height="40" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M14.017 21L14.017 18C14.017 16.8954 14.9124 16 16.017 16H19.017C19.5693 16 20.017 15.5523 20.017 15V9C20.017 8.44772 19.5693 8 19.017 8H15.017C14.4647 8 14.017 8.44772 14.017 9V12C14.017 12.5523 13.5693 13 13.017 13H12.017V21H14.017ZM6.017 21L6.017 18C6.017 16.8954 6.9124 16 8.017 16H11.017C11.5693 16 12.017 15.5523 12.017 15V9C12.017 8.44772 11.5693 8 11.017 8H7.01701C6.46472 8 6.01701 8.44772 6.01701 9V12C6.01701 12.5523 5.5693 13 5.01701 13H4.01701V21H6.017Z" />
-                  </svg>
-                </div>
-                <p className={styles.testimonialText}>"{item.text}"</p>
-                <div className={styles.testimonialAuthor}>
-                  <img src={item.img} alt={item.name} className={styles.authorAvatar} />
-                  <div className={styles.authorInfo}>
-                    <span className={styles.authorName}>{item.name}</span>
-                    <span className={styles.authorRole}>{item.role}</span>
-                  </div>
-                </div>
-              </div>
-            ))}
+            <div style={{ width: '100%', textAlign: 'center', padding: '4rem', background: 'rgba(255,255,255,0.5)', borderRadius: '24px', border: '1px dashed #cbd5e1' }}>
+               <p style={{ color: '#64748b', fontSize: '1.1rem' }}>Success stories from our graduates will be featured here soon.</p>
+            </div>
           </div>
         </div>
       </section>

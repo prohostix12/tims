@@ -6,6 +6,7 @@ export interface INews extends Document {
   excerpt: string;
   content?: string;
   image?: string;
+  pdfUrl?: string;
   category?: string;
   status: 'published' | 'draft';
   publishedAt: Date;
@@ -19,6 +20,7 @@ const NewsSchema: Schema = new Schema({
   excerpt:     { type: String, required: true },
   content:     { type: String },
   image:       { type: String },
+  pdfUrl:      { type: String },
   category:    { type: String, default: 'General' },
   status:      { type: String, enum: ['published', 'draft'], default: 'published' },
   publishedAt: { type: Date, default: Date.now },

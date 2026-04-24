@@ -79,6 +79,7 @@ export default function LeadsPage() {
               <tr>
                 <th>Student Info</th>
                 <th>Contact Details</th>
+                <th>Interest / Course</th>
                 <th>Source</th>
                 <th>Date Received</th>
                 <th>Status</th>
@@ -90,10 +91,17 @@ export default function LeadsPage() {
                 <tr key={lead._id}>
                   <td>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                      <div style={{ width: '36px', height: '36px', background: '#f1f5f9', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#64748b' }}>
+                      <div style={{ width: '36px', height: '36px', background: '#f1f5f9', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#64748b', flexShrink: 0 }}>
                         <User size={18} />
                       </div>
-                      <span style={{ fontWeight: 600, color: '#00122e' }}>{lead.name}</span>
+                      <div style={{ display: 'flex', flexDirection: 'column' }}>
+                        <span style={{ fontWeight: 600, color: '#00122e' }}>{lead.name}</span>
+                        {lead.description && (
+                          <span style={{ fontSize: '0.75rem', color: '#64748b', maxWidth: '200px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }} title={lead.description}>
+                            {lead.description}
+                          </span>
+                        )}
+                      </div>
                     </div>
                   </td>
                   <td>
@@ -107,10 +115,15 @@ export default function LeadsPage() {
                     </div>
                   </td>
                   <td>
+                    <span style={{ fontWeight: 600, fontSize: '0.85rem', color: '#00122e' }}>
+                      {lead.interest || 'N/A'}
+                    </span>
+                  </td>
+                  <td>
                     <span style={{ 
                       padding: '4px 10px', 
-                      background: lead.source === 'Course Finder' ? '#ecfdf5' : '#eff6ff', 
-                      color: lead.source === 'Course Finder' ? '#059669' : '#2563eb', 
+                      background: lead.source === 'Enquiry Form' ? '#ecfdf5' : '#eff6ff', 
+                      color: lead.source === 'Enquiry Form' ? '#059669' : '#2563eb', 
                       borderRadius: '20px', 
                       fontSize: '0.75rem', 
                       fontWeight: 700 
@@ -139,16 +152,18 @@ export default function LeadsPage() {
                     >
                       <option value="new">New</option>
                       <option value="contacted">Contacted</option>
-                      <option value="closed">Closed</option>
+                      <option value="qualified">Qualified</option>
+                      <option value="lost">Lost</option>
+                      <option value="won">Won</option>
                     </select>
                   </td>
                 </tr>
               )) : (
                 <tr>
-                  <td colSpan={6} style={{ textAlign: 'center', color: '#94a3b8', padding: '5rem' }}>
+                  <td colSpan={7} style={{ textAlign: 'center', color: '#94a3b8', padding: '5rem' }}>
                     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1rem' }}>
                       <Search size={48} opacity={0.2} />
-                      <p>No leads found. Enquiries from the Course Finder will appear here.</p>
+                      <p>No leads found. Enquiries from the website will appear here.</p>
                     </div>
                   </td>
                 </tr>

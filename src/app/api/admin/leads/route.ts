@@ -1,18 +1,6 @@
 import { NextResponse } from 'next/server';
 import connectDB from '@/lib/db';
-import mongoose from 'mongoose';
-
-// Ensure the model is available
-const LeadSchema = new mongoose.Schema({
-  name: { type: String, required: true },
-  email: { type: String, required: true },
-  phone: { type: String, required: true },
-  source: { type: String, default: 'Course Finder' },
-  status: { type: String, default: 'new' },
-  createdAt: { type: Date, default: Date.now }
-});
-
-const Lead = mongoose.models.Lead || mongoose.model('Lead', LeadSchema);
+import Lead from '@/models/Lead';
 
 export async function GET() {
   try {
@@ -25,7 +13,6 @@ export async function GET() {
 }
 
 export async function PUT(request: Request) {
-  // Add ability to update lead status
   try {
     const { searchParams } = new URL(request.url);
     const id = searchParams.get('id');

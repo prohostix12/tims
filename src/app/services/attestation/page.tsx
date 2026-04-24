@@ -43,21 +43,67 @@ export default function AttestationPage() {
 
   return (
     <main className={styles.container}>
-      {/* ===== Cinematic Attestation Hero Section ===== */}
-      <section className={styles.heroHeader}>
-        <img 
-          src="https://images.unsplash.com/photo-1450101499163-c8848c66ca85?q=80&w=2000&auto=format&fit=crop" 
-          alt="Certificate Attestation" 
-          className={`${styles.heroBgImage} ${styles.parallaxImage}`}
-        />
-        <div className={styles.heroOverlay} />
-        <div className={styles.heroContent}>
-          <p className={styles.heroCrumb}>
-            <Link href="/">Home</Link> / <Link href="#">Services</Link> / Attestation
-          </p>
-          <span className={styles.heroTag}>Document Services</span>
-          <h1 className={`${styles.heroTitle} ${styles.revealText}`}>Attestation</h1>
-          <p className={styles.heroSub}>Professional Legalization & Authentication services to ensure your documents are globally recognized.</p>
+      {/* ===== Modern Editorial White Hero Section ===== */}
+      <section className={styles.whiteHeroSection}>
+        <div className={styles.heroLayout}>
+          <div className={styles.textContent}>
+            <div className={styles.breadcrumbBar}>
+              <Link href="/">Home</Link> <span className={styles.sep}>/</span> <Link href="#">Services</Link> <span className={styles.sep}>/</span> Attestation
+            </div>
+            
+            <h1 className={styles.mainTitle}>
+              Document <span className={styles.highlight}>Attestation</span> & <br />
+              Embassy Legalization.
+            </h1>
+            
+            <p className={styles.subText}>
+              Providing world-class authentication and legalization services for your educational, personal, and commercial documents with 100% security and accuracy.
+            </p>
+
+            <div className={styles.ctaWrapper}>
+              <Link href="/contact" className={styles.primaryAction}>
+                Get Free Consultation
+              </Link>
+              <div className={styles.searchPrompt}>
+                <span className={styles.searchIcon}>🔍</span>
+                <input type="text" placeholder="Search document type..." className={styles.ghostInput} />
+              </div>
+            </div>
+
+            <div className={styles.trustBar}>
+              <div className={styles.trustPoint}>
+                <span className={styles.pointIcon}>✓</span>
+                <span className={styles.pointText}>MEA Authorized</span>
+              </div>
+              <div className={styles.trustPoint}>
+                <span className={styles.pointIcon}>✓</span>
+                <span className={styles.pointText}>Fast Track Process</span>
+              </div>
+              <div className={styles.trustPoint}>
+                <span className={styles.pointIcon}>✓</span>
+                <span className={styles.pointText}>Global Acceptance</span>
+              </div>
+            </div>
+          </div>
+
+          <div className={styles.visualSide}>
+            <div className={styles.editorialCard}>
+              <img
+                src="/images/hero-attestation.png"
+                alt="Professional Document Attestation"
+                className={styles.editorialImg}
+              />
+              <div className={styles.floatingStats}>
+                <div className={styles.statBox}>
+                  <span className={styles.statVal}>15k+</span>
+                  <span className={styles.statLab}>Trusted Users</span>
+                </div>
+              </div>
+              <div className={styles.badgeLabel}>
+                Premium Authentication Service
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 

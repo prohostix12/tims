@@ -4,93 +4,49 @@ import { useState, useEffect, useRef } from 'react';
 import styles from './universities.module.css';
 import Link from 'next/link';
 import Image from 'next/image';
-import { MapPin, ArrowRight, GraduationCap } from 'lucide-react';
-
-const universities = [
-  {
-    name: "Amrita Vishwa Vidyapeetham",
-    location: "Coimbatore, India",
-    description: "A multi-disciplinary, research-intensive university ranked among the best in India.",
-    features: ["NAAC A++", "UGC Approved", "Global Research"],
-    programs: ["UG", "PG", "UG/PG"],
-    image: "https://images.unsplash.com/photo-1562774053-701939374585?q=80&w=600&auto=format&fit=crop"
-  },
-  {
-    name: "University of Greenwich",
-    location: "London, United Kingdom",
-    description: "Renowned for its academic excellence and stunning historic campus in the heart of London.",
-    features: ["TEF Silver", "International Faculty", "Business Leader"],
-    programs: ["UG", "PG", "UG/PG"],
-    image: "https://images.unsplash.com/photo-1607237138185-eedd9c632b0b?q=80&w=600&auto=format&fit=crop"
-  },
-  {
-    name: "Arizona State University",
-    location: "Phoenix, USA",
-    description: "Consistently ranked as the #1 university for innovation in the United States.",
-    features: ["#1 in Innovation", "Large Alumni", "Tech Hub"],
-    programs: ["UG", "PG", "UG/PG"],
-    image: "https://images.unsplash.com/photo-1541339907198-e08756ebafe1?q=80&w=600&auto=format&fit=crop"
-  },
-  {
-    name: "Monash University",
-    location: "Melbourne, Australia",
-    description: "A member of the Group of Eight, recognized for its global outlook and research impact.",
-    features: ["Top 100 Global", "Group of Eight", "Career Ready"],
-    programs: ["UG", "PG", "UG/PG"],
-    image: "https://images.unsplash.com/photo-1523050854058-8df90110c9f1?q=80&w=600&auto=format&fit=crop"
-  },
-  {
-    name: "University of Toronto",
-    location: "Toronto, Canada",
-    description: "Canada's top-ranked university and a global leader in higher education and research.",
-    features: ["Diverse Culture", "Research Powerhouse", "Top Ranked"],
-    programs: ["UG", "PG", "UG/PG"],
-    image: "https://images.unsplash.com/photo-1498243691581-b145c3f54a5a?q=80&w=600&auto=format&fit=crop"
-  },
-  {
-    name: "Technical University of Munich",
-    location: "Munich, Germany",
-    description: "One of Europe's top universities for engineering, technology, and applied sciences.",
-    features: ["STEM Leader", "Partner of Industry", "Top Ranked"],
-    programs: ["UG", "PG", "UG/PG"],
-    image: "https://images.unsplash.com/photo-1592280771190-3e2e4d571952?q=80&w=600&auto=format&fit=crop"
-  },
-  {
-    name: "Manipal Academy of Higher Education",
-    location: "Manipal, India",
-    description: "A pioneer in private higher education with a world-class campus and global partnerships.",
-    features: ["Green Campus", "Top Medical", "NRI Favorite"],
-    programs: ["UG", "PG", "UG/PG"],
-    image: "https://images.unsplash.com/photo-1580582932707-520aed937b7b?q=80&w=600&auto=format&fit=crop"
-  },
-  {
-    name: "Lovely Professional University",
-    location: "Punjab, India",
-    description: "India's largest private university offering diverse programs with strong placement records.",
-    features: ["NAAC A+", "Largest Private", "Strong Placements"],
-    programs: ["10th/+2", "UG", "PG", "UG/PG"],
-    image: "https://images.unsplash.com/photo-1571260899304-425eee4c7efc?q=80&w=600&auto=format&fit=crop"
-  },
-  {
-    name: "Swami Vivekanand Subharti University",
-    location: "Meerut, India",
-    description: "A UGC-recognized university offering distance and regular programs across disciplines.",
-    features: ["UGC Approved", "Distance Learning", "Affordable"],
-    programs: ["10th/+2", "UG", "PG", "UG/PG"],
-    image: "https://images.unsplash.com/photo-1607237138185-eedd9c632b0b?q=80&w=600&auto=format&fit=crop"
-  },
-];
-
-const filters = ['All', '10th/+2', 'UG', 'PG', 'UG/PG'];
+import { MapPin, ArrowRight, GraduationCap, Loader2, Search, Info } from 'lucide-react';
+import EnquiryModal from '@/components/EnquiryModal';
 
 export default function UniversitiesPage() {
+  const [universities, setUniversities] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
   const [activeFilter, setActiveFilter] = useState('All');
   const [visible, setVisible] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
   const gridRef = useRef<HTMLDivElement>(null);
 
-  const filtered = activeFilter === 'All'
-    ? universities
-    : universities.filter(u => u.programs.includes(activeFilter));
+  // Modal state
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedInterest, setSelectedInterest] = useState('');
+
+  useEffect(() => {
+    fetchUniversities();
+  }, []);
+
+  const fetchUniversities = async () => {
+    try {
+      setLoading(true);
+      const res = await fetch('/api/admin/universities');
+      const data = await res.json();
+      if (Array.isArray(data)) setUniversities(data);
+    } catch (err) {
+      console.error('Failed to fetch universities', err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleEnquire = (interest: string) => {
+    setSelectedInterest(interest);
+    setIsModalOpen(true);
+  };
+
+  const filtered = universities.filter(u => {
+    const matchesFilter = activeFilter === 'All' || (u.type && u.type.toLowerCase() === activeFilter.toLowerCase());
+    const matchesSearch = u.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
+                          u.location.toLowerCase().includes(searchTerm.toLowerCase());
+    return matchesFilter && matchesSearch;
+  });
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -99,13 +55,13 @@ export default function UniversitiesPage() {
     );
     if (gridRef.current) observer.observe(gridRef.current);
     return () => observer.disconnect();
-  }, []);
+  }, [loading]);
 
   useEffect(() => {
     setVisible(false);
     const t = setTimeout(() => setVisible(true), 50);
     return () => clearTimeout(t);
-  }, [activeFilter]);
+  }, [activeFilter, searchTerm]);
 
   return (
     <main className={styles.container}>
@@ -125,60 +81,103 @@ export default function UniversitiesPage() {
         </div>
       </section>
 
-      {/* ===== Filter Bar ===== */}
+      {/* ===== Filter & Search Bar ===== */}
       <section className={styles.filterBar}>
         <div className={styles.filterInner}>
-          <span className={styles.filterLabel}><GraduationCap size={16} /> Filter by Program</span>
-          <div className={styles.filterBtns}>
-            {filters.map(f => (
-              <button
-                key={f}
-                className={`${styles.filterBtn} ${activeFilter === f ? styles.filterBtnActive : ''}`}
-                onClick={() => setActiveFilter(f)}
-              >
-                {f}
-              </button>
-            ))}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem', flex: 1 }}>
+            <span className={styles.filterLabel}><GraduationCap size={16} /> Filter</span>
+            <div className={styles.filterBtns}>
+              {['All', 'Private', 'Public', 'Deemed', 'State'].map(f => (
+                <button
+                  key={f}
+                  className={`${styles.filterBtn} ${activeFilter === f ? styles.filterBtnActive : ''}`}
+                  onClick={() => setActiveFilter(f)}
+                >
+                  {f}
+                </button>
+              ))}
+            </div>
+          </div>
+          <div className={styles.searchBox}>
+            <Search size={18} />
+            <input 
+              type="text" 
+              placeholder="Search university or city..." 
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
           </div>
         </div>
       </section>
 
       {/* ===== University Grid ===== */}
       <section className={styles.gridSection}>
-        <div className={styles.gridWrap} ref={gridRef}>
-          {filtered.map((uni, i) => (
-            <div
-              key={uni.name}
-              className={`${styles.card} ${visible ? styles.cardVisible : ''}`}
-              style={{ '--ci': i } as React.CSSProperties}
-            >
-              <div className={styles.cardImg}>
-                <Image
-                  src={uni.image}
-                  alt={uni.name}
-                  fill
-                  style={{ objectFit: 'cover' }}
-                />
-                <span className={styles.cardRegion}>{uni.programs[0]}</span>
+        {loading ? (
+          <div style={{ minHeight: '400px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '1rem', color: '#64748b' }}>
+            <Loader2 className="animate-spin" size={48} />
+            <p style={{ fontWeight: 600 }}>Discovering opportunities...</p>
+          </div>
+        ) : (
+          <>
+            {filtered.length > 0 ? (
+              <div className={styles.gridWrap} ref={gridRef}>
+                {filtered.map((uni, i) => (
+                  <div
+                    key={uni._id || i}
+                    className={`${styles.card} ${visible ? styles.cardVisible : ''}`}
+                    style={{ '--ci': i } as React.CSSProperties}
+                  >
+                    <div className={styles.cardImg}>
+                      <Image
+                        src={uni.image || 'https://images.unsplash.com/photo-1562774053-701939374585?q=80&w=600&auto=format&fit=crop'}
+                        alt={uni.name}
+                        fill
+                        style={{ objectFit: 'cover' }}
+                      />
+                      <span className={styles.cardRegion}>{uni.type || 'Institutional'}</span>
+                    </div>
+                    <div className={styles.cardBody}>
+                      <p className={styles.cardLocation}>
+                        <MapPin size={13} /> {uni.location}
+                      </p>
+                      <h3 className={styles.cardName}>{uni.name}</h3>
+                      <p className={styles.cardDesc}>{uni.description || 'Global education partner offering a wide range of accredited programs and career-oriented learning.'}</p>
+                      <div className={styles.cardTags}>
+                        {uni.accreditations ? uni.accreditations.split(',').slice(0, 3).map((f: string, fi: number) => (
+                          <span key={fi} className={styles.cardTag}>{f.trim()}</span>
+                        )) : (
+                          <>
+                            <span className={styles.cardTag}>UGC Approved</span>
+                            <span className={styles.cardTag}>Top Ranked</span>
+                          </>
+                        )}
+                      </div>
+                      
+                      <div className={styles.cardActions}>
+                        <Link href={`/universities/${uni._id || i}`} className={styles.detailsBtn}>
+                          View Details
+                        </Link>
+                        <button 
+                          onClick={() => handleEnquire(uni.name)}
+                          className={styles.enquiryBtn}
+                        >
+                          Enquire <ArrowRight size={14} />
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                ))}
               </div>
-              <div className={styles.cardBody}>
-                <p className={styles.cardLocation}>
-                  <MapPin size={13} /> {uni.location}
-                </p>
-                <h3 className={styles.cardName}>{uni.name}</h3>
-                <p className={styles.cardDesc}>{uni.description}</p>
-                <div className={styles.cardTags}>
-                  {uni.features.map((f, fi) => (
-                    <span key={fi} className={styles.cardTag}>{f}</span>
-                  ))}
-                </div>
-                <Link href="/contact" className={styles.cardBtn}>
-                  Enquire Now <ArrowRight size={14} />
-                </Link>
+            ) : (
+              <div style={{ textAlign: 'center', padding: '5rem 2rem', background: '#f8fafc', borderRadius: '24px', border: '1px dashed #cbd5e1' }}>
+                <Info size={48} style={{ color: '#94a3b8', marginBottom: '1rem' }} />
+                <h3 style={{ fontSize: '1.5rem', fontWeight: 800, color: '#00122e', margin: '0 0 0.5rem' }}>No Universities Found</h3>
+                <p style={{ color: '#64748b', maxWidth: '400px', margin: '0 auto' }}>We couldn't find any universities matching your current filters. Try resetting them or searching for something else.</p>
+                <button onClick={() => { setActiveFilter('All'); setSearchTerm(''); }} style={{ marginTop: '1.5rem', background: '#00122e', color: 'white', border: 'none', padding: '0.8rem 2rem', borderRadius: '8px', fontWeight: 700, cursor: 'pointer' }}>Reset All Filters</button>
               </div>
-            </div>
-          ))}
-        </div>
+            )}
+          </>
+        )}
       </section>
 
       {/* ===== CTA ===== */}
@@ -186,12 +185,23 @@ export default function UniversitiesPage() {
         <div className={styles.ctaInner}>
           <h2 className={styles.ctaTitle}>Can't find the right university?</h2>
           <p className={styles.ctaSub}>Our counselors will match you with the perfect institution based on your profile, budget, and career goals.</p>
-          <Link href="/contact" className={styles.ctaBtn}>
+          <button 
+            onClick={() => handleEnquire('General University Guidance')}
+            className={styles.ctaBtn}
+            style={{ border: 'none', cursor: 'pointer', fontFamily: 'inherit' }}
+          >
             Get Free Counseling <ArrowRight size={18} />
-          </Link>
+          </button>
         </div>
       </section>
 
+      <EnquiryModal 
+        isOpen={isModalOpen} 
+        onClose={() => setIsModalOpen(false)} 
+        title={`Enquire about ${selectedInterest}`}
+        interest={selectedInterest}
+        source="Universities Page"
+      />
     </main>
   );
 }

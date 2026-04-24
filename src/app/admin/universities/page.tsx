@@ -75,7 +75,7 @@ export default function UniversitiesPage() {
                     </span>
                   </td>
                   <td>
-                    <button style={{ color: '#00122e', fontSize: '0.9rem', marginRight: '1rem', background: 'none', border: 'none', cursor: 'pointer', fontWeight: 600 }}>Manage</button>
+                    <Link href={`/admin/universities/${uni._id}`} style={{ color: '#00122e', fontSize: '0.9rem', marginRight: '1rem', background: 'none', border: 'none', cursor: 'pointer', fontWeight: 600, textDecoration: 'none' }}>View Details</Link>
                     <Link href={`/admin/universities/${uni._id}/edit`} style={{ color: '#64748b', fontSize: '0.9rem', background: 'none', border: 'none', cursor: 'pointer', textDecoration: 'none' }}>Edit</Link>
                   </td>
                 </tr>

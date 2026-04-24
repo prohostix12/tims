@@ -1,8 +1,9 @@
 
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import styles from './page.module.css';
 import { 
@@ -10,6 +11,15 @@ import {
   Award, 
   BookOpen, 
   Globe,
+  Star,
+  Lightbulb,
+  PieChart,
+  Settings,
+  Target,
+  MessageSquare,
+  FileText,
+  Users,
+  Search
 } from 'lucide-react';
 
 const NEWS_PLACEHOLDER = '/images/news-hero-bg.png';
@@ -36,29 +46,54 @@ interface University {
 export default function Home() {
   const [universities, setUniversities] = useState<University[]>([]);
   const [newsItems, setNewsItems] = useState<NewsItem[]>([]);
+  const [blogs, setBlogs] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [searchQuery, setSearchQuery] = useState('');
+  const router = useRouter();
 
-  // Fetch universities from API
-  useEffect(() => {
-    fetch('/api/admin/universities')
-      .then((r) => r.json())
-      .then((data) => {
-        if (Array.isArray(data)) {
-          setUniversities(data.filter((u) => u.status === 'active').slice(0, 6));
-        }
-      })
-      .catch(() => {});
-  }, []);
+  const handleSearch = useCallback((e?: React.FormEvent) => {
+    if (e) e.preventDefault();
+    const q = searchQuery.trim();
+    if (q) {
+      router.push(`/courses?search=${encodeURIComponent(q)}`);
+    } else {
+      router.push('/courses');
+    }
+  }, [searchQuery, router]);
 
-  // Fetch news from API
+  // Fetch universities, news, and blogs from API
   useEffect(() => {
-    fetch('/api/admin/news')
-      .then((r) => r.json())
-      .then((data) => {
-        if (Array.isArray(data)) {
-          setNewsItems(data.filter((n) => n.status === 'published').slice(0, 6));
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+        const [uniRes, newsRes, blogRes] = await Promise.all([
+          fetch('/api/admin/universities'),
+          fetch('/api/admin/news'),
+          fetch('/api/admin/blogs')
+        ]);
+        
+        const uniData = await uniRes.json();
+        const newsData = await newsRes.json();
+        const blogData = await blogRes.json();
+
+        // Set data from API
+        if (Array.isArray(uniData)) {
+          setUniversities(uniData.filter((u) => u.status === 'active').slice(0, 6));
         }
-      })
-      .catch(() => {});
+        if (Array.isArray(newsData)) {
+          setNewsItems(newsData.filter((n) => n.status === 'published').slice(0, 6));
+        }
+        if (Array.isArray(blogData)) {
+          setBlogs(blogData.filter((b) => b.status === 'published').slice(0, 4));
+        }
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
   }, []);
   // Scroll animations for Get To Know Us section
   useEffect(() => {
@@ -146,42 +181,79 @@ export default function Home() {
 
   return (
     <main className={styles.container}>
-      {/* ===== Hero Section ===== */}
-      <section className={styles.heroWrapper}>
-        <div className={styles.heroBgImage} aria-hidden="true" />
-        {/* Animated background particles */}
-        <div className={styles.heroBgOverlay} aria-hidden="true" />
+      {/* ===== Category Icon Strip ===== */}
+      <div className={styles.categoryStrip}>
+        <div className={styles.categoryInner}>
+          {[
+            { emoji: '🎓', label: 'BBA' },
+            { emoji: '📊', label: 'MBA' },
+            { emoji: '📜', label: 'Attestation' },
+            { emoji: '🌐', label: 'Credit Transfer' },
+            { emoji: '💻', label: 'Online Studies' },
+            { emoji: '📚', label: 'Distance Ed.' },
+            { emoji: '🏫', label: 'SSLC / NIOS' },
+            { emoji: '✈️', label: 'Study Abroad' },
+          ].map((cat, i) => (
+            <Link key={i} href="/courses" className={styles.categoryItem}>
+              <span className={styles.categoryEmoji}>{cat.emoji}</span>
+              <span className={styles.categoryLabel}>{cat.label}</span>
+            </Link>
+          ))}
+        </div>
+      </div>
 
+      {/* ===== Hero Section - UpGrad Style ===== */}
+      <section className={styles.heroWrapper}>
         <div className={styles.heroContent}>
-          {/* Badge */}
-          <div className={styles.heroBadge}>
-            <span className={styles.heroBadgeDot} />
-            Trusted by 15,000+ Students Globally
+          <div className={styles.heroLeft}>
+            <h1 className={styles.heroTitle}>
+              Shaping Global Careers <br />
+              <span className={styles.heroTitleDark}>Through Excellence.</span>
+            </h1>
+
+            <form onSubmit={handleSearch} className={styles.heroSearch}>
+              <input
+                type="text"
+                placeholder="Tell us what you're looking for..."
+                className={styles.heroSearchInput}
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                autoComplete="off"
+              />
+              <button type="submit" className={styles.heroSearchBtn}>
+                <Search size={18} />
+              </button>
+            </form>
+
+            <div className={styles.goalSection}>
+              <p className={styles.goalLabel}>Or select your goal 🎯</p>
+              <div className={styles.goalChips}>
+                {['Embassy Attestation', 'Online Degree', 'Credit Transfer', 'SSLC / NIOS', 'BBA / MBA', 'Study Abroad', 'Distance Education', 'Free Counselling'].map((g, i) => (
+                  <Link key={i} href="/courses" className={styles.goalChip}>{g}</Link>
+                ))}
+              </div>
+            </div>
+
+            <p className={styles.communityCount}>
+              Join the community of <span>15,000+</span> learners.
+            </p>
           </div>
 
-          {/* Headline */}
-          <h1 className={styles.heroTitle}>
-            <span className={styles.heroLine1}>Your Future Starts</span>
-            <span className={styles.heroLine2}>
-              With the <em className={styles.heroAccent}>Right</em> Education
-            </span>
-          </h1>
-
-          {/* Subtext */}
-          <p className={styles.heroSub}>
-            TIMS connects ambitious students with accredited universities, 
-            seamless credit transfers, and expert attestation services — 
-            all under one roof.
-          </p>
-
-          {/* CTA row */}
-          <div className={styles.heroActions}>
-            <Link href="/courses" className={styles.heroPrimaryBtn}>
-              Explore Programs <ArrowRight size={18} />
-            </Link>
-            <Link href="/contact" className={styles.heroSecondaryBtn}>
-              Talk to an Advisor
-            </Link>
+          <div className={styles.heroRight}>
+            <div className={styles.heroImageCard}>
+              <Image
+                src="/images/hero-campus.png"
+                alt="Students on University Campus"
+                fill
+                style={{ objectFit: 'cover' }}
+                priority
+              />
+              <div className={styles.heroImageOverlay}>
+                <p className={styles.overlayWhite}>Study in</p>
+                <p className={styles.overlayHighlight}>Top Universities Abroad</p>
+                <Link href="/universities" className={styles.overlayLink}>Explore programs →</Link>
+              </div>
+            </div>
           </div>
         </div>
       </section>
@@ -265,14 +337,7 @@ export default function Home() {
         </div>
 
         <div className={styles.uniGrid}>
-          {(universities.length > 0 ? universities : [
-            { _id: '1', name: "Amrita Vishwa Vidyapeetham", status: 'active' },
-            { _id: '2', name: "University of Greenwich", status: 'active' },
-            { _id: '3', name: "Arizona State University", status: 'active' },
-            { _id: '4', name: "Monash University", status: 'active' },
-            { _id: '5', name: "University of Toronto", status: 'active' },
-            { _id: '6', name: "TU Munich", status: 'active' },
-          ] as University[]).map((uni, i) => (
+          {universities.map((uni, i) => (
             <div key={uni._id} className={styles.uniCard} style={{ '--i': i } as React.CSSProperties}>
               <div className={styles.uniCardImgWrapper}>
                 <Image
@@ -284,12 +349,17 @@ export default function Home() {
               </div>
               <div className={styles.uniCardBody}>
                 <h3 className={styles.uniCardName}>{uni.name}</h3>
-                <Link href="/universities" className={styles.uniCardBtn}>
+                <Link href={`/universities/${uni._id}`} className={styles.uniCardBtn}>
                   View Details <ArrowRight size={14} />
                 </Link>
               </div>
             </div>
           ))}
+          {universities.length === 0 && !loading && (
+             <div style={{ gridColumn: '1 / -1', textAlign: 'center', padding: '3rem', color: '#64748b', background: '#f1f5f9', borderRadius: '16px' }}>
+                <p>Stay tuned! Our partner universities will be listed here soon.</p>
+             </div>
+          )}
         </div>
 
         <div className={styles.uniSectionFooter}>
@@ -311,29 +381,29 @@ export default function Home() {
             {
               icon: <Award size={36} />,
               title: 'Embassy Attestation',
-              desc: 'Attest your educational and non-educational documents with speed and reliability.',
+              desc: 'Global document verification and authentication services.',
               href: '/services/attestation',
-              accent: true,
+              color: 'blue',
             },
             {
               icon: <Globe size={36} />,
               title: 'Online Studies',
-              desc: 'Assistance for admission in the best institutes of India and abroad.',
+              desc: 'Accredited online degrees from top-tier universities.',
               href: '/courses',
-              accent: false,
+              color: 'red',
             },
             {
               icon: <BookOpen size={36} />,
               title: 'Distance Education',
-              desc: 'We provide educational services to students all across the world.',
+              desc: 'Flexible learning programs for students worldwide.',
               href: '/services/distance-education',
-              accent: true,
+              color: 'blue',
             },
           ].map((item, i) => (
             <Link
               key={i}
               href={item.href}
-              className={`${styles.dreamCard} ${item.accent ? styles.dreamCardAccent : styles.dreamCardDark}`}
+              className={`${styles.dreamCard} ${item.color === 'red' ? styles.dreamCardRed : styles.dreamCardBlue}`}
               style={{ '--di': i } as React.CSSProperties}
             >
               <div className={styles.dreamCardIcon}>{item.icon}</div>
@@ -341,6 +411,111 @@ export default function Home() {
               <p className={styles.dreamCardDesc}>{item.desc}</p>
             </Link>
           ))}
+        </div>
+      </section>
+
+      {/* ===== Trending Courses Section ===== */}
+      <section className={styles.coursesSection}>
+        <div className={styles.uniSectionHeader}>
+          <span className={styles.uniSectionTag}>Top Programs</span>
+          <h2 className={styles.uniSectionTitle}>Trending Courses</h2>
+          <p className={styles.uniSectionSub}>
+            Discover our most sought-after programs designed to fast-track your career in management and technology.
+          </p>
+        </div>
+
+        <div className={styles.coursesGrid}>
+          {[
+            { title: 'BBA Global Business', level: 'Bachelor Degree', duration: '3 Years', image: 'https://images.unsplash.com/photo-1523240715639-99f84db47d0e?q=80&w=800' },
+            { title: 'MBA Strategic Management', level: 'Master Degree', duration: '2 Years', image: 'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?q=80&w=800' },
+            { title: 'Diploma in HR Management', level: 'Professional Diploma', duration: '1 Year', image: 'https://images.unsplash.com/photo-1552664730-d307ca884978?q=80&w=800' },
+          ].map((course, i) => (
+            <div key={i} className={styles.courseMiniCard} style={{ '--i': i } as React.CSSProperties}>
+              <div className={styles.courseMiniImg}>
+                <Image src={course.image} alt={course.title} fill style={{ objectFit: 'cover' }} unoptimized={true} />
+                <span className={styles.courseTag}>{course.level}</span>
+              </div>
+              <div className={styles.courseMiniBody}>
+                <h3>{course.title}</h3>
+                <p>{course.duration} • Full-time</p>
+                <Link href="/courses" className={styles.courseLink}>
+                  Explore Program <ArrowRight size={14} />
+                </Link>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* ===== Testimonials Section ===== */}
+      <section className={styles.testimonialsSection}>
+        <div className={styles.uniSectionHeader}>
+          <span className={styles.uniSectionTag}>Success Stories</span>
+          <h2 className={styles.uniSectionTitle}>What Our Students Say</h2>
+          <p className={styles.uniSectionSub}>
+            Join thousands of successful alumni who have transformed their careers through TIMS.
+          </p>
+        </div>
+
+        <div className={styles.testimonialsGrid}>
+          {[
+            { name: 'Sarah Ahmed', role: 'MBA Graduate', text: 'TIMS provided the flexibility I needed to balance my career and studies. The mentorship was top-notch.', avatar: 'https://i.pravatar.cc/100?u=sarah' },
+            { name: 'Kevin Joseph', role: 'BBA Alumni', text: 'The global network of partner universities at TIMS opened doors I never thought possible.', avatar: 'https://i.pravatar.cc/100?u=kevin' },
+            { name: 'Meera Nair', role: 'Diploma Student', text: 'The practical approach to learning and the embassy attestation support made my transition overseas seamless.', avatar: 'https://i.pravatar.cc/100?u=meera' },
+          ].map((t, i) => (
+            <div key={i} className={styles.testimonialCard} style={{ '--i': i } as React.CSSProperties}>
+              <div className={styles.quoteIcon}><MessageSquare size={24} fill="#ef233c" stroke="none" /></div>
+              <p className={styles.testimonialText}>"{t.text}"</p>
+              <div className={styles.testimonialUser}>
+                <Image src={t.avatar} alt={t.name} width={50} height={50} className={styles.userAvatar} unoptimized={true} />
+                <div className={styles.userInfo}>
+                  <h4>{t.name}</h4>
+                  <span>{t.role}</span>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* ===== Blog Section ===== */}
+      <section className={styles.blogSection}>
+        <div className={styles.uniSectionHeader}>
+          <span className={styles.uniSectionTag}>Expert Insights</span>
+          <h2 className={styles.uniSectionTitle}>From Our Blog</h2>
+          <p className={styles.uniSectionSub}>
+            Stay ahead with the latest trends in global education, career tips, and institutional updates.
+          </p>
+        </div>
+
+        <div className={styles.blogGrid}>
+          {blogs.map((post, i) => (
+            <div key={post._id} className={styles.blogMiniCard} style={{ '--i': i } as React.CSSProperties}>
+              <div className={styles.blogMiniImg}>
+                <Image 
+                  src={post.image || '/images/blog-placeholder.png'} 
+                  alt={post.title} 
+                  fill 
+                  style={{ objectFit: 'cover' }} 
+                  unoptimized={true} 
+                />
+              </div>
+              <div className={styles.blogMiniBody}>
+                <span className={styles.blogDate}>
+                  {new Date(post.publishedAt).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}
+                </span>
+                <h3>{post.title}</h3>
+                <Link href={`/blogs/${post._id}`} className={styles.blogLink}>
+                  Read More <ArrowRight size={14} />
+                </Link>
+              </div>
+            </div>
+          ))}
+          {blogs.length === 0 && !loading && (
+            <div style={{ gridColumn: '1 / -1', textAlign: 'center', padding: '3rem', color: '#64748b', background: '#f1f5f9', borderRadius: '16px' }}>
+              <p>Our educational blog posts are coming soon!</p>
+            </div>
+          )}
         </div>
       </section>
 
@@ -355,14 +530,7 @@ export default function Home() {
         </div>
 
         <div className={styles.newsGrid}>
-          {(newsItems.length > 0 ? newsItems : [
-            { _id: '1', title: 'TIMS Awarded Best Admission Partner 2024', excerpt: 'Tirur Institute of Management Studies has been recognized as the Best Admission Partner by Swami Vivekanand Subharti University.', category: 'Awards', publishedAt: '2024-03-15', status: 'published' },
-            { _id: '2', title: 'New Distance Learning Programs Launched', excerpt: 'TIMS introduces new UG and PG distance learning programs in partnership with top accredited universities across India.', category: 'Programs', publishedAt: '2024-02-20', status: 'published' },
-            { _id: '3', title: 'Embassy Attestation Services Now Faster', excerpt: 'Our attestation team has streamlined the process, reducing turnaround time to just 3-5 working days for most documents.', category: 'Services', publishedAt: '2024-01-10', status: 'published' },
-            { _id: '4', title: 'Credit Transfer Program Expansion', excerpt: 'TIMS expands its credit transfer program with 5 new partner universities, giving students more flexibility in completing their degrees.', category: 'Programs', publishedAt: '2023-12-05', status: 'published' },
-            { _id: '5', title: 'Student Success Stories 2023', excerpt: 'Over 2,000 students successfully completed their degree programs through TIMS guidance in 2023, achieving career milestones.', category: 'Success', publishedAt: '2023-11-18', status: 'published' },
-            { _id: '6', title: 'TIMS Joins Global Education Network', excerpt: 'TIMS becomes a member of the Global Education Network, opening doors to international university partnerships and student exchange programs.', category: 'Partnerships', publishedAt: '2023-10-22', status: 'published' },
-          ] as NewsItem[]).map((item, i) => (
+          {newsItems.map((item, i) => (
             <div key={item._id} className={styles.newsCard} style={{ '--i': i } as React.CSSProperties}>
               <div className={styles.newsCardImgWrapper}>
                 <Image
@@ -381,12 +549,17 @@ export default function Home() {
                 </p>
                 <h3 className={styles.newsCardTitle}>{item.title}</h3>
                 <p className={styles.newsCardExcerpt}>{item.excerpt}</p>
-                <Link href="/news" className={styles.newsCardBtn}>
+                <Link href={`/news/${item._id}`} className={styles.newsCardBtn}>
                   Read More <ArrowRight size={14} />
                 </Link>
               </div>
             </div>
           ))}
+          {newsItems.length === 0 && !loading && (
+             <div style={{ gridColumn: '1 / -1', textAlign: 'center', padding: '3rem', color: '#64748b', background: '#f1f5f9', borderRadius: '16px' }}>
+                <p>New updates and announcements are on their way!</p>
+             </div>
+          )}
         </div>
 
         <div className={styles.uniSectionFooter}>

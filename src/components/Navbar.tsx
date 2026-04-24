@@ -55,8 +55,8 @@ const navLinks: NavLink[] = [
     name: 'About',
     path: '/about',
     submenu: [
-      { name: 'Latest News', path: '/about/news' },
-      { name: 'Academic Blog', path: '/about/blog' },
+      { name: 'Latest News', path: '/news' },
+      { name: 'Academic Blog', path: '/blogs' },
     ],
   },
   { name: 'Contact', path: '/contact' },
@@ -107,14 +107,16 @@ const Navbar = () => {
         <nav className={styles.navbar}>
           {/* Logo */}
           <Link href="/" className={styles.logo} aria-label="Go to homepage">
-            <Image
-              src="/images/times-online-logo.png"
-              alt="Times Online Logo"
-              width={160}
-              height={48}
-              priority
-              className={styles.logoImage}
-            />
+            <div className={styles.logoBadge}>
+              <Image
+                src="/images/tims-logo-3.png"
+                alt="Times Online Logo"
+                width={200}
+                height={60}
+                priority
+                className={styles.logoImage}
+              />
+            </div>
           </Link>
 
           {/* Desktop Links */}
@@ -236,7 +238,7 @@ const Navbar = () => {
         <div className={styles.drawerHeader}>
           <Link href="/" className={styles.logo} onClick={() => setMobileOpen(false)}>
             <Image
-              src="/images/times-online-logo.png"
+              src="/images/tims-logo-3.png"
               alt="Times Online Logo"
               width={140}
               height={42}

@@ -3,20 +3,20 @@
 
 :root {
   /* ── Brand Colors ── */
-  --primary: #00122e; /* Deep Navy */
-  --accent: #ef233c;  /* Academic Red */
-  --secondary: #2b2d42;
+  --primary: #1a1a1a; /* Clean Black for Text */
+  --accent: #ef233c;  /* UpGrad Red */
+  --secondary: #4b5563; /* Muted Gray */
 
   /* ── Neutral / Background ── */
   --white: #ffffff;
-  --bg-light: #f8fafc;
+  --bg-light: #f9fafb;
   --bg-white: #ffffff;
-  --bg-accent-light: #e8f0fe;
+  --bg-accent-light: #fef2f2;
 
   /* ── Text ── */
-  --text: #1e293b;
-  --text-dark: #0f172a;
-  --text-muted: #64748b;
+  --text: #1a1a1a;
+  --text-dark: #111827;
+  --text-muted: #4b5563;
 
   /* ── Borders ── */
   --border: #e2e8f0;
@@ -67,9 +67,9 @@ svg[class*="Vercel"],
 }
 
 h1, h2, h3, h4 {
-  font-family: 'Outfit', sans-serif;
-  color: var(--primary);
-  font-weight: 700;
+  font-family: 'Inter', sans-serif;
+  color: var(--text-dark);
+  font-weight: 800;
 }
 
 a {
