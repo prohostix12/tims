@@ -47,6 +47,7 @@ export default function Home() {
   const [universities, setUniversities] = useState<University[]>([]);
   const [newsItems, setNewsItems] = useState<NewsItem[]>([]);
   const [blogs, setBlogs] = useState<any[]>([]);
+  const [courses, setCourses] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const router = useRouter();
@@ -61,20 +62,22 @@ export default function Home() {
     }
   }, [searchQuery, router]);
 
-  // Fetch universities, news, and blogs from API
+  // Fetch universities, news, blogs, and courses from API
   useEffect(() => {
     const fetchData = async () => {
       try {
         setLoading(true);
-        const [uniRes, newsRes, blogRes] = await Promise.all([
+        const [uniRes, newsRes, blogRes, courseRes] = await Promise.all([
           fetch('/api/admin/universities'),
           fetch('/api/admin/news'),
-          fetch('/api/admin/blogs')
+          fetch('/api/admin/blogs'),
+          fetch('/api/admin/programs')
         ]);
         
         const uniData = await uniRes.json();
         const newsData = await newsRes.json();
         const blogData = await blogRes.json();
+        const courseData = await courseRes.json();
 
         // Set data from API
         if (Array.isArray(uniData)) {
@@ -85,6 +88,9 @@ export default function Home() {
         }
         if (Array.isArray(blogData)) {
           setBlogs(blogData.filter((b) => b.status === 'published').slice(0, 4));
+        }
+        if (Array.isArray(courseData)) {
+          setCourses(courseData.slice(0, 3));
         }
       } catch (error) {
         console.error('Error fetching data:', error);
@@ -153,7 +159,7 @@ export default function Home() {
           observer.unobserve(el);
         });
       },
-      { threshold: 0.2 }
+      { threshold: 0.1 }
     );
 
     cards.forEach((c) => observer.observe(c));
@@ -177,7 +183,7 @@ export default function Home() {
     testimonialCards.forEach((c) => observer.observe(c));
 
     return () => observer.disconnect();
-  }, []);
+  }, [courses, universities, newsItems, blogs]); // Re-run when data changes
 
   return (
     <main className={styles.container}>
@@ -329,10 +335,12 @@ export default function Home() {
       {/* ===== Partner Universities Section ===== */}
       <section className={styles.uniSection}>
         <div className={styles.uniSectionHeader}>
-          <span className={styles.uniSectionTag}>Our Network</span>
-          <h2 className={styles.uniSectionTitle}>Partner Universities</h2>
+          <span className={styles.uniSectionTag}>Global Network</span>
+          <h2 className={styles.uniSectionTitle}>
+            <span style={{ color: '#ef233c' }}>Partner</span> Universities
+          </h2>
           <p className={styles.uniSectionSub}>
-            We connect you with world-class institutions across the globe — accredited, reputed, and career-focused.
+            Collaborating with world-class institutions to provide you with the best educational opportunities and global recognition.
           </p>
         </div>
 
@@ -425,25 +433,26 @@ export default function Home() {
         </div>
 
         <div className={styles.coursesGrid}>
-          {[
-            { title: 'BBA Global Business', level: 'Bachelor Degree', duration: '3 Years', image: 'https://images.unsplash.com/photo-1523240715639-99f84db47d0e?q=80&w=800' },
-            { title: 'MBA Strategic Management', level: 'Master Degree', duration: '2 Years', image: 'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?q=80&w=800' },
-            { title: 'Diploma in HR Management', level: 'Professional Diploma', duration: '1 Year', image: 'https://images.unsplash.com/photo-1552664730-d307ca884978?q=80&w=800' },
-          ].map((course, i) => (
-            <div key={i} className={styles.courseMiniCard} style={{ '--i': i } as React.CSSProperties}>
+          {courses.map((course, i) => (
+            <div key={course._id} className={styles.courseMiniCard} style={{ '--i': i } as React.CSSProperties}>
               <div className={styles.courseMiniImg}>
-                <Image src={course.image} alt={course.title} fill style={{ objectFit: 'cover' }} unoptimized={true} />
+                <Image src={course.image || 'https://images.unsplash.com/photo-1523240715639-99f84db47d0e?q=80&w=800'} alt={course.name} fill style={{ objectFit: 'cover' }} unoptimized={true} />
                 <span className={styles.courseTag}>{course.level}</span>
               </div>
               <div className={styles.courseMiniBody}>
-                <h3>{course.title}</h3>
+                <h3>{course.name}</h3>
                 <p>{course.duration} • Full-time</p>
-                <Link href="/courses" className={styles.courseLink}>
+                <Link href={`/courses/${course._id}`} className={styles.courseLink}>
                   Explore Program <ArrowRight size={14} />
                 </Link>
               </div>
             </div>
           ))}
+          {courses.length === 0 && !loading && (
+            <div style={{ gridColumn: '1 / -1', textAlign: 'center', padding: '3rem', color: '#64748b', background: '#f1f5f9', borderRadius: '16px' }}>
+              <p>New academic programs are being added. Check back soon!</p>
+            </div>
+          )}
         </div>
       </section>
 
@@ -458,23 +467,10 @@ export default function Home() {
         </div>
 
         <div className={styles.testimonialsGrid}>
-          {[
-            { name: 'Sarah Ahmed', role: 'MBA Graduate', text: 'TIMS provided the flexibility I needed to balance my career and studies. The mentorship was top-notch.', avatar: 'https://i.pravatar.cc/100?u=sarah' },
-            { name: 'Kevin Joseph', role: 'BBA Alumni', text: 'The global network of partner universities at TIMS opened doors I never thought possible.', avatar: 'https://i.pravatar.cc/100?u=kevin' },
-            { name: 'Meera Nair', role: 'Diploma Student', text: 'The practical approach to learning and the embassy attestation support made my transition overseas seamless.', avatar: 'https://i.pravatar.cc/100?u=meera' },
-          ].map((t, i) => (
-            <div key={i} className={styles.testimonialCard} style={{ '--i': i } as React.CSSProperties}>
-              <div className={styles.quoteIcon}><MessageSquare size={24} fill="#ef233c" stroke="none" /></div>
-              <p className={styles.testimonialText}>"{t.text}"</p>
-              <div className={styles.testimonialUser}>
-                <Image src={t.avatar} alt={t.name} width={50} height={50} className={styles.userAvatar} unoptimized={true} />
-                <div className={styles.userInfo}>
-                  <h4>{t.name}</h4>
-                  <span>{t.role}</span>
-                </div>
-              </div>
-            </div>
-          ))}
+          {/* Testimonials removed as they are demo data. Empty state below. */}
+          <div style={{ gridColumn: '1 / -1', textAlign: 'center', padding: '3rem', color: '#64748b', background: '#f1f5f9', borderRadius: '16px' }}>
+            <p>Our student testimonials will be featured here soon.</p>
+          </div>
         </div>
       </section>
 
@@ -521,9 +517,11 @@ export default function Home() {
 
       {/* ===== Latest News Section ===== */}
       <section className={styles.newsSection}>
-        <div className={styles.uniSectionHeader}>
-          <span className={styles.uniSectionTag}>Stay Updated</span>
-          <h2 className={styles.uniSectionTitle}>Latest News</h2>
+        <div className={styles.newsHeader}>
+          <span className={styles.newsTag}>Stay Informed</span>
+          <h2 className={styles.newsTitle}>
+            <span style={{ color: '#ef233c' }}>Latest</span> News
+          </h2>
           <p className={styles.uniSectionSub}>
             Stay informed with the latest updates, announcements, and insights from TIMS.
           </p>

@@ -1,0 +1,60 @@
+.fab {
+  position: fixed;
+  bottom: 2.5rem;
+  right: 2.5rem;
+  height: 56px;
+  padding: 0 1.75rem;
+  border-radius: 100px;
+  background-color: #ef233c;
+  color: white;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border: none;
+  box-shadow: 0 10px 30px rgba(239, 35, 60, 0.4);
+  cursor: pointer;
+  z-index: 999;
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.fabText {
+  font-weight: 800;
+  font-size: 0.95rem;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.fab:hover {
+  transform: translateY(-5px) scale(1.05);
+  background-color: #002060;
+  box-shadow: 0 15px 40px rgba(0, 32, 96, 0.3);
+}
+
+.fab:active {
+  transform: scale(0.95);
+}
+
+/* Pulsing animation to draw attention */
+@keyframes fabPulse {
+  0% { box-shadow: 0 0 0 0 rgba(239, 35, 60, 0.4); }
+  70% { box-shadow: 0 0 0 20px rgba(239, 35, 60, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(239, 35, 60, 0); }
+}
+
+.fab {
+  animation: fabPulse 3s infinite;
+}
+
+@media (max-width: 768px) {
+  .fab {
+    bottom: 1.5rem;
+    right: 1.5rem;
+    padding: 0 1.25rem;
+    height: 48px;
+    gap: 8px;
+  }
+  .fabText {
+    font-size: 0.8rem;
+  }
+}

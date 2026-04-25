@@ -53,7 +53,9 @@ export default function StudyMaterialPage() {
               <Link href="/">Home</Link> / <Link href="/universities">Universities</Link> / Study Material
             </p>
             <span className={styles.heroTag}>Academic Support</span>
-            <h1 className={styles.heroTitle}>Study Materials</h1>
+            <h1 className={styles.heroTitle}>
+              <span style={{ color: '#ef233c' }}>Study</span> Materials
+            </h1>
             <p className={styles.heroSub}>
               Access a comprehensive library of academic resources, subject notes, and guides designed to help you excel in your studies.
             </p>

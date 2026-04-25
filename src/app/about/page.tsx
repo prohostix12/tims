@@ -15,7 +15,9 @@ export default function About() {
             <Link href="/">Home</Link> / About
           </p>
           <span className={styles.heroTag}>Discover TIMS</span>
-          <h1 className={styles.heroTitle}>About Us</h1>
+          <h1 className={styles.heroTitle}>
+            <span style={{ color: '#ef233c' }}>About</span> Us
+          </h1>
           <p className={styles.heroSub}>Empowering learners through flexible, high-quality, and accessible education since 2009.</p>
         </div>
       </section>

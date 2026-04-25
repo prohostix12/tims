@@ -4,17 +4,14 @@ import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { 
-  ArrowLeft, 
   ArrowRight,
-  Calendar,
-  Tag,
   Newspaper,
   Loader2,
-  Clock,
   ChevronRight
 } from 'lucide-react';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
+import styles from './news.module.css';
 
 interface NewsItem {
   _id: string;
@@ -42,79 +39,82 @@ export default function AllNewsPage() {
       .finally(() => setLoading(false));
   }, []);
 
+  const featuredNews = newsItems[0];
+  const otherNews = newsItems.slice(1);
+
   return (
     <>
       <Navbar />
-      <main style={{ minHeight: '100vh', background: '#ffffff' }}>
-        {/* Cinematic Full-Screen Hero Section */}
-        <section style={{ 
-          background: '#ffffff', 
-          minHeight: '40vh', 
-          display: 'flex', 
-          alignItems: 'center', 
-          justifyContent: 'center',
-          textAlign: 'center',
-          color: '#1a1a1a',
-          overflow: 'hidden',
-          borderBottom: '1px solid #e5e7eb',
-          paddingTop: '100px',
-          position: 'relative'
-        }}>
-          <div style={{ maxWidth: '1000px', margin: '0 auto', padding: '0 20px', position: 'relative', zIndex: 1 }}>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px', fontSize: '0.9rem', color: '#4b5563', marginBottom: '1.5rem', fontWeight: 600 }}>
-              <Link href="/" style={{ color: 'inherit', textDecoration: 'none' }}>Home</Link>
-              <ChevronRight size={14} />
-              <span style={{ color: '#1a1a1a' }}>News</span>
+      <main className={styles.container}>
+        {/* Editorial Hero */}
+        <section className={styles.hero}>
+          <div className={styles.heroContent}>
+            <div className={styles.heroLeft}>
+              <div className={styles.heroTag}>Latest Updates</div>
+              <h1 className={styles.heroTitle}>
+                Institutional <span style={{ color: '#ef233c' }}>Journal</span>
+              </h1>
+              <p className={styles.heroDesc}>
+                Stay connected with the pulse of TIMS — from academic breakthroughs to global institutional updates.
+              </p>
             </div>
-            <h1 style={{ fontSize: 'clamp(2.5rem, 8vw, 4rem)', fontWeight: 800, color: '#1a1a1a', margin: 0, letterSpacing: '-1.5px', lineHeight: 1.1 }}>Latest News & <br/> Announcements</h1>
-            <p style={{ color: '#4b5563', fontSize: '1.1rem', marginTop: '1.5rem', maxWidth: '800px', margin: '1.5rem auto 0', lineHeight: 1.6, fontWeight: 400 }}>Stay connected with the pulse of TIMS — from academic breakthroughs to institutional updates.</p>
+            <div className={styles.heroRight}>
+              <Image
+                src="/images/news-hero-bg.png"
+                alt="Institutional News"
+                className={styles.heroImage}
+                fill
+                priority
+              />
+            </div>
           </div>
         </section>
 
-        <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '80px 20px' }}>
-
-          {loading ? (
-            <div style={{ textAlign: 'center', padding: '8rem 0', color: '#64748b' }}>
-               <Loader2 className="animate-spin" size={48} color="#2563eb" style={{ marginBottom: '1rem' }} />
-               <p style={{ fontWeight: 600 }}>Fetching latest updates...</p>
+        {/* Magazine Grid */}
+        <section className={styles.newsSection}>
+          <div className={styles.sectionHeader}>
+            <div className={styles.headerLeft}>
+              <h2><span style={{ color: '#ef233c' }}>Editor's</span> Choice</h2>
+              <p>Handpicked stories from our community.</p>
             </div>
-          ) : (
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(360px, 1fr))', gap: '2rem' }}>
-              {newsItems.length > 0 ? newsItems.map((item, i) => (
-                <div key={item._id} style={{ background: 'white', borderRadius: '4px', overflow: 'hidden', border: '1px solid #e5e7eb', boxShadow: '0 4px 15px rgba(0,0,0,0.02)', transition: 'all 0.3s ease' }}>
-                  <div style={{ position: 'relative', height: '220px', overflow: 'hidden' }}>
+          </div>
+
+          <div className={styles.newsGrid}>
+            {loading ? (
+              <div style={{ textAlign: 'center', padding: '10rem 0' }}>
+                <Loader2 className="animate-spin" size={48} style={{ color: '#ef233c', marginBottom: '1rem' }} />
+                <p style={{ fontWeight: 700, color: '#002060' }}>Curating latest stories...</p>
+              </div>
+            ) : newsItems.length > 0 ? (
+              newsItems.map((item, i) => (
+                <article key={item._id} className={styles.newsArticle}>
+                  <div className={styles.imageBox}>
                     <Image
                       src={item.image || '/images/news-hero-bg.png'}
                       alt={item.title}
+                      className={styles.articleImage}
                       fill
-                      style={{ objectFit: 'cover' }}
                     />
-                    {item.category && (
-                      <span style={{ position: 'absolute', top: '1rem', left: '1rem', background: 'rgba(0,18,46,0.85)', backdropFilter: 'blur(4px)', color: 'white', padding: '4px 12px', borderRadius: '8px', fontSize: '0.7rem', fontWeight: 800, letterSpacing: '0.5px' }}>{item.category.toUpperCase()}</span>
-                    )}
                   </div>
-                  <div style={{ padding: '2rem' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '15px', color: '#94a3b8', fontSize: '0.8rem', fontWeight: 700, marginBottom: '1.25rem' }}>
-                       <span style={{ display: 'flex', alignItems: 'center', gap: '6px' }}><Calendar size={14} /> {new Date(item.publishedAt).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}</span>
-                    </div>
-                    <h3 style={{ fontSize: '1.3rem', fontWeight: 700, color: '#1a1a1a', lineHeight: 1.3, marginBottom: '1rem', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>{item.title}</h3>
-                    <p style={{ color: '#4b5563', fontSize: '0.95rem', lineHeight: 1.7, marginBottom: '2rem', display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>{item.excerpt}</p>
-                    
-                    <Link href={`/news/${item._id}`} style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', color: '#ef233c', fontWeight: 700, textDecoration: 'none', fontSize: '0.95rem', transition: 'all 0.2s ease' }}>
-                      Read Story <ArrowRight size={16} />
+                  <div className={styles.articleContent}>
+                    <span className={styles.articleCategory}>{item.category || 'ACADEMIC'}</span>
+                    <h3 className={styles.articleTitle}>{item.title}</h3>
+                    <p className={styles.articleExcerpt}>{item.excerpt}</p>
+                    <Link href={`/news/${item._id}`} className={styles.readMore}>
+                      READ STORY <ArrowRight size={20} />
                     </Link>
                   </div>
-                </div>
-              )) : (
-                <div style={{ gridColumn: '1 / -1', textAlign: 'center', padding: '6rem 2rem', background: '#fff', borderRadius: '32px', border: '1px dashed #cbd5e1' }}>
-                   <Newspaper size={48} style={{ color: '#cbd5e1', marginBottom: '1.5rem' }} />
-                   <h3 style={{ fontSize: '1.5rem', fontWeight: 800, color: '#00122e', margin: '0 0 0.5rem' }}>No News Articles Yet</h3>
-                   <p style={{ color: '#64748b' }}>Our team is working on new updates. Please check back later.</p>
-                </div>
-              )}
-            </div>
-          )}
-        </div>
+                </article>
+              ))
+            ) : (
+              <div className={styles.emptyState}>
+                <Newspaper size={64} style={{ color: '#e2e8f0', marginBottom: '2rem' }} />
+                <h2>No articles published yet</h2>
+                <p>Check back soon for the latest institutional updates.</p>
+              </div>
+            )}
+          </div>
+        </section>
       </main>
       <Footer />
     </>

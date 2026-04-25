@@ -65,19 +65,30 @@ export default function UniversitiesPage() {
 
   return (
     <main className={styles.container}>
-
-      {/* ===== Hero ===== */}
-      <section className={styles.hero}>
-        <div className={styles.heroBg} />
-        <div className={styles.heroContent}>
-          <p className={styles.heroCrumb}>
-            <Link href="/">Home</Link> / Universities
-          </p>
-          <span className={styles.heroTag}>Global Network</span>
-          <h1 className={styles.heroTitle}>Our Partner Universities</h1>
+      {/* ===== Simple Image Hero ===== */}
+      <section className={styles.imageHero}>
+        <div className={styles.imageHeroContent}>
+          <nav className={styles.heroBreadcrumb}>
+            <Link href="/">Home</Link> <span>/</span> <span>Universities</span>
+          </nav>
+          <h1 className={styles.heroTitle}>
+            <span style={{ color: '#ef233c' }}>Partner</span> Universities
+          </h1>
           <p className={styles.heroSub}>
-            Explore our worldwide network of accredited, reputed institutions — handpicked to match your academic and career goals.
+            Discover your future at one of our globally recognized partner institutions.
           </p>
+          
+          <div className={styles.heroSearchWrapper}>
+            <div className={styles.heroSearchBox}>
+              <Search size={20} className={styles.heroSearchIcon} />
+              <input 
+                type="text" 
+                placeholder="Search university or city..." 
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
+            </div>
+          </div>
         </div>
       </section>
 
@@ -141,7 +152,7 @@ export default function UniversitiesPage() {
                         <MapPin size={13} /> {uni.location}
                       </p>
                       <h3 className={styles.cardName}>{uni.name}</h3>
-                      <p className={styles.cardDesc}>{uni.description || 'Global education partner offering a wide range of accredited programs and career-oriented learning.'}</p>
+                      <p className={styles.cardDesc}>{uni.description || ''}</p>
                       <div className={styles.cardTags}>
                         {uni.accreditations ? uni.accreditations.split(',').slice(0, 3).map((f: string, fi: number) => (
                           <span key={fi} className={styles.cardTag}>{f.trim()}</span>
@@ -171,9 +182,9 @@ export default function UniversitiesPage() {
             ) : (
               <div style={{ textAlign: 'center', padding: '5rem 2rem', background: '#f8fafc', borderRadius: '24px', border: '1px dashed #cbd5e1' }}>
                 <Info size={48} style={{ color: '#94a3b8', marginBottom: '1rem' }} />
-                <h3 style={{ fontSize: '1.5rem', fontWeight: 800, color: '#00122e', margin: '0 0 0.5rem' }}>No Universities Found</h3>
+                <h3 style={{ fontSize: '1.5rem', fontWeight: 800, color: '#002060', margin: '0 0 0.5rem' }}>No Universities Found</h3>
                 <p style={{ color: '#64748b', maxWidth: '400px', margin: '0 auto' }}>We couldn't find any universities matching your current filters. Try resetting them or searching for something else.</p>
-                <button onClick={() => { setActiveFilter('All'); setSearchTerm(''); }} style={{ marginTop: '1.5rem', background: '#00122e', color: 'white', border: 'none', padding: '0.8rem 2rem', borderRadius: '8px', fontWeight: 700, cursor: 'pointer' }}>Reset All Filters</button>
+                <button onClick={() => { setActiveFilter('All'); setSearchTerm(''); }} style={{ marginTop: '1.5rem', background: '#002060', color: 'white', border: 'none', padding: '0.8rem 2rem', borderRadius: '8px', fontWeight: 700, cursor: 'pointer' }}>Reset All Filters</button>
               </div>
             )}
           </>

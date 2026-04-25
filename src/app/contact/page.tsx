@@ -55,15 +55,19 @@ export default function ContactPage() {
 
   return (
     <main className={styles.container}>
-      {/* ===== Hero Section ===== */}
+      {/* ===== Cinematic Hero Section ===== */}
       <section className={styles.heroHeader}>
-        <div style={{ textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+        <div className={styles.heroContent}>
           <p className={styles.heroCrumb}>
             <Link href="/">Home</Link> / Contact
           </p>
-          <span className={styles.heroTag}>Support</span>
-          <h1 className={styles.heroTitle}>Get in Touch</h1>
-          <p className={styles.heroSub}>We're here to help you navigate your educational journey</p>
+          <span className={styles.heroTag}>Support Center</span>
+          <h1 className={styles.heroTitle}>
+            Get in <span style={{ color: '#ef233c' }}>Touch</span>
+          </h1>
+          <p className={styles.heroSub}>
+            Have questions? Our academic counselors are here to help you navigate your educational journey with clarity and confidence.
+          </p>
         </div>
       </section>
 
@@ -114,7 +118,7 @@ export default function ContactPage() {
              </div>
              <div className={styles.infoText}>
                <h3>Phone Number</h3>
-               <p>+91 123 456 7890<br/>Mon-Sat 9:00 AM - 6:00 PM</p>
+               <p>+91 98765 43210<br/>Mon-Sat 9:00 AM - 6:00 PM</p>
              </div>
            </div>
 

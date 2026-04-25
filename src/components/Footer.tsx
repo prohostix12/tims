@@ -11,69 +11,66 @@ const Footer = () => {
     <footer className={styles.footer}>
       <div className={styles.footerGrid}>
         <div className={styles.footerCol}>
-          <h2 style={{ fontSize: '1.75rem', fontWeight: 900, marginBottom: '1.5rem', color: 'white' }}>
-            TIMS<span style={{ color: '#ef233c' }}>.</span>
-          </h2>
+          <h3>Company</h3>
           <p>
-            Tirur Institute of Management Studies is a premier educational consultancy 
-            dedicated to providing high-quality management education and distance learning 
-            pathways for over a decade.
+            TIMS ( Tirur Institute of Management Studies) is an 
+            educational institution. It was established in 2009 
+            with the sole purpose of providing education 
+            accessible to every section of society, ... <Link href="/about" className={styles.readMore}>[Read More]</Link>
           </p>
         </div>
 
         <div className={styles.footerCol}>
-          <h3>Navigation</h3>
+          <h3>Explore</h3>
           <div className={styles.footerLinks}>
-            <Link href="/about" className={styles.footerLink}>About Us</Link>
-            <Link href="/universities" className={styles.footerLink}>Universities</Link>
-            <Link href="/courses" className={styles.footerLink}>Programs</Link>
-            <Link href="/services" className={styles.footerLink}>Services</Link>
+            <Link href="/" className={styles.footerLink}>Home</Link>
+            <Link href="/about" className={styles.footerLink}>About</Link>
+            <Link href="/blogs" className={styles.footerLink}>Blog</Link>
+            <Link href="/news" className={styles.footerLink}>News</Link>
             <Link href="/contact" className={styles.footerLink}>Contact</Link>
+            <Link href="/terms" className={styles.footerLink}>Terms and Conditions</Link>
+            <Link href="/privacy" className={styles.footerLink}>Privacy Policy</Link>
           </div>
         </div>
 
         <div className={styles.footerCol}>
-          <h3>Student Hub</h3>
-          <div className={styles.footerLinks}>
-            <button 
-              className={styles.footerLink}
-              onClick={() => window.dispatchEvent(new CustomEvent('open-course-finder'))}
-              style={{ background: 'none', border: 'none', padding: 0, cursor: 'pointer', textAlign: 'left', font: 'inherit' }}
-            >
-              Course Finder
-            </button>
-            <Link href="/services/attestation" className={styles.footerLink}>Attestation</Link>
-            <Link href="/services/distance-education" className={styles.footerLink}>Online Degrees</Link>
-            <Link href="/login" className={styles.footerLink}>Admin Login</Link>
-          </div>
-        </div>
-
-        <div className={styles.footerCol}>
-          <h3>Contact Us</h3>
+          <h3>Head Office</h3>
           <div className={styles.contactInfo}>
             <div className={styles.contactItem}>
-              <MapPin size={20} color="#ef233c" />
-              <span>Tirur, Malappuram, Kerala, India</span>
+              <Mail size={16} color="#ef233c" className={styles.iconMargin} />
+              <a href="mailto:info@timseducation.com">info@timseducation.com</a>
             </div>
             <div className={styles.contactItem}>
-              <Phone size={20} color="#ef233c" />
-              <span>+91 98765 43210</span>
+              <Phone size={16} color="#ef233c" className={styles.iconMargin} />
+              <a href="tel:+919961967777">+91 9961967777</a>
+            </div>
+            <div className={styles.contactItem} style={{ marginTop: '1rem', alignItems: 'flex-start' }}>
+              <span>2nd Floor, Pamls Tower, near<br/>Central Bank, Thazhepalam,<br/>Tirur, Kerala 676101</span>
+            </div>
+          </div>
+        </div>
+
+        <div className={styles.footerCol}>
+          <h3>Edapal Office</h3>
+          <div className={styles.contactInfo}>
+            <div className={styles.contactItem}>
+              <Mail size={16} color="#ef233c" className={styles.iconMargin} />
+              <a href="mailto:info@timseducation.com">info@timseducation.com</a>
             </div>
             <div className={styles.contactItem}>
-              <Mail size={20} color="#ef233c" />
-              <span>info@timseducation.com</span>
+              <Phone size={16} color="#ef233c" className={styles.iconMargin} />
+              <a href="tel:+919526387777">+91 9526387777</a>
+            </div>
+            <div className={styles.contactItem} style={{ marginTop: '1rem', alignItems: 'flex-start' }}>
+              <span>2nd floor Al madeela complex<br/>Calicut road Edappal 679576<br/>MALAPPURAM DT Kerala</span>
             </div>
           </div>
         </div>
       </div>
 
       <div className={styles.footerBottom}>
-        <p>© {new Date().getFullYear()} TIRUR INSTITUTE OF MANAGEMENT STUDIES. ALL RIGHTS RESERVED.</p>
-        <div className={styles.socials}>
-          <a href="#" className={styles.socialBtn} aria-label="Facebook"><Facebook size={20} /></a>
-          <a href="#" className={styles.socialBtn} aria-label="Instagram"><Instagram size={20} /></a>
-          <a href="#" className={styles.socialBtn} aria-label="Twitter"><Twitter size={20} /></a>
-          <a href="#" className={styles.socialBtn} aria-label="Mail"><Mail size={20} /></a>
+        <div style={{ flex: 1, display: 'flex', justifyContent: 'center' }}>
+          <p>© Copyright {new Date().getFullYear()} by TIMS Education</p>
         </div>
       </div>
     </footer>

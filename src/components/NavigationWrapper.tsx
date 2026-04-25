@@ -4,6 +4,7 @@ import { usePathname } from 'next/navigation';
 import Navbar from './Navbar';
 import Footer from './Footer';
 import CourseFinder from './CourseFinder';
+import FloatingCourseFinder from './FloatingCourseFinder';
 
 export default function NavigationWrapper({
   children,
@@ -21,6 +22,7 @@ export default function NavigationWrapper({
     <>
       <Navbar />
       {children}
+      <FloatingCourseFinder />
       <CourseFinder />
       <Footer />
     </>

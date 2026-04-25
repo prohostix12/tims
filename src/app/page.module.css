@@ -86,7 +86,7 @@
 }
 
 .heroTitleDark {
-  color: #1a1a1a;
+  color: #002060;
   font-weight: 800;
   display: block;
 }
@@ -395,9 +395,9 @@
   transform: translateY(0);
 }
 
-.getKnowList li:nth-child(1) { transition-delay: 2s; }
-.getKnowList li:nth-child(2) { transition-delay: 2.3s; }
-.getKnowList li:nth-child(3) { transition-delay: 2.6s; }
+.getKnowList li:nth-child(1) { transition-delay: 0.3s; }
+.getKnowList li:nth-child(2) { transition-delay: 0.5s; }
+.getKnowList li:nth-child(3) { transition-delay: 0.7s; }
 
 .getKnowImage {
   width: 100%;
@@ -649,7 +649,7 @@
 .uniSectionTitle {
   font-size: clamp(1.8rem, 3.5vw, 2.5rem);
   font-weight: 900;
-  color: #00122e;
+  color: #002060;
   margin-bottom: 1.5rem;
   letter-spacing: -2px;
 }
@@ -709,7 +709,7 @@
 .uniCardName {
   font-size: 1.2rem;
   font-weight: 800;
-  color: #00122e;
+  color: #002060;
   line-height: 1.3;
   margin-bottom: 1.5rem;
 }
@@ -966,7 +966,7 @@
 .newsCardTitle {
   font-size: 1.3rem;
   font-weight: 800;
-  color: #00122e;
+  color: #002060;
   line-height: 1.4;
   margin: 0;
   display: -webkit-box;
@@ -1294,7 +1294,7 @@
 .courseMiniBody h3 {
   font-size: 1.1rem;
   font-weight: 800;
-  color: #1a1a1a;
+  color: #002060;
   margin-bottom: 0.5rem;
 }
 
@@ -1369,7 +1369,7 @@
 .userInfo h4 {
   font-size: 1rem;
   font-weight: 800;
-  color: #1a1a1a;
+  color: #002060;
   margin: 0;
 }
 
@@ -1430,7 +1430,7 @@
 .blogMiniBody h3 {
   font-size: 1.2rem;
   font-weight: 800;
-  color: #1a1a1a;
+  color: #002060;
   margin-bottom: 1.5rem;
   line-height: 1.3;
 }

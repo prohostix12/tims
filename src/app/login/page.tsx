@@ -54,10 +54,7 @@ export default function LoginPage() {
           </div>
 
           <div className={styles.inputGroup}>
-            <div className={styles.labelRow}>
-              <label>Password</label>
-              <Link href="/forgot-password" className={styles.forgotPass}>Forgot?</Link>
-            </div>
+            <label>Password</label>
             <div className={styles.inputWrapper}>
               <Lock className={styles.inputIcon} size={20} />
               <input 

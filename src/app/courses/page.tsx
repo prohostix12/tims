@@ -73,11 +73,11 @@ export default function CoursesPage() {
           setCourses(data.map(c => ({
             _id: c._id,
             title: c.name,
-            level: c.level || 'Degree',
-            category: c.category || 'General',
-            description: c.description || 'Professional academic program designed for institutional excellence and professional growth.',
-            duration: c.duration || '3 Years',
-            eligibility: c.eligibility || 'Plus Two',
+            level: c.level || '',
+            category: c.category || '',
+            description: c.description || '',
+            duration: c.duration || '',
+            eligibility: c.eligibility || '',
             image: c.image
           })));
         }
@@ -104,63 +104,27 @@ export default function CoursesPage() {
         <div className={styles.pageGlow} />
 
         {/* ===== UpGrad Style Hero Section ===== */}
+        {/* ===== Red & White Centered Hero ===== */}
         <section className={styles.heroWrapper}>
           <div className={styles.heroContent}>
             <div className={styles.heroLeft}>
-              <nav className={styles.heroBreadcrumb}>
-                <Link href="/">Home</Link> <span>/</span> <span>Programs</span>
-              </nav>
+              <div className={styles.heroBreadcrumb}>
+                Programs Directory
+              </div>
               <h1 className={styles.heroTitle}>
-                Discover Your <span className={styles.heroTitleDark}>Academic Future</span> & Global Path.
+                Discover Your <br />
+                <span className={styles.heroTitleAccent}>Academic Future</span>
               </h1>
               <p className={styles.heroDesc}>
                 Explore our comprehensive directory of recognized academic programs. From SSLC to Post-Graduation, we provide the platform for your global success.
               </p>
-
-              <div className={styles.heroSearch}>
-                <input 
-                  type="text" 
-                  placeholder="Search program directory..." 
-                  className={styles.heroSearchInput}
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                />
-                <button className={styles.heroSearchBtn}>
-                  <Search size={20} />
+              <div className={styles.heroActions}>
+                <Link href="/contact" className={styles.heroPrimaryBtn}>
+                  ENROLL NOW
+                </Link>
+                <button className={styles.heroSecondaryBtn}>
+                  VIEW CATALOG
                 </button>
-              </div>
-
-              <div className={styles.goalSection}>
-                <p className={styles.goalLabel}>Or select a category 🎯</p>
-                <div className={styles.goalChips}>
-                  {categories.map((cat, i) => (
-                    <button 
-                      key={i} 
-                      className={`${styles.goalChip} ${activeCategory === cat ? styles.active : ''}`}
-                      onClick={() => setActiveCategory(cat)}
-                      style={{ border: 'none', cursor: 'pointer', fontFamily: 'inherit' }}
-                    >
-                      {cat}
-                    </button>
-                  ))}
-                </div>
-              </div>
-            </div>
-
-            <div className={styles.heroRight}>
-              <div className={styles.heroImageCard}>
-                <img 
-                  src="https://images.unsplash.com/photo-1541339907198-e08756ebafe1?q=80&w=800&auto=format&fit=crop" 
-                  alt="Academic Excellence" 
-                  style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
-                />
-                <div className={styles.heroImageOverlay}>
-                  <p className={styles.overlayWhite}>Premium Programs</p>
-                  <p className={styles.overlayHighlight}>Recognized Worldwide</p>
-                  <Link href="/contact" className={styles.overlayLink}>
-                    Talk to an Advisor <ArrowRight size={18} />
-                  </Link>
-                </div>
               </div>
             </div>
           </div>

@@ -5,9 +5,8 @@
 
 /* Hero */
 .hero {
-  background-color: var(--primary);
   background-image:
-    linear-gradient(to bottom, rgba(0,18,46,0.72) 0%, rgba(0,18,46,0.88) 100%),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.85) 0%, rgba(255, 255, 255, 0.6) 100%),
     url('/images/about-students.png');
   background-size: cover;
   background-position: center;
@@ -33,7 +32,7 @@
 
 .heroCrumb {
   font-size: 0.85rem;
-  color: rgba(255, 255, 255, 0.7);
+  color: #64748b;
   font-weight: 700;
   letter-spacing: 2px;
   text-transform: uppercase;
@@ -44,40 +43,41 @@
 }
 
 .heroCrumb a {
-  color: #ffffff;
+  color: #002060;
   text-decoration: none;
   transition: color 0.3s;
 }
 
 .heroCrumb a:hover {
-  color: var(--accent);
+  color: #ef233c;
 }
 
 .heroTag {
   display: inline-block;
-  background: rgba(239,35,60,0.15);
+  background: rgba(239,35,60,0.1);
   border: 1px solid rgba(239,35,60,0.3);
-  color: #ff6b7a;
+  color: #ef233c;
   font-size: 0.75rem;
-  font-weight: 700;
+  font-weight: 800;
   letter-spacing: 2px;
   text-transform: uppercase;
-  padding: 0.35rem 1rem;
+  padding: 0.4rem 1.25rem;
   border-radius: 100px;
   margin-bottom: 1.25rem;
 }
 
 .heroTitle {
-  font-size: clamp(2.5rem, 6vw, 4rem);
+  font-size: clamp(2rem, 4vw, 3rem);
   font-weight: 800;
-  color: var(--white);
-  margin: 0 0 1rem;
+  color: #002060;
+  line-height: 1.15;
   letter-spacing: -1px;
+  margin: 0 0 1rem;
 }
 
 .heroSub {
-  font-size: 1.05rem;
-  color: rgba(255,255,255,0.65);
+  font-size: 1.15rem;
+  color: #475569;
   line-height: 1.7;
   margin: 0;
   max-width: 560px;

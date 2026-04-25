@@ -49,7 +49,9 @@ export default function TimetablePage() {
               <Link href="/">Home</Link> / <Link href="/universities">Universities</Link> / Time Table
             </p>
             <span className={styles.heroTag}>Official Schedule</span>
-            <h1 className={styles.heroTitle}>Examination Time Table</h1>
+            <h1 className={styles.heroTitle}>
+              <span style={{ color: '#ef233c' }}>Examination</span> Time Table
+            </h1>
             <p className={styles.heroSub}>
               Stay updated with the latest board and university examination schedules for all our programs.
             </p>

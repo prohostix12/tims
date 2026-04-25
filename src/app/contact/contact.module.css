@@ -3,29 +3,70 @@
   background-color: #f8fafc;
 }
 
-/* ===== Hero Section ===== */
+/* ===== Cinematic Contact Hero ===== */
 .heroHeader {
   width: 100%;
-  min-height: 50vh;
-  background-color: #ffffff;
+  height: 100vh;
+  position: relative;
   display: flex;
-  justify-content: center;
   align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background-image: 
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.85) 0%, rgba(255, 255, 255, 0.7) 100%),
+    url('https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&q=80&w=2000');
+  background-size: cover;
+  background-position: center;
   padding-top: 100px;
-  border-bottom: 1px solid #e5e7eb;
+}
+
+.heroContent {
+  position: relative;
+  z-index: 10;
+  text-align: center;
+  padding: 0 2rem;
+  width: 100%;
+  max-width: 900px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.heroTag {
+  display: inline-block;
+  background: rgba(239, 35, 60, 0.1);
+  border: 1px solid rgba(239, 35, 60, 0.2);
+  color: #ef233c;
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  padding: 0.5rem 1.5rem;
+  border-radius: 100px;
+  margin-bottom: 2rem;
 }
 
 .heroTitle {
-  font-size: 3.5rem;
+  font-size: clamp(2.5rem, 6vw, 4rem);
   font-weight: 800;
-  color: #1a1a1a;
-  margin-bottom: 1rem;
-  letter-spacing: -1.5px;
+  color: #002060;
+  line-height: 1.1;
+  margin: 0;
+  letter-spacing: -2px;
+}
+
+.heroSub {
+  font-size: 1.15rem;
+  color: #475569;
+  line-height: 1.8;
+  margin: 1.5rem 0 0;
+  max-width: 600px;
+  font-weight: 400;
 }
 
 .heroCrumb {
   font-size: 0.85rem;
-  color: rgba(255, 255, 255, 0.7);
+  color: #94a3b8;
   font-weight: 700;
   letter-spacing: 2px;
   text-transform: uppercase;
@@ -36,47 +77,31 @@
 }
 
 .heroCrumb a {
-  color: #ffffff;
+  color: #002060;
   text-decoration: none;
   transition: color 0.3s;
 }
 
 .heroCrumb a:hover {
-  color: var(--accent);
-}
-
-.heroTag {
-  display: inline-block;
-  background: rgba(239,35,60,0.15);
-  border: 1px solid rgba(239,35,60,0.3);
-  color: #ff6b7a;
-  font-size: 0.75rem;
-  font-weight: 700;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  padding: 0.35rem 1rem;
-  border-radius: 100px;
-  margin-bottom: 1.25rem;
-}
-
-.heroSub {
-  font-size: 1.1rem;
-  color: #4b5563;
-  line-height: 1.6;
-  margin: 0;
-  max-width: 600px;
+  color: #ef233c;
 }
 
 /* ===== Contact Layout ===== */
 .contactSplit {
-  max-width: 1200px;
-  margin: 4rem auto 8rem;
-  padding: 0 2rem;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 8rem 5%;
   display: grid;
   grid-template-columns: 1.2fr 1fr;
-  gap: 4rem;
+  gap: 6rem;
   position: relative;
   z-index: 10;
+  background-image: 
+    linear-gradient(rgba(248, 250, 252, 0.95), rgba(248, 250, 252, 0.95)),
+    url('https://images.unsplash.com/photo-1521737711867-e3b97375f902?q=80&w=2000');
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
 }
 
 /* ===== Form Card ===== */
