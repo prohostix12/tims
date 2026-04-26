@@ -40,6 +40,7 @@ interface University {
   _id: string;
   name: string;
   image?: string;
+  logo?: string;
   status: string;
 }
 
