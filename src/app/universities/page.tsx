@@ -43,8 +43,8 @@ export default function UniversitiesPage() {
 
   const filtered = universities.filter(u => {
     const matchesFilter = activeFilter === 'All' || (u.type && u.type.toLowerCase() === activeFilter.toLowerCase());
-    const matchesSearch = u.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
-                          u.location.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesSearch = (u.name || '').toLowerCase().includes(searchTerm.toLowerCase()) || 
+                          (u.location || '').toLowerCase().includes(searchTerm.toLowerCase());
     return matchesFilter && matchesSearch;
   });
 

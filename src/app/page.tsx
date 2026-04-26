@@ -81,14 +81,16 @@ export default function Home() {
         const courseData = await courseRes.json();
 
         // Set data from API
+        console.log('API Response:', { uniData, newsData, blogData, courseData });
+
         if (Array.isArray(uniData)) {
-          setUniversities(uniData.filter((u) => u.status === 'active').slice(0, 6));
+          setUniversities(uniData.filter((u) => !u.status || u.status.toLowerCase() === 'active').slice(0, 6));
         }
         if (Array.isArray(newsData)) {
-          setNewsItems(newsData.filter((n) => n.status === 'published').slice(0, 6));
+          setNewsItems(newsData.filter((n) => !n.status || n.status.toLowerCase() === 'published').slice(0, 6));
         }
         if (Array.isArray(blogData)) {
-          setBlogs(blogData.filter((b) => b.status === 'published').slice(0, 4));
+          setBlogs(blogData.filter((b) => !b.status || b.status.toLowerCase() === 'published').slice(0, 4));
         }
         if (Array.isArray(courseData)) {
           setCourses(courseData.slice(0, 3));
