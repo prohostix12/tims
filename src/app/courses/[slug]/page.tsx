@@ -16,10 +16,22 @@ import {
 } from 'lucide-react';
 import EnquiryModal from '@/components/EnquiryModal';
 
+interface CourseData {
+  title: string;
+  image: string;
+  category: string;
+  duration: string;
+  eligibility: string;
+  level: string;
+  description: string;
+  highlights: string[];
+  curriculum: string[];
+}
+
 export default function CourseDetailsPage() {
   const params = useParams();
   const slug = params.slug as string;
-  const [courseData, setCourseData] = React.useState<any>(null);
+  const [courseData, setCourseData] = React.useState<CourseData | null>(null);
   const [loading, setLoading] = React.useState(true);
   const [isModalOpen, setIsModalOpen] = React.useState(false);
 
