@@ -90,138 +90,118 @@
   font-weight: 500;
 }
 
-/* Results Search Section */
-.resultsSection {
-  padding: 4rem 5% 10rem;
-  background: #f8fafc;
+/* Results List Section */
+.resultsListSection {
+  padding: 6rem 5%;
+  background: #ffffff;
   position: relative;
+  z-index: 2;
 }
 
-.searchCard {
-  max-width: 900px;
+.resultsListContainer {
+  max-width: 1200px;
   margin: -6rem auto 0;
-  background: #ffffff;
-  border-radius: 24px;
-  padding: 3.5rem;
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.1);
   position: relative;
   z-index: 10;
+}
+
+.universitySection {
+  background: #ffffff;
+  border-radius: 24px;
+  padding: 3rem;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.05);
+  margin-bottom: 3rem;
   border: 1px solid rgba(0, 0, 0, 0.05);
 }
 
-.cardHeader {
-  text-align: center;
-  margin-bottom: 3rem;
-}
-
-.cardHeader h2 {
-  font-size: 2rem;
+.uniTitle {
+  font-size: 1.8rem;
   color: #00122e;
-  margin-bottom: 0.5rem;
+  margin-bottom: 2rem;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border-bottom: 2px solid #f1f5f9;
+  padding-bottom: 1rem;
 }
 
-.cardHeader p {
-  color: #64748b;
-  font-weight: 500;
+.uniTitle i {
+  color: #ef233c;
 }
 
-.searchForm {
+.resultsGrid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
   gap: 1.5rem;
 }
 
-.inputGroup {
+.resultItem {
+  background: #f8fafc;
+  padding: 1.5rem;
+  border-radius: 16px;
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
-}
-
-.inputLabel {
-  font-size: 0.9rem;
-  font-weight: 700;
-  color: #00122e;
-  margin-left: 0.25rem;
-}
-
-.inputField {
-  padding: 1.1rem 1.5rem;
-  border-radius: 12px;
-  border: 2px solid #e2e8f0;
-  background: #f8fafc;
-  font-size: 1rem;
-  font-weight: 500;
-  color: #00122e;
+  gap: 0.75rem;
   transition: all 0.3s ease;
+  border: 1px solid transparent;
 }
 
-.inputField:focus {
-  outline: none;
-  border-color: #ef233c;
+.resultItem:hover {
   background: #ffffff;
-  box-shadow: 0 0 0 4px rgba(239, 35, 60, 0.1);
+  border-color: #ef233c;
+  box-shadow: 0 10px 20px rgba(239, 35, 60, 0.05);
+  transform: translateY(-4px);
 }
 
-.submitBtn {
-  grid-column: span 2;
-  margin-top: 1rem;
-  padding: 1.25rem;
-  background: #00122e;
-  color: #ffffff;
-  border: none;
-  border-radius: 12px;
+.courseLink {
   font-size: 1.1rem;
   font-weight: 700;
-  cursor: pointer;
-  transition: all 0.3s ease;
+  color: #00122e;
+  text-decoration: none;
   display: flex;
   align-items: center;
-  justify-content: center;
-  gap: 10px;
+  justify-content: space-between;
+  transition: color 0.2s ease;
 }
 
-.submitBtn:hover {
-  background: rgba(255, 255, 255, 0.95);
+.resultItem:hover .courseLink {
   color: #ef233c;
-  transform: translateY(-2px);
-  box-shadow: inset 0 0 0 2px #ef233c, 0 10px 20px rgba(0, 0, 0, 0.1);
 }
 
-/* Result Display Area */
-.resultDisplay {
-  margin-top: 4rem;
-  padding-top: 4rem;
-  border-top: 2px dashed #e2e8f0;
+.semesterTag {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #64748b;
+  background: #e2e8f0;
+  padding: 4px 10px;
+  border-radius: 4px;
+  align-self: flex-start;
+}
+
+.loadingWrapper {
   text-align: center;
+  padding: 5rem;
+  color: #64748b;
 }
 
 .emptyState {
-  padding: 4rem;
-}
-
-.emptyIcon {
-  width: 80px;
-  height: 80px;
-  background: #f1f5f9;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 0 auto 1.5rem;
-  color: #94a3b8;
+  text-align: center;
+  padding: 5rem;
+  background: #f8fafc;
+  border-radius: 24px;
+  color: #64748b;
 }
 
 @media (max-width: 768px) {
-  .searchCard {
-    padding: 2rem;
-    margin-top: -4rem;
+  .universitySection {
+    padding: 1.5rem;
   }
   
-  .searchForm {
+  .resultsGrid {
     grid-template-columns: 1fr;
   }
   
-  .submitBtn {
-    grid-column: span 1;
+  .resultsListContainer {
+    margin-top: -2rem;
   }
 }
