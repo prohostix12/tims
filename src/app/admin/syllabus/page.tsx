@@ -14,7 +14,8 @@ import {
   Download,
   BookOpen,
   Edit,
-  GraduationCap
+  GraduationCap,
+  Layers
 } from 'lucide-react';
 import ConfirmModal from '@/components/ConfirmModal';
 
@@ -28,6 +29,7 @@ export default function SyllabusAdminPage() {
   const [formData, setFormData] = useState({
     university: '',
     course: '',
+    semester: '',
     fileUrl: ''
   });
 
@@ -101,6 +103,7 @@ export default function SyllabusAdminPage() {
         setFormData({
           university: '',
           course: '',
+          semester: '',
           fileUrl: ''
         });
         fetchSyllabi();
@@ -120,6 +123,7 @@ export default function SyllabusAdminPage() {
     setFormData({
       university: item.university?._id || item.university || '',
       course: item.course?._id || item.course || '',
+      semester: item.semester || '',
       fileUrl: item.fileUrl
     });
     setIsFormOpen(true);
@@ -142,7 +146,8 @@ export default function SyllabusAdminPage() {
 
   const filteredSyllabi = syllabi.filter(s => 
     s.course?.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    s.university?.name?.toLowerCase().includes(searchTerm.toLowerCase())
+    s.university?.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    s.semester?.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   return (
@@ -172,7 +177,7 @@ export default function SyllabusAdminPage() {
             <Search size={18} />
             <input 
               type="text" 
-              placeholder="Search by course or university..." 
+              placeholder="Search syllabus..." 
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
@@ -190,6 +195,7 @@ export default function SyllabusAdminPage() {
               <tr>
                 <th>Course Name</th>
                 <th>University</th>
+                <th>Semester</th>
                 <th>Document</th>
                 <th>Actions</th>
               </tr>
@@ -211,6 +217,11 @@ export default function SyllabusAdminPage() {
                     </div>
                   </td>
                   <td>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#64748b', fontWeight: 600 }}>
+                      <Layers size={16} /> {item.semester || 'N/A'}
+                    </div>
+                  </td>
+                  <td>
                     <a href={item.fileUrl} target="_blank" rel="noopener noreferrer" style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', color: '#2563eb', fontWeight: 600, fontSize: '0.85rem' }}>
                       <Download size={16} /> View PDF
                     </a>
@@ -228,7 +239,7 @@ export default function SyllabusAdminPage() {
                 </tr>
               )) : (
                 <tr>
-                  <td colSpan={4} style={{ textAlign: 'center', padding: '4rem', color: '#64748b' }}>
+                  <td colSpan={5} style={{ textAlign: 'center', padding: '4rem', color: '#64748b' }}>
                     No syllabi found. Click "Upload Syllabus" to add one.
                   </td>
                 </tr>
@@ -245,7 +256,7 @@ export default function SyllabusAdminPage() {
             <div className={styles.modalHeader}>
               <div>
                 <h2 style={{ margin: 0 }}>{editingId ? 'Edit Syllabus' : 'Upload New Syllabus'}</h2>
-                <p style={{ margin: '4px 0 0', color: '#64748b', fontSize: '0.9rem' }}>Upload official program curriculum docs.</p>
+                <p style={{ margin: '4px 0 0', color: '#64748b', fontSize: '0.9rem' }}>Fill in academic criteria and attach PDF.</p>
               </div>
               <button className={styles.closeBtn} onClick={() => { setIsFormOpen(false); setEditingId(null); }}>
                 <X size={24} />
@@ -256,7 +267,7 @@ export default function SyllabusAdminPage() {
               <div className={styles.modalBody}>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
                   <div>
-                    <label className={styles.label}>University</label>
+                    <label className={styles.label}>1. University</label>
                     <select 
                       className={styles.input} 
                       value={formData.university} 
@@ -271,7 +282,7 @@ export default function SyllabusAdminPage() {
                   </div>
 
                   <div>
-                    <label className={styles.label}>Course</label>
+                    <label className={styles.label}>2. Course</label>
                     <select 
                       className={styles.input} 
                       value={formData.course} 
@@ -290,7 +301,29 @@ export default function SyllabusAdminPage() {
                   </div>
 
                   <div>
-                    <label className={styles.label}><FileText size={16} /> Syllabus Document (PDF)</label>
+                    <label className={styles.label}>3. Semester</label>
+                    <select 
+                      className={styles.input} 
+                      value={formData.semester} 
+                      onChange={(e) => setFormData({...formData, semester: e.target.value})}
+                      required
+                    >
+                      <option value="">Select Semester</option>
+                      <option value="1st Semester">1st Semester</option>
+                      <option value="2nd Semester">2nd Semester</option>
+                      <option value="3rd Semester">3rd Semester</option>
+                      <option value="4th Semester">4th Semester</option>
+                      <option value="5th Semester">5th Semester</option>
+                      <option value="6th Semester">6th Semester</option>
+                      <option value="7th Semester">7th Semester</option>
+                      <option value="8th Semester">8th Semester</option>
+                      <option value="Annual System">Annual System</option>
+                      <option value="Full Curriculum">Full Curriculum</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className={styles.label}><FileText size={16} /> 4. Syllabus Document (PDF)</label>
                     <input 
                       type="file" 
                       accept=".pdf,application/pdf"
@@ -302,9 +335,6 @@ export default function SyllabusAdminPage() {
                         ✓ File attached successfully
                       </p>
                     )}
-                    <p style={{ fontSize: '0.75rem', color: '#94a3b8', marginTop: '4px' }}>
-                      Upload the official curriculum PDF.
-                    </p>
                   </div>
                 </div>
               </div>
