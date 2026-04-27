@@ -1,16 +1,12 @@
 'use client';
 
-import React, { useState } from 'react';
+import React from 'react';
 import styles from './results.module.css';
-import Navbar from '@/components/Navbar';
-import Footer from '@/components/Footer';
 import { GraduationCap, FileText, ArrowRight, Award } from 'lucide-react';
 
 export default function ResultsPage() {
   return (
     <div className={styles.container}>
-      <Navbar />
-      
       <main>
         <div className={styles.pageGlow} />
 
@@ -32,10 +28,7 @@ export default function ResultsPage() {
             </div>
           </div>
         </section>
-
       </main>
-
-      <Footer />
     </div>
   );
 }

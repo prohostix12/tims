@@ -5,8 +5,6 @@ import styles from './courses.module.css';
 import Link from 'next/link';
 import { Search, GraduationCap, Clock, BookOpen, ArrowRight, Loader2, ShieldCheck, Globe, Zap } from 'lucide-react';
 import EnquiryModal from '@/components/EnquiryModal';
-import Navbar from '@/components/Navbar';
-import Footer from '@/components/Footer';
 
 const CourseCard = ({ course, i, onEnquire }: { course: any, i: number, onEnquire: (interest: string) => void }) => {
   return (
@@ -99,7 +97,6 @@ export default function CoursesPage() {
 
   return (
     <>
-      <Navbar />
       <main className={styles.container}>
         <div className={styles.pageGlow} />
 
@@ -225,7 +222,6 @@ export default function CoursesPage() {
           source="Courses Page"
         />
       </main>
-      <Footer />
     </>
   );
 }
