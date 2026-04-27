@@ -7,7 +7,7 @@ if (process.env.NODE_ENV === 'development') {
   dns.setServers(['8.8.8.8', '8.8.4.4', '1.1.1.1']);
   dns.setDefaultResultOrder('ipv4first');
 }
-const MONGODB_URI = process.env.MONGODB_URI;
+
 
 declare global {
   var mongoose: {
@@ -23,6 +23,8 @@ if (!cached) {
 }
 
 async function connectDB() {
+  const MONGODB_URI = process.env.MONGODB_URI;
+
   if (!MONGODB_URI) {
     throw new Error('Please define the MONGODB_URI environment variable inside .env.local');
   }
@@ -39,7 +41,6 @@ async function connectDB() {
     const opts = {
       bufferCommands: false,
       serverSelectionTimeoutMS: 10000,
-      family: 4, // Force IPv4 — fixes SRV resolution issues on some networks
     };
 
     cached.promise = mongoose.connect(MONGODB_URI, opts).then((m) => m);
