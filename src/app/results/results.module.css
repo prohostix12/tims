@@ -1,0 +1,216 @@
+.container {
+  min-height: 100vh;
+  background: #ffffff;
+  position: relative;
+  overflow: hidden;
+}
+
+.pageGlow {
+  position: absolute;
+  top: -10%;
+  right: -5%;
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle, rgba(239, 35, 60, 0.05) 0%, rgba(255, 255, 255, 0) 70%);
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* Hero Section */
+.heroWrapper {
+  padding: 12rem 5% 10rem;
+  background-image: url('/results_hero_bg_1777279494699.png');
+  background-size: cover;
+  background-position: center;
+  position: relative;
+  color: #ffffff;
+}
+
+.heroOverlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to right, rgba(0, 18, 46, 0.95) 0%, rgba(0, 18, 46, 0.4) 100%);
+  z-index: 1;
+}
+
+.heroContent {
+  max-width: 1400px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 2;
+}
+
+.heroLeft {
+  max-width: 800px;
+}
+
+.heroBreadcrumb {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(239, 35, 60, 0.08);
+  color: #ef233c;
+  padding: 0.5rem 1rem;
+  border-radius: 50px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 2rem;
+}
+
+.heroTitle {
+  font-size: clamp(2.5rem, 5vw, 4.5rem);
+  line-height: 1.1;
+  color: #ffffff;
+  margin-bottom: 1.5rem;
+  font-weight: 900;
+  letter-spacing: -2px;
+}
+
+.heroTitleAccent {
+  color: #ef233c;
+}
+
+.heroDesc {
+  font-size: 1.2rem;
+  color: rgba(255, 255, 255, 0.8);
+  line-height: 1.6;
+  margin-bottom: 2.5rem;
+  font-weight: 500;
+}
+
+/* Results Search Section */
+.resultsSection {
+  padding: 4rem 5% 10rem;
+  background: #f8fafc;
+  position: relative;
+}
+
+.searchCard {
+  max-width: 900px;
+  margin: -6rem auto 0;
+  background: #ffffff;
+  border-radius: 24px;
+  padding: 3.5rem;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.1);
+  position: relative;
+  z-index: 10;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.cardHeader {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.cardHeader h2 {
+  font-size: 2rem;
+  color: #00122e;
+  margin-bottom: 0.5rem;
+}
+
+.cardHeader p {
+  color: #64748b;
+  font-weight: 500;
+}
+
+.searchForm {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+}
+
+.inputGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.inputLabel {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #00122e;
+  margin-left: 0.25rem;
+}
+
+.inputField {
+  padding: 1.1rem 1.5rem;
+  border-radius: 12px;
+  border: 2px solid #e2e8f0;
+  background: #f8fafc;
+  font-size: 1rem;
+  font-weight: 500;
+  color: #00122e;
+  transition: all 0.3s ease;
+}
+
+.inputField:focus {
+  outline: none;
+  border-color: #ef233c;
+  background: #ffffff;
+  box-shadow: 0 0 0 4px rgba(239, 35, 60, 0.1);
+}
+
+.submitBtn {
+  grid-column: span 2;
+  margin-top: 1rem;
+  padding: 1.25rem;
+  background: #00122e;
+  color: #ffffff;
+  border: none;
+  border-radius: 12px;
+  font-size: 1.1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.submitBtn:hover {
+  background: #ef233c;
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(239, 35, 60, 0.2);
+}
+
+/* Result Display Area */
+.resultDisplay {
+  margin-top: 4rem;
+  padding-top: 4rem;
+  border-top: 2px dashed #e2e8f0;
+  text-align: center;
+}
+
+.emptyState {
+  padding: 4rem;
+}
+
+.emptyIcon {
+  width: 80px;
+  height: 80px;
+  background: #f1f5f9;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1.5rem;
+  color: #94a3b8;
+}
+
+@media (max-width: 768px) {
+  .searchCard {
+    padding: 2rem;
+    margin-top: -4rem;
+  }
+  
+  .searchForm {
+    grid-template-columns: 1fr;
+  }
+  
+  .submitBtn {
+    grid-column: span 1;
+  }
+}
