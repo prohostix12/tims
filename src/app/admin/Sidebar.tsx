@@ -35,6 +35,7 @@ export default function Sidebar() {
     { name: 'Syllabus', path: '/admin/syllabus', icon: <FileText size={20} /> },
     { name: 'Study Materials', path: '/admin/study-materials', icon: <Book size={20} /> },
     { name: 'Time Table', path: '/admin/timetable', icon: <CalendarDays size={20} /> },
+    { name: 'Results', path: '/admin/results', icon: <ClipboardList size={20} /> },
     { name: 'Course Finder', path: '/admin/course-finder', icon: <Search size={20} /> },
     { name: 'Leads', path: '/admin/leads', icon: <ClipboardList size={20} /> },
     { name: 'Enrollments', path: '/admin/enrollments', icon: <ClipboardList size={20} /> },
