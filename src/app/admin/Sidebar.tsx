@@ -57,7 +57,8 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
             alt="TIMS Logo" 
             width={200} 
             height={60} 
-            style={{ objectFit: 'contain' }}
+            style={{ width: '100%', height: 'auto', objectFit: 'contain' }}
+            priority
           />
         </div>
         <button className={styles.mobileClose} onClick={onClose}>
