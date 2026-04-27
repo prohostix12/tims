@@ -31,6 +31,20 @@ const nextConfig: NextConfig = {
     ],
     qualities: [75, 80, 90],
   },
+  async redirects() {
+    return [
+      {
+        source: '/programs',
+        destination: '/courses',
+        permanent: true,
+      },
+      {
+        source: '/programs/:slug*',
+        destination: '/courses/:slug*',
+        permanent: true,
+      },
+    ];
+  },
 };
 
 export default nextConfig;
