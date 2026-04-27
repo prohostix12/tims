@@ -32,7 +32,8 @@
 .heroOverlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(to right, rgba(0, 18, 46, 0.95) 0%, rgba(0, 18, 46, 0.4) 100%);
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(2px);
   z-index: 1;
 }
 
@@ -42,6 +43,7 @@
   position: relative;
   z-index: 2;
   text-align: center;
+  color: #00122e;
 }
 
 .heroLeft {
@@ -70,7 +72,7 @@
 .heroTitle {
   font-size: clamp(2.5rem, 5vw, 4.5rem);
   line-height: 1.1;
-  color: #ffffff;
+  color: #00122e;
   margin-bottom: 1.5rem;
   font-weight: 900;
   letter-spacing: -2px;
@@ -82,7 +84,7 @@
 
 .heroDesc {
   font-size: 1.2rem;
-  color: rgba(255, 255, 255, 0.8);
+  color: #4b5563;
   line-height: 1.6;
   margin-bottom: 2.5rem;
   font-weight: 500;
