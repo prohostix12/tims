@@ -38,11 +38,10 @@
 /* ---- Logo ---- */
 .logo {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   flex-shrink: 0;
   text-decoration: none;
   line-height: 0;
-  align-self: flex-start;
   margin-top: -25px;
 }
 
@@ -355,7 +354,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 1.25rem 1.5rem;
+  padding: 0.8rem 1.2rem;
   border-bottom: 1px solid #f1f5f9;
   position: sticky;
   top: 0;
@@ -385,10 +384,10 @@
 
 /* Drawer nav list */
 .drawerNav {
-  padding: 1rem 1.25rem;
+  padding: 0.5rem 1rem;
   display: flex;
   flex-direction: column;
-  gap: 0.25rem;
+  gap: 0.15rem;
   flex: 1;
 }
 
@@ -403,8 +402,8 @@
   align-items: center;
   justify-content: space-between;
   width: 100%;
-  padding: 0.85rem 1rem;
-  font-size: 1rem;
+  padding: 0.65rem 0.85rem;
+  font-size: 0.95rem;
   font-weight: 700;
   color: #002060;
   text-decoration: none;
@@ -522,7 +521,7 @@
 
 /* Drawer footer */
 .drawerActions {
-  padding: 1.25rem 1.5rem;
+  padding: 1rem 1.2rem;
   border-top: 1px solid #f1f5f9;
   display: flex;
   flex-direction: column;
