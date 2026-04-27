@@ -13,7 +13,8 @@ import {
   AlertCircle,
   Download,
   Book,
-  Edit
+  Edit,
+  Layers
 } from 'lucide-react';
 import ConfirmModal from '@/components/ConfirmModal';
 
@@ -26,6 +27,7 @@ export default function StudyMaterialsAdminPage() {
   const [formData, setFormData] = useState({
     university: '',
     course: '',
+    semester: '',
     subject: '',
     fileUrl: '',
     category: 'General',
@@ -86,6 +88,7 @@ export default function StudyMaterialsAdminPage() {
     setFormData({
       university: item.university?._id || item.university || '',
       course: item.course?._id || item.course || '',
+      semester: item.semester || '',
       subject: item.subject,
       fileUrl: item.fileUrl,
       category: item.category || 'General',
@@ -114,6 +117,7 @@ export default function StudyMaterialsAdminPage() {
         setFormData({
           university: '',
           course: '',
+          semester: '',
           subject: '',
           fileUrl: '',
           category: 'General',
@@ -148,7 +152,8 @@ export default function StudyMaterialsAdminPage() {
 
   const filteredMaterials = materials.filter(m => 
     m.subject.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    m.category.toLowerCase().includes(searchTerm.toLowerCase())
+    m.category.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    m.semester?.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   return (
@@ -158,7 +163,7 @@ export default function StudyMaterialsAdminPage() {
           <h1 className={styles.title}>Study Materials</h1>
           <p style={{ color: '#64748b' }}>Upload and manage educational resources and PDFs for students.</p>
         </div>
-        <button className={styles.addBtn} onClick={() => setIsFormOpen(true)}>
+        <button className={styles.addBtn} onClick={() => { setIsFormOpen(true); setEditingId(null); }}>
           <Plus size={20} /> Upload Material
         </button>
       </header>
@@ -178,7 +183,7 @@ export default function StudyMaterialsAdminPage() {
             <Search size={18} />
             <input 
               type="text" 
-              placeholder="Search by subject..." 
+              placeholder="Search by subject or semester..." 
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
@@ -194,12 +199,11 @@ export default function StudyMaterialsAdminPage() {
           <table className={styles.table}>
             <thead>
               <tr>
-                <th>Subject Name</th>
+                <th>Subject & Semester</th>
                 <th>University</th>
                 <th>Course</th>
                 <th>Category</th>
                 <th>Format</th>
-                <th>Upload Date</th>
                 <th>Actions</th>
               </tr>
             </thead>
@@ -211,7 +215,12 @@ export default function StudyMaterialsAdminPage() {
                       <div style={{ width: '40px', height: '40px', background: '#ecfdf5', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#059669' }}>
                         <Book size={20} />
                       </div>
-                      <span style={{ fontWeight: 600, color: '#0f172a' }}>{item.subject}</span>
+                      <div>
+                        <div style={{ fontWeight: 600, color: '#0f172a' }}>{item.subject}</div>
+                        <div style={{ fontSize: '0.75rem', color: '#64748b', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '4px' }}>
+                          <Layers size={12} /> {item.semester || 'N/A'}
+                        </div>
+                      </div>
                     </div>
                   </td>
                   <td>{item.university?.name || '-'}</td>
@@ -221,9 +230,6 @@ export default function StudyMaterialsAdminPage() {
                     <span style={{ fontSize: '0.75rem', fontWeight: 700, background: '#f1f5f9', color: '#64748b', padding: '4px 8px', borderRadius: '4px' }}>
                       {item.fileType}
                     </span>
-                  </td>
-                  <td style={{ fontSize: '0.85rem', color: '#64748b' }}>
-                    {new Date(item.createdAt).toLocaleDateString()}
                   </td>
                   <td>
                     <div style={{ display: 'flex', gap: '8px' }}>
@@ -241,7 +247,7 @@ export default function StudyMaterialsAdminPage() {
                 </tr>
               )) : (
                 <tr>
-                  <td colSpan={5} style={{ textAlign: 'center', padding: '4rem', color: '#64748b' }}>
+                  <td colSpan={6} style={{ textAlign: 'center', padding: '4rem', color: '#64748b' }}>
                     No study materials found. Click "Upload Material" to add your first resource.
                   </td>
                 </tr>
@@ -254,11 +260,11 @@ export default function StudyMaterialsAdminPage() {
       {/* Upload Modal */}
       {isFormOpen && (
         <div className={styles.modalOverlay}>
-          <div className={styles.modalContent} style={{ maxWidth: '500px' }}>
+          <div className={styles.modalContent} style={{ maxWidth: '600px' }}>
             <div className={styles.modalHeader}>
               <div>
                 <h2 style={{ margin: 0 }}>{editingId ? 'Edit Study Material' : 'Upload Study Material'}</h2>
-                <p style={{ margin: '4px 0 0', color: '#64748b', fontSize: '0.9rem' }}>{editingId ? 'Update the resource details below.' : 'Add educational resources for student download.'}</p>
+                <p style={{ margin: '4px 0 0', color: '#64748b', fontSize: '0.9rem' }}>Fill in academic criteria and attach resource.</p>
               </div>
               <button className={styles.closeBtn} onClick={() => { setIsFormOpen(false); setEditingId(null); }}>
                 <X size={24} />
@@ -270,7 +276,7 @@ export default function StudyMaterialsAdminPage() {
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
                   <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px' }}>
                     <div>
-                      <label className={styles.label}>University</label>
+                      <label className={styles.label}>1. University</label>
                       <select 
                         className={styles.input} 
                         value={formData.university} 
@@ -285,7 +291,7 @@ export default function StudyMaterialsAdminPage() {
                     </div>
 
                     <div>
-                      <label className={styles.label}>Course</label>
+                      <label className={styles.label}>2. Course</label>
                       <select 
                         className={styles.input} 
                         value={formData.course} 
@@ -304,62 +310,86 @@ export default function StudyMaterialsAdminPage() {
                     </div>
                   </div>
 
-                  <div>
-                    <label className={styles.label}>Subject Name</label>
-                    <input 
-                      type="text" 
-                      className={styles.input}
-                      placeholder="e.g. Business Administration"
-                      value={formData.subject}
-                      onChange={(e) => setFormData({...formData, subject: e.target.value})}
-                      required
-                    />
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px' }}>
+                    <div>
+                      <label className={styles.label}>3. Semester</label>
+                      <select 
+                        className={styles.input} 
+                        value={formData.semester} 
+                        onChange={(e) => setFormData({...formData, semester: e.target.value})}
+                        required
+                      >
+                        <option value="">Select Semester</option>
+                        <option value="1st Semester">1st Semester</option>
+                        <option value="2nd Semester">2nd Semester</option>
+                        <option value="3rd Semester">3rd Semester</option>
+                        <option value="4th Semester">4th Semester</option>
+                        <option value="5th Semester">5th Semester</option>
+                        <option value="6th Semester">6th Semester</option>
+                        <option value="7th Semester">7th Semester</option>
+                        <option value="8th Semester">8th Semester</option>
+                        <option value="Annual System">Annual System</option>
+                        <option value="General Material">General Material</option>
+                      </select>
+                    </div>
+
+                    <div>
+                      <label className={styles.label}>4. Subject Name</label>
+                      <input 
+                        type="text" 
+                        className={styles.input}
+                        placeholder="e.g. Financial Accounting"
+                        value={formData.subject}
+                        onChange={(e) => setFormData({...formData, subject: e.target.value})}
+                        required
+                      />
+                    </div>
+                  </div>
+
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px' }}>
+                    <div>
+                      <label className={styles.label}>5. Category</label>
+                      <select 
+                        className={styles.input} 
+                        value={formData.category} 
+                        onChange={(e) => setFormData({...formData, category: e.target.value})}
+                      >
+                        <option value="General">General</option>
+                        <option value="Core Subject">Core Subject</option>
+                        <option value="Elective">Elective</option>
+                        <option value="Practical">Practical</option>
+                        <option value="Reference">Reference</option>
+                      </select>
+                    </div>
+
+                    <div>
+                      <label className={styles.label}>6. Resource Format</label>
+                      <select 
+                        className={styles.input} 
+                        value={formData.fileType} 
+                        onChange={(e) => setFormData({...formData, fileType: e.target.value})}
+                      >
+                        <option value="PDF">PDF Document</option>
+                        <option value="Video">Video Lecture</option>
+                        <option value="Notes">Handwritten Notes</option>
+                        <option value="PPT">Presentation</option>
+                      </select>
+                    </div>
                   </div>
 
                   <div>
-                    <label className={styles.label}>Category</label>
-                    <select 
-                      className={styles.input} 
-                      value={formData.category} 
-                      onChange={(e) => setFormData({...formData, category: e.target.value})}
-                    >
-                      <option value="General">General</option>
-                      <option value="UG Programs">UG Programs</option>
-                      <option value="PG Programs">PG Programs</option>
-                      <option value="Diploma">Diploma</option>
-                      <option value="Competitive Exams">Competitive Exams</option>
-                    </select>
-                  </div>
-
-                  <div>
-                    <label className={styles.label}>Format / File Type</label>
-                    <select 
-                      className={styles.input} 
-                      value={formData.fileType} 
-                      onChange={(e) => setFormData({...formData, fileType: e.target.value})}
-                    >
-                      <option value="PDF">PDF</option>
-                      <option value="Video">Video</option>
-                      <option value="Document">Document</option>
-                    </select>
-                  </div>
-
-                  <div>
-                    <label className={styles.label}><FileText size={16} /> Study Resource (PDF/Doc/Video)</label>
+                    <label className={styles.label}><FileText size={16} /> 7. Upload Resource</label>
                     <input 
                       type="file" 
-                      accept=".pdf,.doc,.docx,application/pdf,video/*"
+                      accept=".pdf,.doc,.docx,application/pdf,video/*,.ppt,.pptx"
                       className={styles.input}
                       onChange={handleFileUpload}
                     />
                     {formData.fileUrl && (
                       <p style={{ fontSize: '0.75rem', color: '#10b981', marginTop: '6px', fontWeight: 600 }}>
-                        ✓ Resource attached successfully
+                        ✓ File attached successfully
                       </p>
                     )}
-                    <p style={{ fontSize: '0.75rem', color: '#94a3b8', marginTop: '4px' }}>
-                      Upload the study guide, video, or reference material.
-                    </p>
                   </div>
                 </div>
               </div>
@@ -369,7 +399,7 @@ export default function StudyMaterialsAdminPage() {
                   Cancel
                 </button>
                 <button type="submit" className={styles.saveBtn} disabled={saving} style={{ padding: '0.8rem 2.5rem' }}>
-                  {saving ? <><Loader2 className="animate-spin" size={20} /> Saving...</> : editingId ? 'Update Resource' : 'Upload Resource'}
+                  {saving ? <><Loader2 className="animate-spin" size={20} /> Saving...</> : editingId ? 'Update Material' : 'Upload Material'}
                 </button>
               </div>
             </form>
