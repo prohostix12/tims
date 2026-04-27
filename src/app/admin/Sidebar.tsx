@@ -1,4 +1,3 @@
-
 'use client';
 
 import React from 'react';
@@ -20,10 +19,16 @@ import {
   PenTool,
   FileText,
   Book,
-  CalendarDays
+  CalendarDays,
+  X
 } from 'lucide-react';
 
-export default function Sidebar() {
+interface SidebarProps {
+  isOpen: boolean;
+  onClose: () => void;
+}
+
+export default function Sidebar({ isOpen, onClose }: SidebarProps) {
   const pathname = usePathname();
 
   const navItems = [
@@ -44,15 +49,20 @@ export default function Sidebar() {
   ];
 
   return (
-    <aside className={styles.sidebar}>
-      <div className={styles.logo} style={{ padding: '1rem', display: 'flex', justifyContent: 'center' }}>
-        <Image 
-          src="/images/tims-logo-3.png" 
-          alt="TIMS Logo" 
-          width={180} 
-          height={50} 
-          style={{ objectFit: 'contain' }}
-        />
+    <aside className={`${styles.sidebar} ${isOpen ? styles.sidebarOpen : ''}`}>
+      <div className={styles.sidebarHeader}>
+        <div className={styles.logo}>
+          <Image 
+            src="/images/tims-logo-3.png" 
+            alt="TIMS Logo" 
+            width={150} 
+            height={40} 
+            style={{ objectFit: 'contain' }}
+          />
+        </div>
+        <button className={styles.mobileClose} onClick={onClose}>
+          <X size={20} />
+        </button>
       </div>
       
       <nav className={styles.nav}>
@@ -60,6 +70,7 @@ export default function Sidebar() {
           <Link 
             key={item.path}
             href={item.path}
+            onClick={() => { if (window.innerWidth < 1024) onClose(); }}
             className={`${styles.navItem} ${pathname === item.path ? styles.activeNavItem : ''}`}
           >
             <span className={styles.navIcon}>{item.icon}</span>
