@@ -17,7 +17,8 @@ import {
   Layers,
   UploadCloud,
   ChevronLeft,
-  BookOpen
+  BookOpen,
+  GraduationCap
 } from 'lucide-react';
 import ConfirmModal from '@/components/ConfirmModal';
 
@@ -30,6 +31,9 @@ export default function TimetableAdminPage() {
   const [formType, setFormType] = useState<'manual' | 'file'>('manual');
   
   const [formData, setFormData] = useState({
+    university: '',
+    course: '',
+    semester: '',
     examName: '',
     type: 'manual' as 'manual' | 'file',
     fileUrl: '',
@@ -39,10 +43,28 @@ export default function TimetableAdminPage() {
   const [saving, setSaving] = useState(false);
   const [deleteModal, setDeleteModal] = useState({ isOpen: false, id: '' });
   const [toast, setToast] = useState<{ msg: string; type: 'success' | 'error' } | null>(null);
+  const [universities, setUniversities] = useState<any[]>([]);
+  const [programs, setPrograms] = useState<any[]>([]);
 
   useEffect(() => {
     fetchTimetables();
+    fetchUniversitiesAndPrograms();
   }, []);
+
+  const fetchUniversitiesAndPrograms = async () => {
+    try {
+      const [uniRes, progRes] = await Promise.all([
+        fetch('/api/admin/universities'),
+        fetch('/api/admin/programs')
+      ]);
+      const uniData = await uniRes.json();
+      const progData = await progRes.json();
+      if (Array.isArray(uniData)) setUniversities(uniData);
+      if (Array.isArray(progData)) setPrograms(progData);
+    } catch (err) {
+      console.error('Failed to fetch dependencies', err);
+    }
+  };
 
   const fetchTimetables = async () => {
     try {
@@ -108,6 +130,9 @@ export default function TimetableAdminPage() {
         setIsFormOpen(false);
         setEditingId(null);
         setFormData({
+          university: '',
+          course: '',
+          semester: '',
           examName: '',
           type: 'manual',
           fileUrl: '',
@@ -129,6 +154,9 @@ export default function TimetableAdminPage() {
     setEditingId(item._id);
     setFormType(item.type);
     setFormData({
+      university: item.university?._id || item.university || '',
+      course: item.course?._id || item.course || '',
+      semester: item.semester || '',
       examName: item.examName,
       type: item.type,
       fileUrl: item.fileUrl || '',
@@ -153,7 +181,9 @@ export default function TimetableAdminPage() {
   };
 
   const filteredTimetables = timetables.filter(t => 
-    t.examName.toLowerCase().includes(searchTerm.toLowerCase())
+    t.examName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    t.course?.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    t.semester?.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   return (
@@ -161,9 +191,9 @@ export default function TimetableAdminPage() {
       <header className={styles.header}>
         <div>
           <h1 className={styles.title}>Exam Timetables</h1>
-          <p style={{ color: '#64748b' }}>Manage examination schedules via manual entry or PDF uploads.</p>
+          <p style={{ color: '#64748b' }}>Manage examination schedules by selecting University, Course, and Semester.</p>
         </div>
-        <button className={styles.addBtn} onClick={() => { setIsFormOpen(true); setFormType('manual'); }}>
+        <button className={styles.addBtn} onClick={() => { setIsFormOpen(true); setEditingId(null); setFormType('manual'); }}>
           <Plus size={20} /> New Timetable
         </button>
       </header>
@@ -183,7 +213,7 @@ export default function TimetableAdminPage() {
             <Search size={18} />
             <input 
               type="text" 
-              placeholder="Search by exam name..." 
+              placeholder="Search schedules..." 
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
@@ -199,10 +229,9 @@ export default function TimetableAdminPage() {
           <table className={styles.table}>
             <thead>
               <tr>
-                <th>Exam Name</th>
+                <th>Exam & Semester</th>
+                <th>Course & University</th>
                 <th>Type</th>
-                <th>Details</th>
-                <th>Created At</th>
                 <th>Actions</th>
               </tr>
             </thead>
@@ -214,23 +243,22 @@ export default function TimetableAdminPage() {
                       <div style={{ width: '40px', height: '40px', background: '#eff6ff', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#2563eb' }}>
                         <Calendar size={20} />
                       </div>
-                      <span style={{ fontWeight: 600, color: '#0f172a' }}>{item.examName}</span>
+                      <div>
+                        <div style={{ fontWeight: 600, color: '#0f172a' }}>{item.examName}</div>
+                        <div style={{ fontSize: '0.75rem', color: '#64748b', fontWeight: 700 }}>SEM: {item.semester}</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td>
+                    <div style={{ fontSize: '0.9rem', fontWeight: 600 }}>{item.course?.name || '-'}</div>
+                    <div style={{ fontSize: '0.75rem', color: '#64748b', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                      <GraduationCap size={14} /> {item.university?.name || '-'}
                     </div>
                   </td>
                   <td>
                     <span style={{ fontSize: '0.75rem', fontWeight: 700, background: item.type === 'manual' ? '#f0fdf4' : '#fef2f2', color: item.type === 'manual' ? '#16a34a' : '#dc2626', padding: '4px 8px', borderRadius: '4px' }}>
                       {item.type.toUpperCase()}
                     </span>
-                  </td>
-                  <td>
-                    {item.type === 'manual' ? (
-                      <span style={{ fontSize: '0.85rem', color: '#64748b' }}>{item.entries.length} Subjects</span>
-                    ) : (
-                      <a href={item.fileUrl} target="_blank" rel="noopener noreferrer" style={{ fontSize: '0.85rem', color: '#2563eb', textDecoration: 'underline' }}>View Document</a>
-                    )}
-                  </td>
-                  <td style={{ fontSize: '0.85rem', color: '#64748b' }}>
-                    {new Date(item.createdAt).toLocaleDateString()}
                   </td>
                   <td>
                     <div style={{ display: 'flex', gap: '8px' }}>
@@ -245,8 +273,8 @@ export default function TimetableAdminPage() {
                 </tr>
               )) : (
                 <tr>
-                  <td colSpan={5} style={{ textAlign: 'center', padding: '4rem', color: '#64748b' }}>
-                    No timetables found. Click "New Timetable" to add one.
+                  <td colSpan={4} style={{ textAlign: 'center', padding: '4rem', color: '#64748b' }}>
+                    No timetables found.
                   </td>
                 </tr>
               )}
@@ -261,10 +289,10 @@ export default function TimetableAdminPage() {
           <div className={styles.modalContent} style={{ maxWidth: '1100px', width: '95%' }}>
             <div className={styles.modalHeader}>
               <div>
-                <h2 style={{ margin: 0, fontSize: '1.5rem', fontWeight: 800, color: '#00122e' }}>
+                <h2 style={{ margin: 0 }}>
                   {editingId ? 'Edit Timetable' : 'Create Timetable'}
                 </h2>
-                <p style={{ margin: '4px 0 0', color: '#64748b', fontSize: '0.9rem' }}>Fill in the details below to publish the exam schedule.</p>
+                <p style={{ margin: '4px 0 0', color: '#64748b', fontSize: '0.9rem' }}>Publish exam schedules organized by academic criteria.</p>
               </div>
               <button className={styles.closeBtn} onClick={() => { setIsFormOpen(false); setEditingId(null); }}>
                 <X size={24} />
@@ -272,98 +300,150 @@ export default function TimetableAdminPage() {
             </div>
 
             <form onSubmit={handleSubmit}>
-              <div className={styles.modalBody} style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-                <div>
-                  <label className={styles.label}>Examination Name</label>
-                  <input 
-                    type="text" 
-                    className={styles.input}
-                    placeholder="e.g. B.Com Second Semester Exams - June 2024"
-                    value={formData.examName}
-                    onChange={(e) => setFormData({...formData, examName: e.target.value})}
-                    required
-                  />
-                </div>
+              <div className={styles.modalBody}>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1.5rem', marginBottom: '2rem' }}>
+                  {/* 1. University */}
+                  <div>
+                    <label className={styles.label}>University</label>
+                    <select 
+                      className={styles.input} 
+                      value={formData.university}
+                      onChange={(e) => setFormData({...formData, university: e.target.value, course: ''})}
+                      required
+                    >
+                      <option value="">Select University</option>
+                      {universities.map(u => (
+                        <option key={u._id} value={u._id}>{u.name}</option>
+                      ))}
+                    </select>
+                  </div>
 
-                <div>
-                  <label className={styles.label}>Entry Method</label>
-                  <div style={{ display: 'flex', gap: '1rem', background: '#f8fafc', padding: '0.5rem', borderRadius: '12px', border: '1px solid #e2e8f0' }}>
-                    <button 
-                      type="button" 
-                      onClick={() => setFormType('manual')}
-                      style={{ flex: 1, padding: '0.8rem', borderRadius: '8px', border: 'none', background: formType === 'manual' ? '#ffffff' : 'transparent', boxShadow: formType === 'manual' ? '0 4px 12px rgba(0,0,0,0.08)' : 'none', color: formType === 'manual' ? '#ef233c' : '#64748b', fontWeight: 700, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', cursor: 'pointer', transition: 'all 0.2s ease' }}
+                  {/* 2. Course */}
+                  <div>
+                    <label className={styles.label}>Course / Program</label>
+                    <select 
+                      className={styles.input}
+                      value={formData.course}
+                      onChange={(e) => setFormData({...formData, course: e.target.value})}
+                      required
+                      disabled={!formData.university}
                     >
-                      <Layers size={18} /> Manual Entry
-                    </button>
-                    <button 
-                      type="button" 
-                      onClick={() => setFormType('file')}
-                      style={{ flex: 1, padding: '0.8rem', borderRadius: '8px', border: 'none', background: formType === 'file' ? '#ffffff' : 'transparent', boxShadow: formType === 'file' ? '0 4px 12px rgba(0,0,0,0.08)' : 'none', color: formType === 'file' ? '#ef233c' : '#64748b', fontWeight: 700, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', cursor: 'pointer', transition: 'all 0.2s ease' }}
+                      <option value="">Select Course</option>
+                      {programs.filter(p => {
+                        const uniId = p.university?._id || p.university;
+                        return String(uniId) === String(formData.university);
+                      }).map(p => (
+                        <option key={p._id} value={p._id}>{p.name}</option>
+                      ))}
+                    </select>
+                  </div>
+
+                  {/* 3. Semester */}
+                  <div>
+                    <label className={styles.label}>Semester</label>
+                    <select 
+                      className={styles.input}
+                      value={formData.semester}
+                      onChange={(e) => setFormData({...formData, semester: e.target.value})}
+                      required
                     >
-                      <UploadCloud size={18} /> PDF Upload
-                    </button>
+                      <option value="">Select Semester</option>
+                      <option value="1st Semester">1st Semester</option>
+                      <option value="2nd Semester">2nd Semester</option>
+                      <option value="3rd Semester">3rd Semester</option>
+                      <option value="4th Semester">4th Semester</option>
+                      <option value="5th Semester">5th Semester</option>
+                      <option value="6th Semester">6th Semester</option>
+                      <option value="7th Semester">7th Semester</option>
+                      <option value="8th Semester">8th Semester</option>
+                      <option value="Annual System">Annual System</option>
+                    </select>
                   </div>
                 </div>
 
-                {formType === 'manual' ? (
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                      <label className={styles.label} style={{ margin: 0 }}>Subject Wise Schedule</label>
-                      <button type="button" onClick={addEntry} style={{ background: '#00122e', color: 'white', border: 'none', padding: '8px 16px', borderRadius: '8px', fontSize: '0.85rem', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '6px', cursor: 'pointer' }}>
-                        <Plus size={16} /> Add Subject
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+                  <div>
+                    <label className={styles.label}>Examination Name</label>
+                    <input 
+                      type="text" 
+                      className={styles.input}
+                      placeholder="e.g. Regular Theory Examinations - June 2024"
+                      value={formData.examName}
+                      onChange={(e) => setFormData({...formData, examName: e.target.value})}
+                      required
+                    />
+                  </div>
+
+                  <div>
+                    <label className={styles.label}>Entry Method</label>
+                    <div style={{ display: 'flex', gap: '1rem', background: '#f8fafc', padding: '0.5rem', borderRadius: '12px', border: '1px solid #e2e8f0' }}>
+                      <button 
+                        type="button" 
+                        onClick={() => setFormType('manual')}
+                        style={{ flex: 1, padding: '0.8rem', borderRadius: '8px', border: 'none', background: formType === 'manual' ? '#ffffff' : 'transparent', boxShadow: formType === 'manual' ? '0 4px 12px rgba(0,0,0,0.08)' : 'none', color: formType === 'manual' ? '#ef233c' : '#64748b', fontWeight: 700, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', cursor: 'pointer', transition: 'all 0.2s ease' }}
+                      >
+                        <Layers size={18} /> Manual Entry
+                      </button>
+                      <button 
+                        type="button" 
+                        onClick={() => setFormType('file')}
+                        style={{ flex: 1, padding: '0.8rem', borderRadius: '8px', border: 'none', background: formType === 'file' ? '#ffffff' : 'transparent', boxShadow: formType === 'file' ? '0 4px 12px rgba(0,0,0,0.08)' : 'none', color: formType === 'file' ? '#ef233c' : '#64748b', fontWeight: 700, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', cursor: 'pointer', transition: 'all 0.2s ease' }}
+                      >
+                        <UploadCloud size={18} /> PDF Upload
                       </button>
                     </div>
-                    
-                    <div style={{ maxHeight: '450px', overflowY: 'auto', paddingRight: '10px', background: '#f8fafc', padding: '1.5rem', borderRadius: '16px', border: '1px solid #e2e8f0' }}>
-                      {/* Header Row for Table */}
-                      <div style={{ display: 'grid', gridTemplateColumns: '120px 1fr 180px 180px 40px', gap: '15px', marginBottom: '10px', padding: '0 10px', color: '#64748b', fontSize: '0.8rem', fontWeight: 700, textTransform: 'uppercase' }}>
-                        <span>Code</span>
-                        <span>Subject Name</span>
-                        <span>Date</span>
-                        <span>Time</span>
-                        <span></span>
-                      </div>
+                  </div>
 
-                      {formData.entries.map((entry, idx) => (
-                        <div key={idx} style={{ display: 'grid', gridTemplateColumns: '120px 1fr 180px 180px 40px', gap: '15px', marginBottom: '12px', alignItems: 'center', background: 'white', padding: '10px', borderRadius: '10px', border: '1px solid #f1f5f9' }}>
-                          <input type="text" placeholder="e.g. BC101" className={styles.input} style={{ padding: '8px 12px' }} value={entry.code} onChange={(e) => handleEntryChange(idx, 'code', e.target.value)} required />
-                          <input type="text" placeholder="Subject Name" className={styles.input} style={{ padding: '8px 12px' }} value={entry.subject} onChange={(e) => handleEntryChange(idx, 'subject', e.target.value)} required />
-                          <input type="date" className={styles.input} style={{ padding: '8px 12px' }} value={entry.date} onChange={(e) => handleEntryChange(idx, 'date', e.target.value)} required />
-                          <input type="text" placeholder="10AM - 1PM" className={styles.input} style={{ padding: '8px 12px' }} value={entry.time} onChange={(e) => handleEntryChange(idx, 'time', e.target.value)} required />
-                          <button type="button" onClick={() => removeEntry(idx)} style={{ background: '#fee2e2', border: 'none', color: '#ef4444', padding: '8px', borderRadius: '8px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                            <Trash2 size={18} />
-                          </button>
-                        </div>
-                      ))}
+                  {formType === 'manual' ? (
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                        <label className={styles.label} style={{ margin: 0 }}>Subject Wise Schedule</label>
+                        <button type="button" onClick={addEntry} style={{ background: '#00122e', color: 'white', border: 'none', padding: '8px 16px', borderRadius: '8px', fontSize: '0.85rem', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '6px', cursor: 'pointer' }}>
+                          <Plus size={16} /> Add Subject
+                        </button>
+                      </div>
                       
-                      {formData.entries.length === 0 && (
-                        <div style={{ textAlign: 'center', padding: '2rem', color: '#94a3b8' }}>
-                           No subjects added yet. Click "Add Subject" to start.
+                      <div style={{ maxHeight: '450px', overflowY: 'auto', paddingRight: '10px', background: '#f8fafc', padding: '1.5rem', borderRadius: '16px', border: '1px solid #e2e8f0' }}>
+                        <div style={{ display: 'grid', gridTemplateColumns: '120px 1fr 180px 180px 40px', gap: '15px', marginBottom: '10px', padding: '0 10px', color: '#64748b', fontSize: '0.8rem', fontWeight: 700, textTransform: 'uppercase' }}>
+                          <span>Code</span>
+                          <span>Subject Name</span>
+                          <span>Date</span>
+                          <span>Time</span>
+                          <span></span>
                         </div>
+
+                        {formData.entries.map((entry, idx) => (
+                          <div key={idx} style={{ display: 'grid', gridTemplateColumns: '120px 1fr 180px 180px 40px', gap: '15px', marginBottom: '12px', alignItems: 'center', background: 'white', padding: '10px', borderRadius: '10px', border: '1px solid #f1f5f9' }}>
+                            <input type="text" placeholder="e.g. BC101" className={styles.input} style={{ padding: '8px 12px' }} value={entry.code} onChange={(e) => handleEntryChange(idx, 'code', e.target.value)} required />
+                            <input type="text" placeholder="Subject Name" className={styles.input} style={{ padding: '8px 12px' }} value={entry.subject} onChange={(e) => handleEntryChange(idx, 'subject', e.target.value)} required />
+                            <input type="date" className={styles.input} style={{ padding: '8px 12px' }} value={entry.date} onChange={(e) => handleEntryChange(idx, 'date', e.target.value)} required />
+                            <input type="text" placeholder="10AM - 1PM" className={styles.input} style={{ padding: '8px 12px' }} value={entry.time} onChange={(e) => handleEntryChange(idx, 'time', e.target.value)} required />
+                            <button type="button" onClick={() => removeEntry(idx)} style={{ background: '#fee2e2', border: 'none', color: '#ef4444', padding: '8px', borderRadius: '8px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                              <Trash2 size={18} />
+                            </button>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  ) : (
+                    <div style={{ background: '#f8fafc', padding: '3rem 2rem', borderRadius: '16px', border: '1px dashed #cbd5e1', textAlign: 'center' }}>
+                      <UploadCloud size={48} style={{ color: '#cbd5e1', marginBottom: '1rem' }} />
+                      <label className={styles.label} style={{ justifyContent: 'center' }}>Timetable Document (PDF)</label>
+                      <input 
+                        type="file" 
+                        accept=".pdf,application/pdf"
+                        className={styles.input}
+                        onChange={handleFileUpload}
+                        style={{ maxWidth: '600px', margin: '0 auto' }}
+                      />
+                      {formData.fileUrl && (
+                        <p style={{ fontSize: '0.85rem', color: '#10b981', marginTop: '10px', fontWeight: 600 }}>
+                          ✓ Timetable PDF attached successfully
+                        </p>
                       )}
                     </div>
-                  </div>
-                ) : (
-                  <div style={{ background: '#f8fafc', padding: '3rem 2rem', borderRadius: '16px', border: '1px dashed #cbd5e1', textAlign: 'center' }}>
-                    <UploadCloud size={48} style={{ color: '#cbd5e1', marginBottom: '1rem' }} />
-                    <label className={styles.label} style={{ justifyContent: 'center' }}>Timetable Document (PDF)</label>
-                    <input 
-                      type="file" 
-                      accept=".pdf,application/pdf"
-                      className={styles.input}
-                      onChange={handleFileUpload}
-                      style={{ maxWidth: '600px', margin: '0 auto' }}
-                    />
-                    {formData.fileUrl && (
-                      <p style={{ fontSize: '0.85rem', color: '#10b981', marginTop: '10px', fontWeight: 600 }}>
-                        ✓ Timetable PDF attached successfully
-                      </p>
-                    )}
-                    <p style={{ fontSize: '0.85rem', color: '#64748b', marginTop: '10px' }}>
-                      Upload the official examination schedule PDF.
-                    </p>
-                  </div>
-                )}
+                  )}
+                </div>
               </div>
 
               <div className={styles.modalFooter}>
@@ -385,7 +465,7 @@ export default function TimetableAdminPage() {
         onClose={() => setDeleteModal({ isOpen: false, id: '' })}
         onConfirm={handleDelete}
         title="Delete Timetable"
-        message="Are you sure you want to delete this examination schedule? This action cannot be undone."
+        message="Are you sure you want to delete this examination schedule?"
       />
     </div>
   );

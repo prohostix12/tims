@@ -5,7 +5,7 @@ import Timetable from '@/models/Timetable';
 export async function GET() {
   try {
     await connectDB();
-    const timetables = await Timetable.find({}).sort({ createdAt: -1 });
+    const timetables = await Timetable.find({}).populate('university', 'name').populate('course', 'name').sort({ createdAt: -1 });
     return NextResponse.json(timetables);
   } catch (error: any) {
     return NextResponse.json({ error: error.message }, { status: 500 });

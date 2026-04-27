@@ -1,6 +1,9 @@
 import mongoose, { Schema, Document } from 'mongoose';
 
 export interface ITimetable extends Document {
+  university: mongoose.Types.ObjectId;
+  course: mongoose.Types.ObjectId;
+  semester: string;
   examName: string;
   type: 'manual' | 'file';
   fileUrl?: string; // If type is 'file'
@@ -16,6 +19,9 @@ export interface ITimetable extends Document {
 }
 
 const TimetableSchema: Schema = new Schema({
+  university: { type: Schema.Types.ObjectId, ref: 'University', required: true },
+  course: { type: Schema.Types.ObjectId, ref: 'Program', required: true },
+  semester: { type: String, required: true },
   examName: { type: String, required: true },
   type: { type: String, enum: ['manual', 'file'], default: 'manual' },
   fileUrl: { type: String },
