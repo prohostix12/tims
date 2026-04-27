@@ -122,9 +122,6 @@ export default function CoursesPage() {
                 <Link href="/contact" className={styles.heroPrimaryBtn}>
                   ENROLL NOW
                 </Link>
-                <button className={styles.heroSecondaryBtn}>
-                  VIEW CATALOG
-                </button>
               </div>
             </div>
           </div>

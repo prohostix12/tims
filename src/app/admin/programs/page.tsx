@@ -10,6 +10,11 @@ export default function ProgramsPage() {
   const [universities, setUniversities] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedUni, setSelectedUni] = useState('all');
+  const [deleteModal, setDeleteModal] = useState<{ show: boolean; id: string; name: string }>({ 
+    show: false, 
+    id: '', 
+    name: '' 
+  });
 
   useEffect(() => {
     fetchUniversities();
@@ -45,6 +50,35 @@ export default function ProgramsPage() {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleDelete = async () => {
+    const { id } = deleteModal;
+    if (!id) return;
+    
+    try {
+      const response = await fetch(`/api/admin/programs/${id}`, {
+        method: 'DELETE',
+      });
+      
+      if (response.ok) {
+        setPrograms(programs.filter(p => p._id !== id));
+        setDeleteModal({ show: false, id: '', name: '' });
+      } else {
+        alert('Failed to delete program');
+      }
+    } catch (error) {
+      console.error('Error deleting program:', error);
+      alert('Error deleting program');
+    }
+  };
+  
+  const openDeleteModal = (program: any) => {
+    setDeleteModal({
+      show: true,
+      id: program._id,
+      name: program.name
+    });
   };
 
   return (
@@ -102,8 +136,15 @@ export default function ProgramsPage() {
                       <Link href={`/admin/programs/${program._id}/edit`} style={{ color: '#00122e', border: 'none', background: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center' }} title="Edit">
                         <Edit size={18} />
                       </Link>
-                      <button style={{ color: '#ef233c', border: 'none', background: 'none', cursor: 'pointer' }} title="Delete">
-                        <Trash2 size={18} />
+                      <button 
+                        onClick={(e) => { 
+                          e.stopPropagation(); 
+                          openDeleteModal(program);
+                        }}
+                        style={{ color: '#ef233c', border: 'none', background: 'none', cursor: 'pointer', padding: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center' }} 
+                        title="Delete"
+                      >
+                        <Trash2 size={18} style={{ pointerEvents: 'none' }} />
                       </button>
                     </div>
                   </td>
@@ -119,6 +160,25 @@ export default function ProgramsPage() {
           </table>
         )}
       </div>
+
+      {deleteModal.show && (
+        <div className={styles.modalOverlay}>
+          <div className={styles.modalContent} style={{ maxWidth: '450px' }}>
+            <div className={styles.modalHeader}>
+              <h2>Confirm Delete</h2>
+              <button className={styles.closeBtn} onClick={() => setDeleteModal({ show: false, id: '', name: '' })}>×</button>
+            </div>
+            <div className={styles.modalBody}>
+              <p>Are you sure you want to delete <strong>{deleteModal.name}</strong>?</p>
+              <p style={{ marginTop: '0.5rem', color: '#ef4444', fontSize: '0.85rem' }}>This action cannot be undone.</p>
+            </div>
+            <div className={styles.modalFooter}>
+              <button className={styles.cancelBtn} onClick={() => setDeleteModal({ show: false, id: '', name: '' })}>Cancel</button>
+              <button className={styles.saveBtn} style={{ backgroundColor: '#ef233c' }} onClick={handleDelete}>Delete Program</button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

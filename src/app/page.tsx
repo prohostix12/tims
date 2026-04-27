@@ -240,7 +240,7 @@ export default function Home() {
               />
               <div className={styles.heroImageOverlay}>
                 <p className={styles.overlayWhite}>Study in</p>
-                <p className={styles.overlayHighlight}>Top Universities Abroad</p>
+                <p className={styles.overlayHighlight}>Top Universities</p>
                 <Link href="/universities" className={styles.overlayLink}>Explore programs →</Link>
               </div>
             </div>

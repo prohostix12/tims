@@ -55,7 +55,7 @@ export default function Sidebar() {
             className={`${styles.navItem} ${pathname === item.path ? styles.activeNavItem : ''}`}
           >
             <span className={styles.navIcon}>{item.icon}</span>
-            <span>{item.name}</span>
+            <span className={styles.navText}>{item.name}</span>
           </Link>
         ))}
       </nav>
@@ -63,11 +63,11 @@ export default function Sidebar() {
       <div className={styles.sidebarFooter}>
         <Link href="/" className={`${styles.secondaryBtn} ${styles.viewWebsite}`}>
           <ExternalLink size={18} />
-          <span>View Website</span>
+          <span className={styles.navText}>View Website</span>
         </Link>
         <button className={`${styles.secondaryBtn} ${styles.logoutBtn}`}>
           <LogOut size={18} />
-          <span>Logout</span>
+          <span className={styles.navText}>Logout</span>
         </button>
       </div>
     </aside>
