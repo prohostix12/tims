@@ -271,18 +271,6 @@ export default function ResultsAdminPage() {
             <form onSubmit={handleSubmit}>
               <div className={styles.modalBody} style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
                 <div>
-                  <label className={styles.label}>Course / Program Name</label>
-                  <input 
-                    type="text" 
-                    className={styles.input}
-                    placeholder="e.g. MBA International Business - Sem 2"
-                    value={formData.course}
-                    onChange={(e) => setFormData({...formData, course: e.target.value})}
-                    required
-                  />
-                </div>
-
-                <div>
                   <label className={styles.label}>University</label>
                   <select 
                     className={styles.input}
@@ -295,6 +283,18 @@ export default function ResultsAdminPage() {
                       <option key={u._id} value={u._id}>{u.name}</option>
                     ))}
                   </select>
+                </div>
+
+                <div>
+                  <label className={styles.label}>Course / Program Name</label>
+                  <input 
+                    type="text" 
+                    className={styles.input}
+                    placeholder="e.g. MBA International Business - Sem 2"
+                    value={formData.course}
+                    onChange={(e) => setFormData({...formData, course: e.target.value})}
+                    required
+                  />
                 </div>
 
                 <div>
