@@ -14,7 +14,7 @@ const Footer = () => {
         <div className={styles.footerCol}>
           <div style={{ marginBottom: '1.5rem', background: '#fff', display: 'inline-block', padding: '0.5rem 1rem', borderRadius: '8px' }}>
             <Image 
-              src="/images/tims-logo-3.png" 
+              src="/images/tims-logo-admin.png" 
               alt="TIMS Logo" 
               width={160} 
               height={45} 
