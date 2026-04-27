@@ -62,10 +62,9 @@
 }
 
 .logoImage {
-  height: 120px;
+  height: 45px;
   width: auto;
   object-fit: contain;
-  display: block;
 }
 
 /* ---- Desktop nav links ---- */
