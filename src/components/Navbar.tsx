@@ -42,6 +42,7 @@ const navLinks: NavLink[] = [
         path: '/universities/examination',
         submenu: [
           { name: 'Time Table', path: '/universities/examination/timetable' },
+          { name: 'Results', path: '/results' },
         ],
       },
     ],
@@ -49,7 +50,9 @@ const navLinks: NavLink[] = [
   {
     name: 'Students',
     path: '/students',
-    submenu: [{ name: 'Syllabus', path: '/students/syllabus' }],
+    submenu: [
+      { name: 'Syllabus', path: '/students/syllabus' },
+    ],
   },
   {
     name: 'About',
