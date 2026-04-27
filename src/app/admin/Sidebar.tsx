@@ -53,7 +53,7 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
       <div className={styles.sidebarHeader}>
         <div className={styles.logo}>
           <Image 
-            src="/images/tims-logo.png" 
+            src="/images/tims-logo-admin.png" 
             alt="TIMS Logo" 
             width={300} 
             height={120} 

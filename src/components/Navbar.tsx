@@ -112,7 +112,7 @@ const Navbar = () => {
           <Link href="/" className={styles.logo} aria-label="Go to homepage">
             <div className={styles.logoBadge}>
               <Image
-                src="/images/tims-logo.png"
+                src="/images/tims-logo-admin.png"
                 alt="Times Online Logo"
                 width={120}
                 height={36}
@@ -241,7 +241,7 @@ const Navbar = () => {
         <div className={styles.drawerHeader}>
           <Link href="/" className={styles.logo} onClick={() => setMobileOpen(false)}>
             <Image
-              src="/images/tims-logo.png"
+              src="/images/tims-logo-admin.png"
               alt="Times Online Logo"
               width={90}
               height={27}

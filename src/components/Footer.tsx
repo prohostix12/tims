@@ -14,7 +14,7 @@ const Footer = () => {
         <div className={styles.footerCol}>
           <div style={{ marginBottom: '2rem', marginLeft: '-15px' }}>
             <Image 
-              src="/images/tims-logo.png" 
+              src="/images/tims-logo-admin.png" 
               alt="TIMS Logo" 
               width={220} 
               height={65} 
