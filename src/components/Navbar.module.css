@@ -319,10 +319,12 @@
   opacity: 0;
   transition: opacity 0.3s ease;
   backdrop-filter: blur(3px);
+  pointer-events: none;
 }
 
 .mobileOverlayOpen {
   opacity: 1;
+  pointer-events: auto;
 }
 
 /* ==============================================
@@ -587,6 +589,11 @@
 
 /* Slightly smaller logo on very small screens */
 @media (max-width: 480px) {
+  .logo {
+    margin-top: 0;
+    align-self: center;
+  }
+
   .logoImage {
     height: 38px;
   }
