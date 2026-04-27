@@ -55,9 +55,9 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
           <Image 
             src="/images/tims-logo-admin.png" 
             alt="TIMS Logo" 
-            width={260} 
-            height={100} 
-            style={{ width: '100%', height: 'auto', objectFit: 'contain', maxHeight: '80px' }}
+            width={300} 
+            height={120} 
+            style={{ width: '100%', height: 'auto', objectFit: 'contain', maxHeight: '110px' }}
             priority
           />
         </div>
