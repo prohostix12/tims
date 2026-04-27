@@ -55,8 +55,8 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
           <Image 
             src="/images/tims-logo-3.png" 
             alt="TIMS Logo" 
-            width={150} 
-            height={40} 
+            width={200} 
+            height={60} 
             style={{ objectFit: 'contain' }}
           />
         </div>
