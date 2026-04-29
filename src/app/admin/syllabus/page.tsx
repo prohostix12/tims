@@ -48,7 +48,7 @@ export default function SyllabusAdminPage() {
     try {
       const [uniRes, progRes] = await Promise.all([
         fetch('/api/admin/universities'),
-        fetch('/api/admin/programs')
+        fetch('/api/admin/programs', { cache: 'no-store' })
       ]);
       const uniData = await uniRes.json();
       const progData = await progRes.json();

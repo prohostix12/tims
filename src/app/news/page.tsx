@@ -28,7 +28,7 @@ export default function AllNewsPage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch('/api/admin/news')
+    fetch('/api/admin/news', { cache: 'no-store' })
       .then((r) => r.json())
       .then((data) => {
         if (Array.isArray(data)) {

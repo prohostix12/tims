@@ -54,7 +54,7 @@ export default function CoursesPage() {
   const categories = ['All', 'SSLC', '+2', 'Degree', 'Post Graduate', 'Diploma', 'Others'];
   
   useEffect(() => {
-    fetch('/api/admin/programs')
+    fetch('/api/admin/programs', { cache: 'no-store' })
       .then(r => r.json())
       .then(data => {
         if (Array.isArray(data)) {

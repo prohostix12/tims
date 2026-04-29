@@ -70,10 +70,10 @@ export default function Home() {
       try {
         setLoading(true);
         const [uniRes, newsRes, blogRes, courseRes] = await Promise.all([
-          fetch('/api/admin/universities'),
-          fetch('/api/admin/news'),
-          fetch('/api/admin/blogs'),
-          fetch('/api/admin/programs')
+          fetch('/api/admin/universities', { cache: 'no-store' }),
+          fetch('/api/admin/news', { cache: 'no-store' }),
+          fetch('/api/admin/blogs', { cache: 'no-store' }),
+          fetch('/api/admin/programs', { cache: 'no-store' })
         ]);
         
         const uniData = await uniRes.json();

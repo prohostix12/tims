@@ -27,7 +27,7 @@ export default function UniversitiesPage() {
   const fetchUniversities = async () => {
     try {
       setLoading(true);
-      const res = await fetch('/api/admin/universities');
+      const res = await fetch('/api/admin/universities', { cache: 'no-store' });
       const data = await res.json();
       if (Array.isArray(data)) setUniversities(data);
     } catch (err) {
