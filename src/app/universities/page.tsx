@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from 'react';
 import styles from './universities.module.css';
 import Link from 'next/link';
 import Image from 'next/image';
-import { MapPin, ArrowRight, GraduationCap, Loader2, Search, Info } from 'lucide-react';
+import { MapPin, ArrowRight, GraduationCap, Loader2, Search, Info, Globe } from 'lucide-react';
 import EnquiryModal from '@/components/EnquiryModal';
 
 export default function UniversitiesPage() {
@@ -12,6 +12,7 @@ export default function UniversitiesPage() {
   const [loading, setLoading] = useState(true);
   const [activeFilter, setActiveFilter] = useState('All');
   const [visible, setVisible] = useState(false);
+  const [visibleCount, setVisibleCount] = useState(6);
   const [searchTerm, setSearchTerm] = useState('');
   const gridRef = useRef<HTMLDivElement>(null);
 
@@ -59,36 +60,54 @@ export default function UniversitiesPage() {
 
   useEffect(() => {
     setVisible(false);
+    setVisibleCount(6);
     const t = setTimeout(() => setVisible(true), 50);
     return () => clearTimeout(t);
   }, [activeFilter, searchTerm]);
 
   return (
     <main className={styles.container}>
-      {/* ===== Simple Image Hero ===== */}
-      <section className={styles.imageHero}>
-        <div className={styles.imageHeroContent}>
-          <nav className={styles.heroBreadcrumb}>
-            <Link href="/">Home</Link> <span>/</span> <span>Universities</span>
-          </nav>
-          <h1 className={styles.heroTitle}>
-            <span style={{ color: '#ef233c' }}>Global</span> Academic Partners
-          </h1>
-          <p className={styles.heroSub}>
-            TIMS Education connects you with the world's most prestigious universities. Explore our network of top-ranked institutions across India and abroad, each handpicked for their academic excellence, global accreditation, and career placement records.
-          </p>
+      {/* ===== Skillhub Inspired Hero - Universities ===== */}
+      <section className={styles.heroWrapper}>
+        <div className={styles.heroContent}>
           
-          <div className={styles.heroSearchWrapper}>
-            <div className={styles.heroSearchBox}>
-              <Search size={20} className={styles.heroSearchIcon} />
+          <div className={styles.heroLeft}>
+            <nav className={styles.heroBreadcrumb}>
+              <Link href="/">Home</Link> <span>/</span> <span>Universities</span>
+            </nav>
+            
+            <h1 className={styles.heroTitle}>
+              Global <br />
+              <span className={styles.heroTitleAccent}>Academic Partners</span>
+            </h1>
+            
+            <p className={styles.heroSubtext}>
+              TIMS Education connects you with the world's most prestigious universities. Explore our network of top-ranked institutions across India and abroad, each handpicked for their academic excellence, global accreditation, and career placement records.
+            </p>
+
+            <div className={styles.heroSearch}>
+              <div className={styles.searchIconWrapper}>
+                <Search size={20} />
+              </div>
               <input 
                 type="text" 
                 placeholder="Search university or city..." 
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
+              <button onClick={() => {
+                const grid = document.getElementById('university-grid');
+                if(grid) grid.scrollIntoView({behavior: 'smooth'});
+              }}>Search</button>
             </div>
           </div>
+
+          <div className={styles.heroRight}>
+            <div className={styles.imageWrapper}>
+              <img src="/images/hero-campus.png" alt="University Campus" className={styles.campusImg} />
+            </div>
+          </div>
+
         </div>
       </section>
 
@@ -122,7 +141,7 @@ export default function UniversitiesPage() {
       </section>
 
       {/* ===== University Grid ===== */}
-      <section className={styles.gridSection}>
+      <section className={styles.gridSection} id="university-grid">
         {loading ? (
           <div style={{ minHeight: '400px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '1rem', color: '#64748b' }}>
             <Loader2 className="animate-spin" size={48} />
@@ -131,8 +150,9 @@ export default function UniversitiesPage() {
         ) : (
           <>
             {filtered.length > 0 ? (
-              <div className={styles.gridWrap} ref={gridRef}>
-                {filtered.map((uni, i) => (
+              <>
+                <div className={styles.gridWrap} ref={gridRef}>
+                {filtered.slice(0, visibleCount).map((uni, i) => (
                   <div
                     key={uni._id || i}
                     className={`${styles.card} ${visible ? styles.cardVisible : ''}`}
@@ -184,6 +204,17 @@ export default function UniversitiesPage() {
                   </div>
                 ))}
               </div>
+              {filtered.length > visibleCount && (
+                <div style={{ textAlign: 'center', marginTop: '4rem' }}>
+                  <button 
+                    onClick={() => setVisibleCount(prev => prev + 6)}
+                    style={{ background: '#ef233c', color: 'white', border: 'none', padding: '1.25rem 3rem', borderRadius: '8px', fontWeight: 800, cursor: 'pointer', textTransform: 'uppercase', letterSpacing: '2px', transition: 'all 0.3s ease' }}
+                  >
+                    View More Universities
+                  </button>
+                </div>
+              )}
+              </>
             ) : (
               <div style={{ textAlign: 'center', padding: '5rem 2rem', background: '#f8fafc', borderRadius: '24px', border: '1px dashed #cbd5e1' }}>
                 <Info size={48} style={{ color: '#94a3b8', marginBottom: '1rem' }} />

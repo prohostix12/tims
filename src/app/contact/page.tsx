@@ -58,16 +58,21 @@ export default function ContactPage() {
       {/* ===== Cinematic Hero Section ===== */}
       <section className={styles.heroHeader}>
         <div className={styles.heroContent}>
-          <p className={styles.heroCrumb}>
-            <Link href="/">Home</Link> / Contact
-          </p>
-          <span className={styles.heroTag}>Support Center</span>
-          <h1 className={styles.heroTitle}>
-            Dedicated <span style={{ color: '#ef233c' }}>Academic Support</span>
-          </h1>
-          <p className={styles.heroSub}>
-            Your future is our priority. Whether you have questions about specific programs, university admissions, or need personalized career counseling, our dedicated support team is ready to guide you every step of the way. Reach out today and let's shape your success together.
-          </p>
+          <div className={styles.heroLeft}>
+            <p className={styles.heroCrumb}>
+              <Link href="/">Home</Link> / Contact
+            </p>
+            <span className={styles.heroTag}>Support Center</span>
+            <h1 className={styles.heroTitle}>
+              Dedicated <span style={{ color: '#ef233c' }}>Academic Support</span>
+            </h1>
+            <p className={styles.heroSub}>
+              Your future is our priority. Whether you have questions about specific programs, university admissions, or need personalized career counseling, our dedicated support team is ready to guide you every step of the way. Reach out today and let's shape your success together.
+            </p>
+          </div>
+          <div className={styles.heroRight}>
+            <img src="/images/student-laptop.png" alt="Contact Support" className={styles.heroImg} />
+          </div>
         </div>
       </section>
 

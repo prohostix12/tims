@@ -49,16 +49,21 @@ export default function StudyMaterialPage() {
         {/* Hero */}
         <section className={styles.hero}>
           <div className={styles.heroContent}>
-            <p className={styles.heroCrumb}>
-              <Link href="/">Home</Link> / <Link href="/universities">Universities</Link> / Study Material
-            </p>
-            <span className={styles.heroTag}>Academic Support</span>
-            <h1 className={styles.heroTitle}>
-              <span style={{ color: '#ef233c' }}>Premium</span> Study Resources
-            </h1>
-            <p className={styles.heroSub}>
-              Empower your learning with our comprehensive digital library. Access high-quality subject notes, academic guides, and success-oriented resources meticulously curated by our expert faculty to help you master your curriculum and excel in your examinations.
-            </p>
+            <div className={styles.heroLeft}>
+              <p className={styles.heroCrumb}>
+                <Link href="/">Home</Link> / <Link href="/universities">Universities</Link> / Study Material
+              </p>
+              <span className={styles.heroTag}>Academic Support</span>
+              <h1 className={styles.heroTitle}>
+                <span style={{ color: '#ef233c' }}>Premium</span> Study Resources
+              </h1>
+              <p className={styles.heroSub}>
+                Empower your learning with our comprehensive digital library. Access high-quality subject notes, academic guides, and success-oriented resources meticulously curated by our expert faculty to help you master your curriculum and excel in your examinations.
+              </p>
+            </div>
+            <div className={styles.heroRight}>
+              <img src="/images/student-laptop.png" alt="Study Material" className={styles.heroImg} />
+            </div>
           </div>
         </section>
 

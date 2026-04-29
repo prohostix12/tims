@@ -73,16 +73,21 @@ export default function TimetablePage() {
         {/* Hero */}
         <section className={styles.hero}>
           <div className={styles.heroContent}>
-            <p className={styles.heroCrumb}>
-              <Link href="/">Home</Link> / <Link href="/universities">Universities</Link> / Time Table
-            </p>
-            <span className={styles.heroTag}>Official Schedule</span>
-            <h1 className={styles.heroTitle}>
-            Examination <span style={{ color: '#ef233c' }}>Timetables</span>
-          </h1>
-          <p className={styles.heroDesc}>
-            Stay ahead of your academic schedule. Access the official examination timetables for all our partner universities and boards. We ensure you have the most accurate and up-to-date information to help you plan your studies and achieve your best results.
-          </p>
+            <div className={styles.heroLeft}>
+              <p className={styles.heroCrumb}>
+                <Link href="/">Home</Link> / <Link href="/universities">Universities</Link> / Time Table
+              </p>
+              <span className={styles.heroTag}>Official Schedule</span>
+              <h1 className={styles.heroTitle}>
+                Examination <span style={{ color: '#ef233c' }}>Timetables</span>
+              </h1>
+              <p className={styles.heroDesc}>
+                Stay ahead of your academic schedule. Access the official examination timetables for all our partner universities and boards. We ensure you have the most accurate and up-to-date information to help you plan your studies and achieve your best results.
+              </p>
+            </div>
+            <div className={styles.heroRight}>
+              <img src="/images/about-students.png" alt="Timetable" className={styles.heroImg} />
+            </div>
           </div>
         </section>
 

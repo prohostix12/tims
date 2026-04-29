@@ -24,16 +24,6 @@ const CourseCard = ({ course, i, onEnquire }: { course: any, i: number, onEnquir
           {course.description}
         </p>
         
-        <div className={styles.courseMeta}>
-          <div className={styles.metaItem}>
-            <Clock size={16} color="#ef233c" />
-            {course.duration}
-          </div>
-          <div className={styles.metaItem}>
-            <BookOpen size={16} color="#ef233c" />
-            {course.eligibility}
-          </div>
-        </div>
         
         <div className={styles.btnGroup}>
           <button 

@@ -5,29 +5,65 @@
 
 /* Hero */
 .hero {
-  background-image:
-    linear-gradient(to bottom, rgba(255, 255, 255, 0.85) 0%, rgba(255, 255, 255, 0.6) 100%),
-    url('/images/about-students.png');
-  background-size: cover;
-  background-position: center;
+  background: linear-gradient(135deg, #e0f2fe 0%, #fee2e2 100%);
   padding: 8rem 5% 5rem;
   position: relative;
   overflow: hidden;
   height: 100vh;
+  min-height: 600px;
   display: flex;
   flex-direction: column;
   justify-content: center;
 }
 
 .heroContent {
-  max-width: 700px;
+  width: 100%;
+  max-width: 1200px;
   position: relative;
   z-index: 1;
   margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  gap: 4rem;
+}
+
+.heroLeft {
   display: flex;
   flex-direction: column;
+  gap: 1.25rem;
+  align-items: flex-start;
+  text-align: left;
+}
+
+.heroRight {
+  display: flex;
+  justify-content: flex-end;
   align-items: center;
-  text-align: center;
+}
+
+.heroImg {
+  width: 100%;
+  max-width: 500px;
+  height: auto;
+  object-fit: cover;
+  border-radius: 20px;
+  box-shadow: 0 20px 40px rgba(0,32,96,0.1);
+  border: 4px solid #ffffff;
+}
+
+@media (max-width: 1024px) {
+  .heroContent {
+    grid-template-columns: 1fr;
+    text-align: center;
+  }
+  .heroLeft {
+    align-items: center;
+    text-align: center;
+  }
+  .heroRight {
+    justify-content: center;
+  }
 }
 
 .heroCrumb {

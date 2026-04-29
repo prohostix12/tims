@@ -324,8 +324,10 @@
 /* ===== Courses Grid ===== */
 .coursesGrid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 1.5rem;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2.5rem;
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
 .courseCard {
@@ -346,7 +348,7 @@
 }
 
 .cardImage {
-  height: 160px;
+  height: 220px;
   position: relative;
   overflow: hidden;
 }

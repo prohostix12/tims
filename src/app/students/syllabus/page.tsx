@@ -42,21 +42,25 @@ export default function SyllabusPage() {
       {/* Hero */}
       <section className={styles.hero}>
         <div className={styles.heroContent}>
-          <span className={styles.heroTag}>Academic Resources</span>
-          <h1 className={styles.heroTitle}>
-            Academic <span style={{ color: '#ef233c' }}>Syllabus Repository</span>
-          </h1>
-          <p className={styles.heroDesc}>
-            Stay on track with your academic goals by accessing the most up-to-date curriculum and syllabi for our diverse range of programs. From core foundational subjects to advanced specializations, our repository provides everything you need to master your field.
-          </p>
-
-          <div className={styles.heroActions}>
-            <div className={styles.searchBox}>
-              <input type="text" placeholder="Search by course or university..." className={styles.searchInput} />
+          <div className={styles.heroLeft}>
+            <span className={styles.heroTag}>Academic Resources</span>
+            <h1 className={styles.heroTitle}>
+              Academic <span style={{ color: '#ef233c' }}>Syllabus Repository</span>
+            </h1>
+            <p className={styles.heroDesc}>
+              Stay on track with your academic goals by accessing the most up-to-date curriculum and syllabi for our diverse range of programs. From core foundational subjects to advanced specializations, our repository provides everything you need to master your field.
+            </p>
+            <div className={styles.heroActions}>
+              <div className={styles.searchBox}>
+                <input type="text" placeholder="Search by course or university..." className={styles.searchInput} />
+              </div>
+              <Link href="/courses" className={styles.heroBtn}>
+                Browse All Programs <ChevronRight size={18} />
+              </Link>
             </div>
-            <Link href="/courses" className={styles.heroBtn}>
-              Browse All Programs <ChevronRight size={18} />
-            </Link>
+          </div>
+          <div className={styles.heroRight}>
+            <img src="/images/courses-hero-bg.png" alt="Syllabus" className={styles.heroImg} />
           </div>
         </div>
       </section>

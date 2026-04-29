@@ -54,6 +54,9 @@ export default function ResultsPage() {
                 Access your examination results, digital marksheets, and academic credentials from various universities. Click on your course name to view and download your result document.
               </p>
             </div>
+            <div className={styles.heroRight}>
+              <img src="/images/hero-campus.png" alt="Results" className={styles.heroImg} />
+            </div>
           </div>
         </section>
 
