@@ -214,12 +214,15 @@ export default function Home() {
             </p>
 
             <div className={styles.heroCTAGroup}>
-              <Link href="/courses" className={styles.heroCTABtn}>
-                Explore Courses <ArrowRight size={16} />
-              </Link>
-              <Link href="/about" className={styles.heroPlayBtn}>
+              <button
+                className={styles.heroCTABtn}
+                onClick={() => window.dispatchEvent(new CustomEvent('open-course-finder'))}
+              >
+                Suggest Me a University <ArrowRight size={16} />
+              </button>
+              <Link href="/courses" className={styles.heroPlayBtn}>
                 <span className={styles.playCircle}>▶</span>
-                <span>How it Works</span>
+                <span>Explore Courses</span>
               </Link>
             </div>
 
@@ -304,6 +307,80 @@ export default function Home() {
 
       {/* ===== Online Courses Section (Tabbed) ===== */}
       <OnlineCoursesSection />
+
+      {/* ===== Stats Trust Bar ===== */}
+      <section className={styles.statsTrustBar}>
+        {[
+          { num: '5,000+', label: 'Happy Alumni' },
+          { num: '100+',   label: 'Expert Mentors' },
+          { num: '90+',    label: 'Partner Universities' },
+          { num: '18+',    label: 'Years Experience' },
+        ].map((s, i) => (
+          <div key={i} className={styles.statsTrustItem}>
+            <span className={styles.statsTrustNum}>{s.num}</span>
+            <span className={styles.statsTrustLabel}>{s.label}</span>
+          </div>
+        ))}
+      </section>
+
+      {/* ===== Career Guidance Section ===== */}
+      <section className={styles.careerSection}>
+        <div className={styles.careerHeader}>
+          <span className={styles.uniSectionTag}>Plan Your Future</span>
+          <h2 className={styles.careerTitle}>Career Guidance</h2>
+          <p className={styles.careerSub}>Know what career paths open up after completing your degree</p>
+        </div>
+        <div className={styles.careerGrid}>
+          {[
+            { degree: 'After MBA',   desc: 'Management, Consulting, Banking & Finance roles', href: '/courses' },
+            { degree: 'After MCA',   desc: 'Software Development, Cloud, AI & IT Management', href: '/courses' },
+            { degree: 'After M.Com', desc: 'Accounting, Taxation, Finance & Academia', href: '/courses' },
+            { degree: 'After BBA',   desc: 'Marketing, HR, Entrepreneurship & Sales', href: '/courses' },
+            { degree: 'After BCA',   desc: 'Web Development, Data Science & Tech Support', href: '/courses' },
+            { degree: 'After B.Com', desc: 'CA, Banking, E-Commerce & Government Jobs', href: '/courses' },
+          ].map((item, i) => (
+            <Link key={i} href={item.href} className={styles.careerCard}>
+              <div className={styles.careerCardNum}>{String(i + 1).padStart(2, '0')}</div>
+              <h3 className={styles.careerCardDegree}>{item.degree}</h3>
+              <p className={styles.careerCardDesc}>{item.desc}</p>
+              <span className={styles.careerCardCta}>Know More <ArrowRight size={14} /></span>
+            </Link>
+          ))}
+        </div>
+      </section>
+
+      {/* ===== What We Do For You ===== */}
+      <section className={styles.whatWeDoSection}>
+        <div className={styles.whatWeDoInner}>
+          <div className={styles.whatWeDoHeader}>
+            <span className={styles.uniSectionTag}>Our Process</span>
+            <h2 className={styles.whatWeDoTitle}>What We Do For You</h2>
+            <p className={styles.whatWeDoPara}>End-to-end support — from choosing the right university to completing your admission successfully.</p>
+          </div>
+          <div className={styles.whatWeDoGrid}>
+            {[
+              { step: '01', title: 'Understand Your Goals', desc: 'We start by understanding your background, budget, and career aspirations through a free consultation.' },
+              { step: '02', title: 'Suggest the Right Program', desc: 'Our mentors match you with the best UGC-approved university and program that fits your profile.' },
+              { step: '03', title: 'Hassle-Free Admission', desc: 'We guide you through the entire admission process — forms, documents, and fee payments.' },
+              { step: '04', title: 'Ongoing Support', desc: 'After joining, we provide study materials, exam guidance, and career counselling throughout your course.' },
+            ].map((item, i) => (
+              <div key={i} className={styles.whatWeDoCard}>
+                <div className={styles.whatWeDoStep}>{item.step}</div>
+                <h3 className={styles.whatWeDoCardTitle}>{item.title}</h3>
+                <p className={styles.whatWeDoCardDesc}>{item.desc}</p>
+              </div>
+            ))}
+          </div>
+          <div style={{ textAlign: 'center', marginTop: '3rem' }}>
+            <button
+              className={styles.confusedBtn}
+              onClick={() => window.dispatchEvent(new CustomEvent('open-course-finder'))}
+            >
+              Get Free Guidance <ArrowRight size={18} />
+            </button>
+          </div>
+        </div>
+      </section>
 
       {/* ===== Value Proposition Section (Edufolio-inspired) ===== */}
       <section className={styles.valuePropSection}>
