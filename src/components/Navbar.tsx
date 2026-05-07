@@ -3,7 +3,6 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import styles from './Navbar.module.css';
 import { ChevronDown, Menu, X, ArrowRight } from 'lucide-react';
@@ -78,14 +77,12 @@ const Navbar = () => {
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
-  // Close mobile menu on route change
   useEffect(() => {
     setMobileOpen(false);
     setOpenMobileItem(null);
     setOpenMobileSubItem(null);
   }, [pathname]);
 
-  // Lock body scroll when mobile menu is open
   useEffect(() => {
     document.body.style.overflow = mobileOpen ? 'hidden' : '';
     return () => { document.body.style.overflow = ''; };
@@ -108,28 +105,15 @@ const Navbar = () => {
     <>
       <div className={`${styles.navWrapper} ${scrolled ? styles.scrolled : ''}`}>
         <nav className={styles.navbar}>
+
           {/* Logo */}
           <Link href="/" className={styles.logo} aria-label="Go to homepage">
-            <div className={styles.logoBadge}>
-              <Image
-                src="/images/demo logo5.png"
-                alt="Find Your University"
-                width={350}
-                height={110}
-                priority
-                className={styles.logoImage}
-                style={{ objectFit: 'contain' }}
-              />
-              <div className={styles.logoNameWrap}>
-                <span className={styles.logoNameTop}>Find Your</span>
-                <span className={styles.logoNameBottom}>University</span>
-              </div>
-            </div>
+            <span className={styles.logoText}>Find Your University</span>
           </Link>
 
           {/* Desktop Links */}
           <ul className={styles.navLinks} role="menubar">
-            {/* Render Home */}
+            {/* Home */}
             {navLinks.filter(link => link.name === 'Home').map((link) => (
               <li key={link.name} className={styles.navItem} role="none">
                 <Link
@@ -142,16 +126,16 @@ const Navbar = () => {
               </li>
             ))}
 
-            {/* Added Course Finder in the center */}
+            {/* Course Finder button */}
             <li className={styles.navItem} role="none" style={{ display: 'flex', alignItems: 'center' }}>
               <button
                 className={styles.navLink}
                 onClick={() => window.dispatchEvent(new CustomEvent('open-course-finder'))}
                 role="menuitem"
-                style={{ 
-                  background: '#002060', 
-                  border: 'none', 
-                  cursor: 'pointer', 
+                style={{
+                  background: '#E8502A',
+                  border: 'none',
+                  cursor: 'pointer',
                   fontFamily: 'inherit',
                   color: '#ffffff',
                   fontWeight: '700',
@@ -160,14 +144,14 @@ const Navbar = () => {
                   display: 'flex',
                   alignItems: 'center',
                   transition: 'all 0.3s ease',
-                  fontSize: '0.85rem'
+                  fontSize: '0.85rem',
                 }}
               >
                 Course Finder
               </button>
             </li>
 
-            {/* Render About */}
+            {/* About */}
             {navLinks.filter(link => link.name === 'About').map((link) => (
               <li key={link.name} className={styles.navItem} role="none">
                 <Link
@@ -181,21 +165,19 @@ const Navbar = () => {
             ))}
           </ul>
 
-          {/* Desktop Actions */}
+          {/* Desktop Actions — hamburger + Login */}
           <div className={styles.actions}>
-            <Link href="/login" className={styles.primaryAction}>
-              Login
-            </Link>
-
-            {/* Hamburger */}
             <button
               className={styles.menuToggle}
               onClick={() => setMobileOpen(!mobileOpen)}
               aria-label={mobileOpen ? 'Close menu' : 'Open menu'}
               aria-expanded={mobileOpen}
             >
-              {mobileOpen ? <X size={26} /> : <Menu size={26} />}
+              {mobileOpen ? <X size={22} /> : <Menu size={22} />}
             </button>
+            <Link href="/login" className={styles.loginBtn}>
+              Login
+            </Link>
           </div>
         </nav>
       </div>
@@ -217,83 +199,89 @@ const Navbar = () => {
         {/* Drawer header */}
         <div className={styles.drawerHeader}>
           <Link href="/" className={styles.logo} onClick={() => setMobileOpen(false)}>
-            <div className={styles.logoBadge}>
-              <Image
-                src="/images/demo logo5.png"
-                alt="Find Your University"
-                width={250}
-                height={80}
-                className={styles.logoImage}
-                style={{ objectFit: 'contain' }}
-              />
-              <div className={styles.logoNameWrap}>
-                <span className={styles.logoNameTop}>Find Your</span>
-                <span className={styles.logoNameBottom}>University</span>
-              </div>
-            </div>
+            <span className={styles.logoText}>Find Your University</span>
           </Link>
           <button
             className={styles.drawerClose}
             onClick={() => setMobileOpen(false)}
             aria-label="Close menu"
           >
-            <X size={26} />
+            <X size={22} />
           </button>
         </div>
 
-        {/* Drawer links */}
+        {/* Drawer links — all nav items */}
         <nav className={styles.drawerNav}>
-          {/* Render Home for Mobile */}
-          {navLinks.filter(link => link.name === 'Home').map((link) => (
+          {navLinks.map((link) => (
             <div key={link.name} className={styles.drawerItem}>
-              <Link
-                href={link.path}
-                className={`${styles.drawerLink} ${isActive(link) ? styles.drawerLinkActive : ''}`}
-                onClick={() => setMobileOpen(false)}
-              >
-                {link.name}
-              </Link>
-            </div>
-          ))}
-
-          {/* Render Course Finder for Mobile */}
-          <div className={styles.drawerItem} style={{ padding: '0.5rem 1rem' }}>
-            <button
-              className={styles.drawerLink}
-              style={{ 
-                background: '#002060', 
-                color: '#ffffff', 
-                fontWeight: '700',
-                padding: '0.8rem 1.5rem',
-                borderRadius: '12px',
-                width: '100%',
-                textAlign: 'center',
-                justifyContent: 'center'
-              }}
-              onClick={() => {
-                setMobileOpen(false);
-                window.dispatchEvent(new CustomEvent('open-course-finder'));
-              }}
-            >
-              Course Finder
-            </button>
-          </div>
-
-          {/* Render About for Mobile */}
-          {navLinks.filter(link => link.name === 'About').map((link) => (
-            <div key={link.name} className={styles.drawerItem}>
-              <Link
-                href={link.path}
-                className={`${styles.drawerLink} ${isActive(link) ? styles.drawerLinkActive : ''}`}
-                onClick={() => setMobileOpen(false)}
-              >
-                {link.name}
-              </Link>
+              {link.submenu ? (
+                <>
+                  <button
+                    className={`${styles.drawerLink} ${openMobileItem === link.name ? styles.drawerLinkActive : ''}`}
+                    onClick={() => toggleMobileItem(link.name)}
+                  >
+                    {link.name}
+                    <span className={`${styles.drawerChevron} ${openMobileItem === link.name ? styles.drawerChevronOpen : ''}`}>
+                      <ChevronDown size={16} />
+                    </span>
+                  </button>
+                  {openMobileItem === link.name && (
+                    <div className={styles.drawerSub}>
+                      {link.submenu.map((sub) => (
+                        <div key={sub.name}>
+                          {sub.submenu ? (
+                            <>
+                              <button
+                                className={`${styles.drawerSubLink} ${openMobileSubItem === sub.name ? styles.drawerLinkActive : ''}`}
+                                onClick={() => toggleMobileSubItem(sub.name)}
+                                style={{ width: '100%', textAlign: 'left', border: 'none', background: 'none', fontFamily: 'inherit', cursor: 'pointer' }}
+                              >
+                                {sub.name}
+                                <ChevronDown size={14} />
+                              </button>
+                              {openMobileSubItem === sub.name && (
+                                <div className={styles.drawerSub} style={{ paddingLeft: '1rem' }}>
+                                  {sub.submenu.map((nested) => (
+                                    <Link
+                                      key={nested.name}
+                                      href={nested.path}
+                                      className={styles.drawerSubLink}
+                                      onClick={() => setMobileOpen(false)}
+                                    >
+                                      {nested.name}
+                                    </Link>
+                                  ))}
+                                </div>
+                              )}
+                            </>
+                          ) : (
+                            <Link
+                              href={sub.path}
+                              className={styles.drawerSubLink}
+                              onClick={() => setMobileOpen(false)}
+                            >
+                              {sub.name}
+                            </Link>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </>
+              ) : (
+                <Link
+                  href={link.path}
+                  className={`${styles.drawerLink} ${isActive(link) ? styles.drawerLinkActive : ''}`}
+                  onClick={() => setMobileOpen(false)}
+                >
+                  {link.name}
+                </Link>
+              )}
             </div>
           ))}
         </nav>
 
-        {/* Drawer Footer Actions */}
+        {/* Drawer Footer */}
         <div className={styles.drawerActions}>
           <button
             className={styles.drawerActionSecondary}

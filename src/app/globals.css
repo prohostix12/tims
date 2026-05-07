@@ -4,14 +4,14 @@
 :root {
   /* ── Brand Colors ── */
   --primary: #1a1a1a; /* Clean Black for Text */
-  --accent: #ef233c;  /* UpGrad Red */
+  --accent: #E8502A;  /* Educore Orange-Red */
   --secondary: #4b5563; /* Muted Gray */
 
   /* ── Neutral / Background ── */
   --white: #ffffff;
   --bg-light: #f9fafb;
   --bg-white: #ffffff;
-  --bg-accent-light: #fef2f2;
+  --bg-accent-light: #fdf0ea;
 
   /* ── Text ── */
   --text: #002060;
