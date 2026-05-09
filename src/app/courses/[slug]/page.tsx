@@ -1,3 +1,4 @@
+
 'use client';
 
 import React from 'react';
@@ -12,7 +13,9 @@ import {
   ArrowLeft,
   Calendar,
   Award,
-  Users
+  Users,
+  ChevronRight,
+  ShieldCheck
 } from 'lucide-react';
 import EnquiryModal from '@/components/EnquiryModal';
 
@@ -45,21 +48,21 @@ export default function CourseDetailsPage() {
               title: data.name,
               image: data.image || "https://images.unsplash.com/photo-1523050853063-bd8012fec046?q=80&w=1200",
               category: data.category || 'Program',
-              duration: data.duration || "24 Months",
-              eligibility: data.eligibility || "Bachelor's Degree in relevant field",
-              level: data.level || "Advanced Professional",
-              description: data.description || `The ${data.name} is a premier academic program designed to equip students with the advanced skills and strategic mindset required in today's competitive global landscape.`,
-              highlights: [
-                "Industry-aligned curriculum",
-                "Expert faculty mentorship",
-                "Global networking opportunities",
-                "Practical project-based learning"
+              duration: data.duration || "Not specified",
+              eligibility: data.eligibility || "Contact admissions for details",
+              level: data.level || "Professional",
+              description: data.description || `Explore the comprehensive curriculum and global opportunities offered by the ${data.name} program at TIMS.`,
+              highlights: (Array.isArray(data.highlights) && data.highlights.length > 0) ? data.highlights : [
+                "Nationally Recognized Certification",
+                "Flexible Learning Schedule",
+                "Expert Faculty Support",
+                "Career-Focused Curriculum"
               ],
-              curriculum: [
-                "Strategic Management & Leadership",
-                "Advanced Analytical Techniques",
-                "Organizational Behavior",
-                "Global Market Dynamics"
+              curriculum: (Array.isArray(data.curriculum) && data.curriculum.length > 0) ? data.curriculum : [
+                "Foundational Concepts",
+                "Advanced Methodologies",
+                "Practical Case Studies",
+                "Final Project & Assessment"
               ]
             });
           }
@@ -71,136 +74,128 @@ export default function CourseDetailsPage() {
 
   if (loading) {
     return (
-      <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-        <p style={{ fontSize: '1.2rem', color: '#64748b', fontWeight: 600 }}>Loading course details...</p>
+      <div className={styles.loadingContainer}>
+        <div className={styles.loader}></div>
+        <p>Loading course details...</p>
       </div>
     );
   }
 
   if (!courseData) {
     return (
-      <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
-        <h2>Course not found</h2>
-        <Link href="/courses" style={{ marginTop: '1rem', color: '#ef233c', textDecoration: 'underline' }}>Back to Courses</Link>
+      <div className={styles.errorContainer}>
+        <h2>Course Profile Not Found</h2>
+        <p>The program you are looking for might have been moved or renamed.</p>
+        <Link href="/courses" className={styles.backBtn}>
+          <ArrowLeft size={18} /> Back to Courses
+        </Link>
       </div>
     );
   }
 
   return (
     <main className={styles.container}>
-      {/* ===== Hero Section ===== */}
-      <section 
-        className={styles.heroHeader}
-        style={{ backgroundImage: `linear-gradient(rgba(0, 18, 46, 0.6), rgba(0, 18, 46, 0.8)), url('${courseData.image}')` }}
-      >
-        <div className={styles.heroContent}>
-          <p className={styles.heroCrumb}>
-            <Link href="/">Home</Link> / <Link href="/courses">Courses</Link> / {courseData.title}
-          </p>
-          <span className={styles.tag}>{courseData.category}</span>
-          <h1 className={styles.title}>{courseData.title}</h1>
+      {/* ===== Page Header ===== */}
+      <section className={styles.heroSection}>
+        <div className={styles.heroInner}>
+          <div className={styles.breadcrumb}>
+            <Link href="/">Home</Link> <ChevronRight size={14} /> 
+            <Link href="/courses">Courses</Link> <ChevronRight size={14} /> 
+            <span>{courseData.title}</span>
+          </div>
+          <span className={styles.categoryBadge}>{courseData.category}</span>
+          <h1 className={styles.mainTitle}>{courseData.title}</h1>
         </div>
       </section>
 
-      {/* ===== Content Section ===== */}
-      <section className={styles.contentSection}>
-        <div className={styles.contentContainer}>
-          <div className={styles.grid}>
-            
-            {/* Main Content */}
-            <div className={styles.mainColumn}>
-              <h2>Program Overview</h2>
-              <p className={styles.description}>
-                {courseData.description}
-              </p>
-
-              <div className={styles.sectionBox}>
-                <h3><Award className={styles.featureIcon} /> Key Highlights</h3>
-                <div className={styles.featureList}>
-                  {courseData.highlights.map((item, idx) => (
-                    <div key={idx} className={styles.featureItem}>
-                      <CheckCircle2 size={20} className={styles.featureIcon} />
-                      {item}
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              <div className={styles.sectionBox}>
-                <h3><BookOpen className={styles.featureIcon} /> Curriculum Preview</h3>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
-                  {courseData.curriculum.map((item, idx) => (
-                    <div key={idx} style={{ padding: '1.75rem', border: '1.5px solid #f1f5f9', borderRadius: '20px', display: 'flex', alignItems: 'center', gap: '20px', color: '#00122e', fontWeight: 700, fontSize: '1.1rem' }}>
-                      <span style={{ width: '36px', height: '36px', background: '#00122e', color: 'white', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.9rem', flexShrink: 0 }}>{idx + 1}</span>
-                      {item}
-                    </div>
-                  ))}
-                </div>
+      {/* ===== Main Content ===== */}
+      <div className={styles.contentWrapper}>
+        <div className={styles.mainGrid}>
+          
+          {/* Left: Course Info */}
+          <div className={styles.leftCol}>
+            <div className={styles.glassCard}>
+              <h2 className={styles.sectionHeading}>Program Overview</h2>
+              <p className={styles.courseDescription}>{courseData.description}</p>
+              
+              <div className={styles.highlightsGrid}>
+                {courseData.highlights.map((h, i) => (
+                  <div key={i} className={styles.highlightItem}>
+                    <CheckCircle2 size={20} className={styles.checkIcon} />
+                    <span>{h}</span>
+                  </div>
+                ))}
               </div>
             </div>
 
-            {/* Sidebar Stats */}
-            <aside className={styles.sidebar}>
-              <div className={styles.sidebarCard}>
-                <h3 className={styles.sidebarTitle}>Program Essentials</h3>
-                
-                <div className={styles.infoRow}>
-                  <div className={styles.infoLabel}><Clock size={18} /> Duration</div>
-                  <div className={styles.infoValue}>{courseData.duration}</div>
-                </div>
-                
-                <div className={styles.infoRow}>
-                  <div className={styles.infoLabel}><GraduationCap size={18} /> Level</div>
-                  <div className={styles.infoValue}>{courseData.level}</div>
-                </div>
-                
-                <div className={styles.infoRow}>
-                  <div className={styles.infoLabel}><Users size={18} /> Eligibility</div>
-                  <div className={styles.infoValue}>{courseData.eligibility}</div>
-                </div>
-
-                <div className={styles.infoRow}>
-                  <div className={styles.infoLabel}><Calendar size={18} /> Intake</div>
-                  <div className={styles.infoValue}>Rolling Enrollment</div>
-                </div>
-
-                <button 
-                  onClick={() => setIsModalOpen(true)}
-                  className={styles.enquireBtn}
-                  style={{ width: '100%', border: 'none', cursor: 'pointer', fontFamily: 'inherit' }}
-                >
-                  ENQUIRE NOW
-                </button>
-                
-                <p style={{ textAlign: 'center', marginTop: '2rem', fontSize: '0.9rem', color: '#64748b', fontWeight: 600 }}>
-                  * Academic scholarships available
-                </p>
+            <div className={styles.glassCard} style={{ marginTop: '2rem' }}>
+              <h2 className={styles.sectionHeading}><BookOpen size={24} style={{ marginRight: '10px' }} /> Curriculum Preview</h2>
+              <div className={styles.curriculumList}>
+                {courseData.curriculum.map((c, i) => (
+                  <div key={i} className={styles.curriculumItem}>
+                    <span className={styles.stepNum}>{i + 1}</span>
+                    <span className={styles.stepText}>{c}</span>
+                  </div>
+                ))}
               </div>
-            </aside>
-
+            </div>
           </div>
-        </div>
-      </section>
 
-      {/* ===== Institutional Footer CTA ===== */}
-      <section style={{ padding: '8rem 0', backgroundColor: '#000000', textAlign: 'center' }}>
-        <div style={{ maxWidth: '800px', margin: '0 auto', padding: '0 5%' }}>
-          <h2 style={{ fontSize: '2.5rem', color: '#ffffff', fontWeight: 900, marginBottom: '1.5rem' }}>Ready to Take the Next Step?</h2>
-          <p style={{ fontSize: '1.1rem', color: 'rgba(255, 255, 255, 0.7)', marginBottom: '3rem', lineHeight: 1.6 }}>
-            Our admissions team is here to guide you through the enrollment process and answer any questions about the {courseData.title} program.
-          </p>
-          <div style={{ display: 'flex', gap: '1.5rem', justifyContent: 'center' }}>
-            <button 
-              onClick={() => setIsModalOpen(true)}
-              style={{ background: '#ef233c', color: 'white', padding: '1.25rem 3rem', borderRadius: '50px', fontWeight: 900, textDecoration: 'none', border: 'none', cursor: 'pointer', fontFamily: 'inherit', transition: 'all 0.3s ease' }}>
-              CONTACT ADMISSIONS
-            </button>
-            <Link href="/universities" style={{ border: '2px solid #ffffff', color: '#ffffff', padding: '1.25rem 3rem', borderRadius: '50px', fontWeight: 900, textDecoration: 'none', transition: 'all 0.3s ease' }}>
-              BROWSE UNIVERSITIES
-            </Link>
-          </div>
+          {/* Right: Sidebar Stats */}
+          <aside className={styles.sidebar}>
+            <div className={styles.stickySidebar}>
+              <div className={styles.infoCard}>
+                <h3 className={styles.infoCardTitle}>Quick Facts</h3>
+                
+                <div className={styles.factRow}>
+                  <div className={styles.factIcon}><Clock size={20} /></div>
+                  <div className={styles.factContent}>
+                    <span className={styles.factLabel}>Duration</span>
+                    <span className={styles.factValue}>{courseData.duration}</span>
+                  </div>
+                </div>
+
+                <div className={styles.factRow}>
+                  <div className={styles.factIcon}><GraduationCap size={20} /></div>
+                  <div className={styles.factContent}>
+                    <span className={styles.factLabel}>Level</span>
+                    <span className={styles.factValue}>{courseData.level}</span>
+                  </div>
+                </div>
+
+                <div className={styles.factRow}>
+                  <div className={styles.factIcon}><Users size={20} /></div>
+                  <div className={styles.factContent}>
+                    <span className={styles.factLabel}>Eligibility</span>
+                    <span className={styles.factValue}>{courseData.eligibility}</span>
+                  </div>
+                </div>
+
+                <div className={styles.factRow}>
+                  <div className={styles.factIcon}><ShieldCheck size={20} /></div>
+                  <div className={styles.factContent}>
+                    <span className={styles.factLabel}>Recognition</span>
+                    <span className={styles.factValue}>UGC-DEB Approved</span>
+                  </div>
+                </div>
+
+                <button className={styles.enquireBtn} onClick={() => setIsModalOpen(true)}>
+                  Enquire Now
+                </button>
+              </div>
+
+              <div className={styles.supportCard}>
+                <h4>Need Help?</h4>
+                <p>Speak to our academic counselors for personalized guidance.</p>
+                <a href="tel:+919961967777" className={styles.callBtn}>
+                  Call +91 9961967777
+                </a>
+              </div>
+            </div>
+          </aside>
+
         </div>
-      </section>
+      </div>
 
       <EnquiryModal 
         isOpen={isModalOpen} 

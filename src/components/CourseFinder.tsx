@@ -9,17 +9,17 @@ const IconCompass = () => (
   </svg>
 );
 const IconUser = () => (
-  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#ef233c" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#E8502A" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
     <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
   </svg>
 );
 const IconMail = () => (
-  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#ef233c" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#E8502A" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
     <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/>
   </svg>
 );
 const IconPhone = () => (
-  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#ef233c" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#E8502A" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
     <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 13a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 2.18h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 9.91a16 16 0 0 0 6.18 6.18l.95-.95a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/>
   </svg>
 );
@@ -69,7 +69,7 @@ const IconChevronRight = () => (
   </svg>
 );
 const IconFrown = () => (
-  <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#ef233c" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+  <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#E8502A" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
     <circle cx="12" cy="12" r="10"/><path d="M16 16s-1.5-2-4-2-4 2-4 2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/>
   </svg>
 );
@@ -696,7 +696,7 @@ export default function CourseFinder() {
 const CF_STYLES = `
 .cf-floating-btn {
   position: fixed; bottom: 1.5rem; right: 5.5rem;
-  background: linear-gradient(135deg, #ef233c 0%, #d90429 100%);
+  background: linear-gradient(135deg, #E8502A 0%, #d90429 100%);
   color: #fff; border: none; border-radius: 50px;
   padding: 16px 26px; font-size: 1rem; font-weight: 600;
   font-family: inherit; cursor: pointer;
@@ -754,10 +754,10 @@ const CF_STYLES = `
   box-sizing: border-box; transition: border-color 0.2s, background 0.2s;
 }
 .cf-input::placeholder { color: #94A3B8; }
-.cf-input:focus { outline: none; border-color: #ef233c; background: #fff; box-shadow: 0 0 0 3px rgba(239, 35, 60, 0.1); }
+.cf-input:focus { outline: none; border-color: #E8502A; background: #fff; box-shadow: 0 0 0 3px rgba(239, 35, 60, 0.1); }
 .cf-submit-btn {
   width: 100%; padding: 14px; margin-top: 6px;
-  background: linear-gradient(135deg, #ef233c 0%, #d90429 100%);
+  background: linear-gradient(135deg, #E8502A 0%, #d90429 100%);
   color: #fff; border: none; border-radius: 10px;
   font-size: 1rem; font-weight: 600; font-family: inherit;
   cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px;
@@ -775,7 +775,7 @@ const CF_STYLES = `
 }
 .cf-header-icon {
   width: 64px; height: 64px; border-radius: 50%;
-  background: linear-gradient(135deg, #ef233c 0%, #d90429 100%);
+  background: linear-gradient(135deg, #E8502A 0%, #d90429 100%);
   display: flex; align-items: center; justify-content: center;
   margin: 0 auto 16px; color: #fff;
   box-shadow: 0 8px 20px rgba(239, 35, 60, 0.3);
@@ -784,7 +784,7 @@ const CF_STYLES = `
 .cf-subtitle { color: #64748B; font-size: 0.95rem; margin: 0; }
 .cf-progress-container { padding: 18px 30px; border-bottom: 1px solid #E2E8F0; background: #fff; }
 .cf-progress-bar { height: 6px; background: #E2E8F0; border-radius: 4px; overflow: hidden; margin-bottom: 8px; }
-.cf-progress-fill { height: 100%; background: linear-gradient(135deg, #ef233c, #d90429); border-radius: 4px; transition: width 0.4s ease; }
+.cf-progress-fill { height: 100%; background: linear-gradient(135deg, #E8502A, #d90429); border-radius: 4px; transition: width 0.4s ease; }
 .cf-progress-text { color: #64748B; font-size: 0.82rem; font-weight: 600; }
 .cf-question-container { padding: 28px 30px; background: #fff; }
 .cf-question-container.animate { animation: cf-q-in 0.3s ease; }
@@ -798,14 +798,14 @@ const CF_STYLES = `
   font-size: 0.9rem; color: #334155; font-weight: 500; font-family: inherit;
   transition: all 0.2s;
 }
-.cf-option-btn:hover { border-color: #ef233c; background: #FFF1F2; transform: translateY(-2px); box-shadow: 0 4px 15px rgba(239, 35, 60, 0.12); }
-.cf-option-btn.selected { background: #FFF1F2; border-color: #ef233c; color: #ef233c; }
-.cf-option-icon { color: #ef233c; display: flex; align-items: center; }
+.cf-option-btn:hover { border-color: #E8502A; background: #FFF1F2; transform: translateY(-2px); box-shadow: 0 4px 15px rgba(239, 35, 60, 0.12); }
+.cf-option-btn.selected { background: #FFF1F2; border-color: #E8502A; color: #E8502A; }
+.cf-option-icon { color: #E8502A; display: flex; align-items: center; }
 .cf-navigation { display: flex; justify-content: space-between; padding: 0 30px 28px; gap: 15px; background: #fff; }
 .cf-back-btn { padding: 11px 22px; background: #F1F5F9; color: #64748B; border: none; border-radius: 10px; cursor: pointer; font-weight: 600; font-size: 0.9rem; font-family: inherit; transition: all 0.2s; display: flex; align-items: center; gap: 6px; }
 .cf-back-btn:hover { background: #E2E8F0; color: #334155; }
 .cf-find-btn {
-  padding: 12px 28px; background: linear-gradient(135deg, #ef233c 0%, #d90429 100%);
+  padding: 12px 28px; background: linear-gradient(135deg, #E8502A 0%, #d90429 100%);
   color: #fff; border: none; border-radius: 10px; cursor: pointer;
   font-weight: 600; font-size: 0.95rem; font-family: inherit; margin-left: auto;
   box-shadow: 0 4px 15px rgba(239, 35, 60, 0.3); transition: all 0.2s;
@@ -820,7 +820,7 @@ const CF_STYLES = `
 }
 .cf-results-icon {
   width: 64px; height: 64px; border-radius: 50%;
-  background: linear-gradient(135deg, #ef233c 0%, #ff4d6d 100%);
+  background: linear-gradient(135deg, #E8502A 0%, #ff4d6d 100%);
   display: flex; align-items: center; justify-content: center;
   margin: 0 auto 16px; color: #fff;
   box-shadow: 0 8px 20px rgba(239, 35, 60, 0.3);
@@ -829,7 +829,7 @@ const CF_STYLES = `
 .cf-results-subtitle { color: #64748B; font-size: 0.9rem; margin: 0; }
 .cf-results-list { padding: 20px; max-height: 350px; overflow: auto; background: #fff; }
 .cf-result-card { display: flex; justify-content: space-between; align-items: center; padding: 16px; background: #F8FAFC; border-radius: 12px; margin-bottom: 10px; text-decoration: none; transition: all 0.2s; border: 2px solid transparent; }
-.cf-result-card:hover { border-color: #ef233c; background: #fff; transform: translateX(4px); box-shadow: 0 4px 15px rgba(0,0,0,0.07); }
+.cf-result-card:hover { border-color: #E8502A; background: #fff; transform: translateX(4px); box-shadow: 0 4px 15px rgba(0,0,0,0.07); }
 .cf-result-info { flex: 1; min-width: 0; }
 .cf-result-name { color: #0f172a; font-size: 1rem; font-weight: 600; margin-bottom: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .cf-result-university { color: #64748B; font-size: 0.82rem; margin-bottom: 8px; display: flex; align-items: center; gap: 5px; }
@@ -840,12 +840,12 @@ const CF_STYLES = `
 .cf-price-value { color: #059669; font-size: 1.05rem; font-weight: 500; }
 .cf-no-results { text-align: center; padding: 40px 20px; color: #64748B; }
 .cf-no-results-icon { margin-bottom: 12px; display: flex; justify-content: center; }
-.cf-browse-all-btn { display: inline-block; margin-top: 15px; padding: 11px 22px; background: linear-gradient(135deg, #ef233c, #d90429); color: #fff; border-radius: 10px; text-decoration: none; font-weight: 600; transition: all 0.2s; }
+.cf-browse-all-btn { display: inline-block; margin-top: 15px; padding: 11px 22px; background: linear-gradient(135deg, #E8502A, #d90429); color: #fff; border-radius: 10px; text-decoration: none; font-weight: 600; transition: all 0.2s; }
 .cf-browse-all-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(239, 35, 60, 0.3); }
 .cf-results-actions { display: flex; justify-content: space-between; padding: 18px 28px 24px; border-top: 1px solid #E2E8F0; gap: 12px; background: #fff; border-radius: 0 0 24px 24px; }
 .cf-restart-btn { padding: 11px 18px; background: #F1F5F9; color: #64748B; border: none; border-radius: 10px; cursor: pointer; font-weight: 600; font-family: inherit; transition: all 0.2s; display: flex; align-items: center; gap: 6px; }
 .cf-restart-btn:hover { background: #E2E8F0; color: #334155; }
-.cf-view-all-btn { padding: 11px 22px; background: linear-gradient(135deg, #ef233c 0%, #d90429 100%); color: #fff; border-radius: 10px; text-decoration: none; font-weight: 600; transition: all 0.2s; display: flex; align-items: center; gap: 6px; }
+.cf-view-all-btn { padding: 11px 22px; background: linear-gradient(135deg, #E8502A 0%, #d90429 100%); color: #fff; border-radius: 10px; text-decoration: none; font-weight: 600; transition: all 0.2s; display: flex; align-items: center; gap: 6px; }
 .cf-view-all-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(239, 35, 60, 0.3); }
 @media (max-width: 768px) {
   .cf-floating-btn span { display: none; }

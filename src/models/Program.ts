@@ -4,6 +4,7 @@ import mongoose, { Schema, Document } from 'mongoose';
 export interface IProgram extends Document {
   name: string;
   university: mongoose.Types.ObjectId;
+  slug: string;
   duration?: string;
   type?: string;
   category: string;
@@ -13,6 +14,8 @@ export interface IProgram extends Document {
   image?: string;
   brochure?: string;
   description?: string;
+  highlights: string[];
+  curriculum: string[];
   fee?: number;
   createdAt: Date;
   updatedAt: Date;
@@ -21,6 +24,7 @@ export interface IProgram extends Document {
 const ProgramSchema: Schema = new Schema({
   name: { type: String, required: true },
   university: { type: Schema.Types.ObjectId, ref: 'University', required: true },
+  slug: { type: String, unique: true, sparse: true },
   duration: { type: String },
   type: { type: String },
   category: { type: String, required: true },
@@ -30,6 +34,8 @@ const ProgramSchema: Schema = new Schema({
   image: { type: String },
   brochure: { type: String },
   description: { type: String },
+  highlights: { type: [String], default: [] },
+  curriculum: { type: [String], default: [] },
   fee: { type: Number, default: 0 },
 }, { timestamps: true });
 

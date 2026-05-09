@@ -221,7 +221,7 @@ export default function About() {
       {/* ===== Testimonials Section ===== */}
       <section className={styles.testimonialsSection}>
         <div style={{ textAlign: 'center', marginBottom: '3rem' }}>
-          <h2 className={styles.sectionTitle} style={{ color: '#fff' }}>Alumni <span style={{ color: '#ef233c' }}>Impact</span></h2>
+          <h2 className={styles.sectionTitle}>Alumni <span style={{ color: '#ef233c' }}>Impact</span></h2>
         </div>
         <div className={styles.marqueeWrapper}>
           <div className={styles.marqueeTrack}>
@@ -235,11 +235,11 @@ export default function About() {
               { name: 'Rahul Nair', role: 'B.Tech Graduate', text: 'The credit transfer guidance was exceptional and seamless.' },
             ]).map((t, i) => (
               <div key={i} className={styles.testimonialCard}>
-                <Quote size={24} style={{ color: '#ef233c', marginBottom: '1rem' }} />
-                <p style={{ color: 'rgba(255,255,255,0.8)', fontStyle: 'italic', marginBottom: '1.5rem' }}>"{t.text}"</p>
+                <Quote size={24} className={styles.quoteIcon} />
+                <p className={styles.testimonialText}>"{t.text}"</p>
                 <div>
-                  <p style={{ color: '#fff', fontWeight: '800', margin: 0 }}>{t.name}</p>
-                  <p style={{ color: 'rgba(255,255,255,0.5)', fontSize: '0.8rem' }}>{t.role}</p>
+                  <p className={styles.testimonialName}>{t.name}</p>
+                  <p className={styles.testimonialRole}>{t.role}</p>
                 </div>
               </div>
             ))}
@@ -274,7 +274,7 @@ export default function About() {
         <h2 className={styles.ctaTitle}>Ready to Define Your Future?</h2>
         <div className={styles.ctaButtons}>
           <Link href="/courses" className={styles.ctaPrimary}>Explore All Courses</Link>
-          <Link href="/contact" className={styles.ctaPrimary} style={{ background: 'transparent', border: '2px solid #fff' }}>Contact Us Now</Link>
+          <Link href="/contact" className={styles.ctaOutline}>Contact Us Now</Link>
         </div>
       </section>
 

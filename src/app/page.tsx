@@ -52,34 +52,66 @@ const TESTIMONIALS = [
   { name: 'Vineeth Kumar', role: 'Diploma in Data Science', avatar: 'V', rating: 5, text: 'The Data Science diploma from TIMS gave me practical skills that I applied immediately at my workplace. The curriculum is modern, relevant and delivered by industry experts.' },
 ];
 
+const IMPACT_CARDS = [
+  { num: '50K', label: 'Learners' },
+  { num: '20K', label: 'Alumnees' },
+  { num: '50', label: 'Universities' },
+  { num: '100', label: 'Mentors' },
+];
+
 export default function Home() {
   const [universities, setUniversities] = useState<University[]>([]);
   const [newsItems, setNewsItems] = useState<NewsItem[]>([]);
   const [blogs, setBlogs] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [activeImpactIdx, setActiveImpactIdx] = useState(0);
   const router = useRouter();
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setActiveImpactIdx((prev) => (prev + 1) % IMPACT_CARDS.length);
+    }, 3000);
+    return () => clearInterval(interval);
+  }, []);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         setLoading(true);
-        const [uniRes, newsRes, blogRes] = await Promise.all([
-          fetch('/api/admin/universities', { cache: 'no-store' }),
-          fetch('/api/admin/news', { cache: 'no-store' }),
-          fetch('/api/admin/blogs', { cache: 'no-store' }),
-        ]);
-        const uniData = await uniRes.json();
-        const newsData = await newsRes.json();
-        const blogData = await blogRes.json();
+        console.log('Fetching initial data...');
 
-        if (Array.isArray(uniData))
+        // Helper to fetch with a small timeout/retry or better error reporting
+        const safeFetch = async (url: string) => {
+          try {
+            const res = await fetch(url, { cache: 'no-store' });
+            if (!res.ok) {
+              console.error(`API Error for ${url}:`, res.status, res.statusText);
+              return null;
+            }
+            return await res.json();
+          } catch (err) {
+            console.error(`Network Error for ${url}:`, err);
+            return null;
+          }
+        };
+
+        const [uniData, newsData, blogData] = await Promise.all([
+          safeFetch('/api/admin/universities'),
+          safeFetch('/api/admin/news'),
+          safeFetch('/api/admin/blogs'),
+        ]);
+
+        if (Array.isArray(uniData)) {
           setUniversities(uniData.filter((u) => !u.status || u.status.toLowerCase() === 'active').slice(0, 6));
-        if (Array.isArray(newsData))
+        }
+        if (Array.isArray(newsData)) {
           setNewsItems(newsData.filter((n) => !n.status || n.status.toLowerCase() === 'published').slice(0, 6));
-        if (Array.isArray(blogData))
+        }
+        if (Array.isArray(blogData)) {
           setBlogs(blogData.filter((b) => !b.status || b.status.toLowerCase() === 'published').slice(0, 4));
+        }
       } catch (error) {
-        console.error('Error fetching data:', error);
+        console.error('Fatal error in fetchData:', error);
       } finally {
         setLoading(false);
       }
@@ -92,123 +124,142 @@ export default function Home() {
   return (
     <main className={styles.page}>
 
-      {/* ===== HERO — Dark 3-column Educore layout ===== */}
-      <section className={styles.hero}>
+      {/* ===== HERO WRAPPER — locks hero + impact to 100dvh ===== */}
+      <div className={styles.heroWrapper}>
 
-        {/* Left panel */}
-        <div className={styles.heroLeft}>
-          <div className={styles.heroIconCircle}>
-            <BookOpen size={26} />
+        {/* ===== HERO — Dark 3-column Educore layout ===== */}
+        <section className={styles.hero}>
+
+          {/* Left panel */}
+          <div className={styles.heroLeft}>
+            <div className={styles.heroIconCircle}>
+              <BookOpen size={26} />
+            </div>
+            <div className={styles.heroStack}>
+              <span style={{ fontSize: '0.85rem' }}>India's No.1</span>
+              <span style={{ fontSize: '0.85rem' }}>Course finding</span>
+              <span style={{ fontSize: '0.85rem' }}>platform</span>
+            </div>
+            <Link href="/about" className={styles.heroStoryLink}>
+              Explore Now <ArrowRight size={14} />
+            </Link>
+            <div className={styles.heroLeftOrangeBar} />
           </div>
-          <div className={styles.heroStack}>
-            <span>Empower</span>
-            <span>Evolve</span>
-            <span>Excel</span>
+
+          {/* Center — student image */}
+          <div className={styles.heroCenter}>
+            <img
+              src="/images/hero-girl-new.png"
+              alt="Student ready for success"
+              className={styles.heroImg}
+            />
           </div>
-          <Link href="/about" className={styles.heroStoryLink}>
-            Our Story <ArrowRight size={14} />
-          </Link>
-          <div className={styles.heroLeftOrangeBar} />
-        </div>
 
-        {/* Center — student image */}
-        <div className={styles.heroCenter}>
-          {/* Orange dot marker — matches Educore divider accent */}
-          <div className={styles.heroDot} />
-          <Image
-            src="/images/hero-girl-new.png"
-            alt="Student ready for success"
-            fill
-            sizes="(max-width: 768px) 100vw, 33vw"
-            className={styles.heroImg}
-            priority
-          />
-        </div>
+          {/* Right panel — headline + CTAs */}
+          <div className={styles.heroRight}>
+            <h1 className={styles.heroTitle}>
+              <span className={styles.heroAccent}>Find Your University</span>
+            </h1>
+            <div className={styles.heroBtns}>
+              <button className={styles.heroBtnPrimary} onClick={openCourseFinder}>
+                Register Now
+              </button>
+              <Link href="/courses" className={styles.heroBtnOutline}>
+                Explore Programs
+              </Link>
+            </div>
 
-        {/* Right panel — headline + CTAs */}
-        <div className={styles.heroRight}>
-          <div className={styles.heroCircle} />
-          <h1 className={styles.heroTitle}>
-            Learn Faster<br />
-            Grow Smarter<br />
-            <span className={styles.heroAccent}>Towards Future</span>
-          </h1>
-          <div className={styles.heroBtns}>
-            <button className={styles.heroBtnPrimary} onClick={openCourseFinder}>
-              Register Now
-            </button>
-            <Link href="/courses" className={styles.heroBtnOutline}>
-              3 Day Free Trial
+            <div className={styles.heroMarqueeWrapper}>
+              <div className={styles.heroMarqueeTrack}>
+                {[...Array(6)].map((_, i) => (
+                  <React.Fragment key={i}>
+                    <Link href="/universities" className={styles.heroMarqueeItem}>Universities</Link>
+                    <Link href="/courses" className={styles.heroMarqueeItem}>Courses</Link>
+                    <Link href="/services/credit-transfer" className={styles.heroMarqueeItem}>Programmes</Link>
+                  </React.Fragment>
+                ))}
+              </div>
+            </div>
+            <div className={styles.heroCredRow}>
+              {['UGC-DEB Approved', 'NAAC Accredited', 'AICTE Approved'].map((b) => (
+                <span key={b} className={styles.heroCred}>{b}</span>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* ===== IMPACT — bottom row of hero fold ===== */}
+        <section className={styles.impact}>
+
+          {/* Left — orange panel */}
+          <div className={styles.impactLeft}>
+            <div className={styles.impactTopRow}>
+              <div className={styles.impactBadge}>Our Impact</div>
+              <div className={styles.impactDots}>
+                 {IMPACT_CARDS.map((_, i) => (
+                   <span key={i} className={i === activeImpactIdx ? styles.dotWhite : styles.dotGrey}></span>
+                 ))}
+              </div>
+            </div>
+            <hr className={styles.impactDivider} />
+            
+            <div key={activeImpactIdx} className={styles.impactCardContent}>
+              <div className={styles.impactMiddleRow}>
+                <div className={styles.impactStatBlock}>
+                  <p className={styles.impactNum}>{IMPACT_CARDS[activeImpactIdx].num}</p>
+                  <div className={styles.impactTextStack}>
+                    <span className={styles.impactPlus}>+</span>
+                    <p className={styles.impactLabel}>{IMPACT_CARDS[activeImpactIdx].label}</p>
+                  </div>
+                </div>
+                <div className={styles.impactAvatars}>
+                  <img src="/images/Mohamed-shameem.jpg" alt="Learner 1" className={styles.impactAvatarImg} style={{ zIndex: 3 }} />
+                  <img src="/images/Nabeel-cm.jpg" alt="Learner 2" className={styles.impactAvatarImg} style={{ zIndex: 2, marginLeft: '-10px' }} />
+                  <img src="/images/Adv-ShoukathAli-pootheri.jpg" alt="Learner 3" className={styles.impactAvatarImg} style={{ zIndex: 1, marginLeft: '-10px' }} />
+                </div>
+              </div>
+              <div className={styles.impactSphereWrapper}>
+                <img src="/images/orange-sphere.png" alt="Orange Swirl Sphere" className={styles.impactSphere} />
+              </div>
+            </div>
+          </div>
+
+          {/* Center — cream panel */}
+          <div className={styles.impactCenter}>
+            <div className={styles.impactCenterLeft}>
+              <h2 className={styles.impactTitle}>
+                Ready To Find<br />Your University?
+              </h2>
+              <button className={styles.impactCTA} onClick={openCourseFinder}>
+                Suggest Me a University
+              </button>
+            </div>
+            <div className={styles.impactCenterRight}>
+              <p className={styles.impactStep}>/ Step 1</p>
+              <p className={styles.impactDesc}>
+                Access our expert guidance to unlock your potential and build a solid
+                foundation for sustainable, long-term growth starting today.
+              </p>
+            </div>
+          </div>
+
+          {/* Right — dark panel */}
+          <div className={styles.impactRight}>
+            <div className={styles.impactPlayRow}>
+              <div className={styles.impactPlayBtn}>
+                <Play size={18} fill="currentColor" style={{ marginLeft: '3px' }} />
+              </div>
+              <img src="/images/Mohamed-shameem.jpg" alt="Expert Mentor" className={styles.impactExpertAv} />
+            </div>
+            <p className={styles.impactExpertText}>
+              Perfect your learning with expert faculties
+            </p>
+            <Link href="/about" className={styles.impactViewMore}>
+              View Demo <ArrowRight size={14} />
             </Link>
           </div>
-          <div className={styles.heroCredRow}>
-            {['UGC-DEB Approved', 'NAAC Accredited', 'AICTE Approved'].map((b) => (
-              <span key={b} className={styles.heroCred}>{b}</span>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ===== IMPACT — 3-panel section ===== */}
-      <section className={styles.impact}>
-
-        {/* Left — red panel */}
-        <div className={styles.impactLeft}>
-          <div className={styles.impactTopRow}>
-            <div className={styles.impactBadge}>Our Impact</div>
-            <div className={styles.impactDots}>
-              <span /><span /><span />
-            </div>
-          </div>
-          <div className={styles.impactStatBlock}>
-            <p className={styles.impactNum}>20,000<span>+</span></p>
-            <p className={styles.impactLabel}>Alumni</p>
-          </div>
-          <div className={styles.impactAvatars}>
-            {['A', 'R', 'P'].map((l, i) => (
-              <div
-                key={i}
-                className={styles.impactAvatar}
-                style={{ marginLeft: i > 0 ? '-12px' : 0 }}
-              >
-                {l}
-              </div>
-            ))}
-          </div>
-          <div className={styles.impactSphere} />
-        </div>
-
-        {/* Center — cream panel */}
-        <div className={styles.impactCenter}>
-          <h2 className={styles.impactTitle}>
-            Ready To Find<br />Your University?
-          </h2>
-          <p className={styles.impactStep}>/ Step 1</p>
-          <p className={styles.impactDesc}>
-            Access our expert guidance to unlock your potential and build a solid
-            foundation for sustainable, long-term growth starting today.
-          </p>
-          <button className={styles.impactCTA} onClick={openCourseFinder}>
-            Suggest Me a University
-          </button>
-        </div>
-
-        {/* Right — dark panel */}
-        <div className={styles.impactRight}>
-          <div className={styles.impactPlayRow}>
-            <div className={styles.impactPlayBtn}>
-              <Play size={18} fill="currentColor" />
-            </div>
-            <div className={styles.impactExpertAv}>M</div>
-          </div>
-          <p className={styles.impactExpertText}>
-            Perfect your journey with expert mentors and personalised guidance
-          </p>
-          <Link href="/about" className={styles.impactViewMore}>
-            View More <ArrowRight size={14} />
-          </Link>
-        </div>
-      </section>
+        </section>
+      </div>
 
       {/* ===== ONLINE COURSES ===== */}
       <OnlineCoursesSection />
@@ -229,28 +280,50 @@ export default function Home() {
       </section>
 
       {/* ===== CAREER GUIDANCE ===== */}
-      <section className={styles.careerSection}>
-        <div className={styles.sectionHeader}>
-          <span className={styles.sectionTag}>Plan Your Future</span>
-          <h2 className={styles.sectionTitle}>Career Guidance</h2>
-          <p className={styles.sectionSub}>Know what career paths open up after completing your degree</p>
+      <section className={styles.careerWrapper}>
+        <div className={styles.careerLeft}>
+          <h2 className={styles.careerLeftTitle}>Top Career Opportunities</h2>
+          <div className={styles.careerSmallGrid}>
+            {[
+              { degree: 'After MBA', href: '/courses/mba' },
+              { degree: 'After MCA', href: '/courses/mca' },
+              { degree: 'After M.Com', href: '/courses/mcom' },
+              { degree: 'After BBA', href: '/courses/bba' },
+              { degree: 'After BCA', href: '/courses/bca' },
+              { degree: 'After B.Com', href: '/courses/bcom' },
+              { degree: 'After SSLC/Plus Two', href: '/courses/sslc-plus-two' },
+              { degree: 'After BA', href: '/courses/ba' },
+              { degree: 'After B.Tech/M.Tech', href: '/courses/engineering' },
+            ].map((item, i) => (
+              <div key={i} className={styles.careerSmallCard}>
+                <h3 className={styles.careerSmallDegree}>{item.degree}</h3>
+                <Link href={item.href} className={styles.careerSmallBtn}>
+                  Know More
+                </Link>
+              </div>
+            ))}
+          </div>
         </div>
-        <div className={styles.careerGrid}>
-          {[
-            { degree: 'After MBA', desc: 'Management, Consulting, Banking & Finance roles', href: '/courses' },
-            { degree: 'After MCA', desc: 'Software Development, Cloud, AI & IT Management', href: '/courses' },
-            { degree: 'After M.Com', desc: 'Accounting, Taxation, Finance & Academia', href: '/courses' },
-            { degree: 'After BBA', desc: 'Marketing, HR, Entrepreneurship & Sales', href: '/courses' },
-            { degree: 'After BCA', desc: 'Web Development, Data Science & Tech Support', href: '/courses' },
-            { degree: 'After B.Com', desc: 'CA, Banking, E-Commerce & Government Jobs', href: '/courses' },
-          ].map((item, i) => (
-            <Link key={i} href={item.href} className={styles.careerCard}>
-              <div className={styles.careerNum}>{String(i + 1).padStart(2, '0')}</div>
-              <h3 className={styles.careerDegree}>{item.degree}</h3>
-              <p className={styles.careerDesc}>{item.desc}</p>
-              <span className={styles.careerCta}>Know More <ArrowRight size={14} /></span>
-            </Link>
-          ))}
+
+        <div className={styles.careerRight}>
+          <div className={styles.careerFeatured}>
+            <div className={styles.careerBadge}>MUST KNOW BEFORE CHOOSE</div>
+            <h2 className={styles.careerMainTitle}>
+              Looking For Best University And Less Fees?
+            </h2>
+            <button className={styles.careerSuggestBtn} onClick={openCourseFinder}>
+              Suggest me a University
+            </button>
+            <div className={styles.careerIllustration}>
+              <Image 
+                src="/images/career-guidance.png"
+                alt="Career guidance illustration"
+                width={150}
+                height={150}
+                style={{ objectFit: 'contain' }}
+              />
+            </div>
+          </div>
         </div>
       </section>
 
@@ -324,6 +397,7 @@ export default function Home() {
                   sizes="(max-width: 768px) 100vw, 33vw"
                   style={{ objectFit: 'cover' }}
                   onError={(e) => { e.currentTarget.src = UNI_PLACEHOLDER; }}
+                  unoptimized
                 />
                 {uni.logo && (
                   <div className={styles.uniLogo}>
@@ -402,12 +476,12 @@ export default function Home() {
 
       {/* ===== TESTIMONIALS ===== */}
       <section className={styles.testimonialsSection}>
-        <div className={styles.sectionHeader} style={{ padding: '0 5%' }}>
-          <span className={styles.sectionTag} style={{ background: 'rgba(255,255,255,0.08)', color: 'rgba(255,255,255,0.65)' }}>
+        <div className={styles.sectionHeader}>
+          <span className={styles.sectionTag}>
             Success Stories
           </span>
-          <h2 className={styles.sectionTitle} style={{ color: '#fff' }}>What Our Students Say</h2>
-          <p className={styles.sectionSub} style={{ color: 'rgba(255,255,255,0.4)' }}>
+          <h2 className={styles.sectionTitle}>What Our Students Say</h2>
+          <p className={styles.sectionSub}>
             Join thousands of successful alumni who have transformed their careers through TIMS.
           </p>
         </div>
@@ -420,7 +494,7 @@ export default function Home() {
                 <div className={styles.testimonialAuthor}>
                   <div className={styles.testimonialAvatar}>{t.avatar}</div>
                   <div>
-                    <p className={styles.testimonialName}>{t.name}</p>
+                    <h4 className={styles.testimonialName}>{t.name}</h4>
                     <p className={styles.testimonialRole}>{t.role}</p>
                   </div>
                 </div>
@@ -512,9 +586,9 @@ export default function Home() {
             Join thousands of successful alumni who have transformed their careers through TIMS.
           </p>
           <div className={styles.readyBtns}>
-            <Link href="/courses" className={styles.heroBtnPrimary}>
+            <button className={styles.heroBtnPrimary} onClick={openCourseFinder}>
               Explore Programs <ArrowRight size={16} />
-            </Link>
+            </button>
             <Link href="/contact" className={styles.heroBtnOutline}>
               Contact Us
             </Link>
@@ -571,6 +645,9 @@ export default function Home() {
         </div>
       </section>
 
+      <button className={styles.floatingFinderBtn} onClick={openCourseFinder}>
+        Course Finder <ArrowRight size={20} />
+      </button>
     </main>
   );
 }

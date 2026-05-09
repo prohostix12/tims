@@ -56,11 +56,9 @@ const navLinks: NavLink[] = [
   {
     name: 'About',
     path: '/about',
-    submenu: [
-      { name: 'Latest News', path: '/news' },
-      { name: 'Academic Blog', path: '/blogs' },
-    ],
   },
+  { name: 'Latest News', path: '/news' },
+  { name: 'Academic Blog', path: '/blogs' },
   { name: 'Contact', path: '/contact' },
 ];
 
@@ -111,9 +109,8 @@ const Navbar = () => {
             <span className={styles.logoText}>Find Your University</span>
           </Link>
 
-          {/* Desktop Links */}
+          {/* Desktop Links — Only Home + Course Finder */}
           <ul className={styles.navLinks} role="menubar">
-            {/* Home */}
             {navLinks.filter(link => link.name === 'Home').map((link) => (
               <li key={link.name} className={styles.navItem} role="none">
                 <Link
@@ -125,48 +122,21 @@ const Navbar = () => {
                 </Link>
               </li>
             ))}
-
-            {/* Course Finder button */}
-            <li className={styles.navItem} role="none" style={{ display: 'flex', alignItems: 'center' }}>
+            <li className={styles.navItem} role="none">
               <button
-                className={styles.navLink}
+                className={styles.courseFinderBtn}
                 onClick={() => window.dispatchEvent(new CustomEvent('open-course-finder'))}
-                role="menuitem"
-                style={{
-                  background: '#E8502A',
-                  border: 'none',
-                  cursor: 'pointer',
-                  fontFamily: 'inherit',
-                  color: '#ffffff',
-                  fontWeight: '700',
-                  padding: '0.6rem 1.2rem',
-                  borderRadius: '100px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  transition: 'all 0.3s ease',
-                  fontSize: '0.85rem',
-                }}
               >
                 Course Finder
               </button>
             </li>
-
-            {/* About */}
-            {navLinks.filter(link => link.name === 'About').map((link) => (
-              <li key={link.name} className={styles.navItem} role="none">
-                <Link
-                  href={link.path}
-                  className={`${styles.navLink} ${isActive(link) ? styles.activeLink : ''}`}
-                  role="menuitem"
-                >
-                  {link.name}
-                </Link>
-              </li>
-            ))}
           </ul>
 
-          {/* Desktop Actions — hamburger + Login */}
+          {/* Desktop Actions — Login + Hamburger */}
           <div className={styles.actions}>
+            <Link href="/login" className={styles.loginBtn}>
+              Login
+            </Link>
             <button
               className={styles.menuToggle}
               onClick={() => setMobileOpen(!mobileOpen)}
@@ -175,9 +145,6 @@ const Navbar = () => {
             >
               {mobileOpen ? <X size={22} /> : <Menu size={22} />}
             </button>
-            <Link href="/login" className={styles.loginBtn}>
-              Login
-            </Link>
           </div>
         </nav>
       </div>

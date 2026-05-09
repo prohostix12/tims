@@ -6,7 +6,18 @@ export async function GET(request: Request, { params }: { params: Promise<{ id: 
   try {
     const { id } = await params;
     await connectDB();
-    const doc = await Program.findById(id);
+    
+    let doc;
+    // Try by ID if it looks like a MongoDB ID
+    if (id.match(/^[0-9a-fA-F]{24}$/)) {
+      doc = await Program.findById(id);
+    }
+    
+    // If not found by ID, try by slug
+    if (!doc) {
+      doc = await Program.findOne({ slug: id });
+    }
+
     if (!doc) return NextResponse.json({ error: 'Not found' }, { status: 404 });
     return NextResponse.json(doc);
   } catch (error: any) {

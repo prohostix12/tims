@@ -5,13 +5,13 @@
   height: 56px;
   padding: 0 1.75rem;
   border-radius: 100px;
-  background-color: #ef233c;
+  background-color: #E8502A;
   color: white;
   display: flex;
   align-items: center;
   gap: 12px;
   border: none;
-  box-shadow: 0 10px 30px rgba(239, 35, 60, 0.4);
+  box-shadow: 0 10px 30px rgba(232, 80, 42, 0.4);
   cursor: pointer;
   z-index: 999;
   transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
@@ -27,8 +27,8 @@
 
 .fab:hover {
   transform: translateY(-5px) scale(1.05);
-  background-color: #002060;
-  box-shadow: 0 15px 40px rgba(0, 32, 96, 0.3);
+  background-color: #c93c1a;
+  box-shadow: 0 15px 40px rgba(201, 60, 26, 0.3);
 }
 
 .fab:active {
@@ -37,9 +37,9 @@
 
 /* Pulsing animation to draw attention */
 @keyframes fabPulse {
-  0% { box-shadow: 0 0 0 0 rgba(239, 35, 60, 0.4); }
-  70% { box-shadow: 0 0 0 20px rgba(239, 35, 60, 0); }
-  100% { box-shadow: 0 0 0 0 rgba(239, 35, 60, 0); }
+  0% { box-shadow: 0 0 0 0 rgba(232, 80, 42, 0.4); }
+  70% { box-shadow: 0 0 0 20px rgba(232, 80, 42, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(232, 80, 42, 0); }
 }
 
 .fab {

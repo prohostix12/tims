@@ -4,6 +4,7 @@ import { useState } from 'react';
 import {
   GraduationCap, Monitor, BarChart2, FlaskConical, BookOpen, Cpu,
   Briefcase, Database, Landmark, Globe, Music, Layers, PenTool, Package, Stethoscope,
+  ArrowRightLeft,
 } from 'lucide-react';
 import styles from './OnlineCoursesSection.module.css';
 
@@ -32,6 +33,12 @@ const courseData: Record<string, { name: string; icon: React.ReactNode }[]> = {
     { name: 'Nutrition',      icon: <Stethoscope size={32} /> },
     { name: 'Music',          icon: <Music size={32} /> },
     { name: 'IT',             icon: <Layers size={32} /> },
+  ],
+  'Credit Transfer Programme': [
+    { name: 'Fast Track Degree', icon: <ArrowRightLeft size={32} /> },
+    { name: 'Lateral Entry', icon: <ArrowRightLeft size={32} /> },
+    { name: 'Credit Mapping', icon: <ArrowRightLeft size={32} /> },
+    { name: 'Degree Completion', icon: <GraduationCap size={32} /> },
   ],
 };
 
@@ -84,7 +91,7 @@ export default function OnlineCoursesSection() {
     <>
       <section className={styles.section}>
         <div className={styles.header}>
-          <h2 className={styles.title}>20+ Online Courses</h2>
+          <h2 className={styles.title}>50+ Programmes</h2>
           <div className={styles.tabs}>
             {tabs.map((tab) => (
               <button

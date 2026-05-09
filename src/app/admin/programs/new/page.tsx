@@ -14,6 +14,7 @@ export default function NewProgram() {
 
   const [formData, setFormData] = useState({
     name: '',
+    slug: '',
     university: '',
     duration: '',
     type: '',
@@ -24,6 +25,8 @@ export default function NewProgram() {
     image: '',
     brochure: '',
     description: '',
+    highlights: '',
+    curriculum: '',
     fee: ''
   });
 
@@ -76,7 +79,11 @@ export default function NewProgram() {
       const response = await fetch('/api/admin/programs', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({
+          ...formData,
+          highlights: formData.highlights.split(',').map(s => s.trim()).filter(s => s !== ''),
+          curriculum: formData.curriculum.split(',').map(s => s.trim()).filter(s => s !== '')
+        }),
       });
 
       if (!response.ok) {
@@ -128,6 +135,20 @@ export default function NewProgram() {
                 />
               </div>
               <div>
+                <label className={styles.label}>SEO Slug</label>
+                <input 
+                  name="slug"
+                  type="text" 
+                  placeholder="e.g. mba" 
+                  className={styles.input} 
+                  value={formData.slug}
+                  onChange={handleChange}
+                />
+              </div>
+            </div>
+
+            <div className={styles.formGrid} style={{ padding: 0 }}>
+              <div>
                 <label className={styles.label}><GraduationCap size={16} /> University</label>
                 <select
                   name="university"
@@ -136,11 +157,36 @@ export default function NewProgram() {
                   onChange={handleChange}
                   required
                 >
+                  <option value="">Select University</option>
                   {universities.map(uni => (
                     <option key={uni._id} value={uni._id}>{uni.name}</option>
                   ))}
                 </select>
               </div>
+            </div>
+
+            <div>
+              <label className={styles.label}>Highlights (comma separated)</label>
+              <textarea 
+                name="highlights"
+                rows={2} 
+                placeholder="Industry-aligned curriculum, Global networking..." 
+                className={styles.textarea}
+                value={formData.highlights}
+                onChange={handleChange}
+              ></textarea>
+            </div>
+
+            <div>
+              <label className={styles.label}>Curriculum Preview (comma separated)</label>
+              <textarea 
+                name="curriculum"
+                rows={2} 
+                placeholder="Strategic Management, Advanced Analytics..." 
+                className={styles.textarea}
+                value={formData.curriculum}
+                onChange={handleChange}
+              ></textarea>
             </div>
 
             <div>
