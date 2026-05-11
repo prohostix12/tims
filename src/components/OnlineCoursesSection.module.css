@@ -308,15 +308,19 @@
 }
 
 /* ===== University Logo Banner ===== */
+/*
+ * The parent .section has padding: 4rem 5%, so its content box = 90% of full width.
+ * To break out and touch both edges we use pure % math (avoids 100vw scrollbar issue):
+ *   margin-left = -(5 / 90 × 100)% = -5.5556%
+ *   width       = (100 / 90 × 100)% = 111.1111%
+ */
 .logoBannerWrapper {
-  width: 100vw;
-  margin-left: calc(50% - 50vw);
-  position: relative;
+  width: 111.111%;
+  margin-left: -5.556%;
   overflow: hidden;
   background: rgba(232, 80, 42, 0.07);
   border-radius: 0;
   padding: 16px 0;
-  border-left: none;
   border-top: 2px solid rgba(232, 80, 42, 0.2);
   border-bottom: 2px solid rgba(232, 80, 42, 0.2);
 }
