@@ -356,15 +356,13 @@
   width: auto;
   max-width: 130px;
   object-fit: contain;
-  mix-blend-mode: multiply;
-  filter: grayscale(15%) contrast(1.05);
-  opacity: 0.85;
-  transition: filter 0.3s, opacity 0.3s, mix-blend-mode 0.3s;
-  background: transparent;
+  filter: grayscale(20%);
+  opacity: 0.8;
+  transition: filter 0.3s, opacity 0.3s;
 }
 
 .logoImg:hover {
-  filter: grayscale(0%) contrast(1.1);
+  filter: grayscale(0%);
   opacity: 1;
 }
 
