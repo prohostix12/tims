@@ -53,12 +53,18 @@ interface UniversityLogo {
 }
 
 const DEFAULT_UNI_LOGOS = [
-  { name: 'Amity University',      logoUrl: '/images/universities/amity.png' },
-  { name: 'Manipal University',    logoUrl: '/images/universities/manipal.png' },
-  { name: 'LPU',                   logoUrl: '/images/universities/lpu.png' },
-  { name: 'Jain University',       logoUrl: '/images/universities/jain.png' },
-  { name: 'Chandigarh University', logoUrl: '/images/universities/chandigarh.png' },
-  { name: 'IGNOU',                 logoUrl: '/images/universities/ignou.png' },
+  { name: 'IGNOU',                 logoUrl: 'https://upload.wikimedia.org/wikipedia/en/thumb/d/d8/Ignou_logo.svg/200px-Ignou_logo.svg.png' },
+  { name: 'Amity University',      logoUrl: 'https://upload.wikimedia.org/wikipedia/en/thumb/5/5d/Amity_University_logo.svg/200px-Amity_University_logo.svg.png' },
+  { name: 'LPU',                   logoUrl: 'https://upload.wikimedia.org/wikipedia/en/thumb/3/3b/Lovely_Professional_University_logo.svg/200px-Lovely_Professional_University_logo.svg.png' },
+  { name: 'Chandigarh University', logoUrl: 'https://upload.wikimedia.org/wikipedia/en/thumb/b/b3/Chandigarh_University_Logo.svg/200px-Chandigarh_University_Logo.svg.png' },
+  { name: 'Manipal Academy',       logoUrl: 'https://upload.wikimedia.org/wikipedia/en/thumb/4/40/Manipal_Academy_of_Higher_Education_logo.png/200px-Manipal_Academy_of_Higher_Education_logo.png' },
+  { name: 'VIT University',        logoUrl: 'https://upload.wikimedia.org/wikipedia/en/thumb/c/c5/Vellore_Institute_of_Technology_seal_2017.svg/200px-Vellore_Institute_of_Technology_seal_2017.svg.png' },
+  { name: 'BITS Pilani',           logoUrl: 'https://upload.wikimedia.org/wikipedia/en/thumb/d/d3/BITS_Pilani-Logo.svg/200px-BITS_Pilani-Logo.svg.png' },
+  { name: 'Symbiosis',             logoUrl: 'https://upload.wikimedia.org/wikipedia/en/thumb/2/2b/Symbiosis_International_University_logo.png/200px-Symbiosis_International_University_logo.png' },
+  { name: 'Sikkim Manipal',        logoUrl: 'https://upload.wikimedia.org/wikipedia/en/thumb/a/af/Sikkim_Manipal_University_logo.png/200px-Sikkim_Manipal_University_logo.png' },
+  { name: 'Jain University',       logoUrl: 'https://upload.wikimedia.org/wikipedia/en/thumb/5/5f/Jain_University_logo.svg/200px-Jain_University_logo.svg.png' },
+  { name: 'Shoolini University',   logoUrl: 'https://upload.wikimedia.org/wikipedia/en/thumb/3/3f/Shoolini_University_Logo.png/200px-Shoolini_University_Logo.png' },
+  { name: 'Anna University',       logoUrl: 'https://upload.wikimedia.org/wikipedia/en/thumb/c/cc/Anna_University_Logo.svg/200px-Anna_University_Logo.svg.png' },
 ];
 
 export default function OnlineCoursesSection() {
