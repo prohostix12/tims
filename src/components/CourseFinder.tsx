@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import './CourseFinder.css';
@@ -502,7 +502,7 @@ export default function CourseFinder() {
       else if (selectedFieldValue === 'openschool') endpoint = '/api/open-school';
 
       const res = await fetch(endpoint).catch(() => null);
-      let data: any[] = [];
+      let data: any = [];
       if (res && res.ok) {
         const ct = res.headers.get('content-type');
         if (ct && ct.includes('application/json')) data = await res.json();
@@ -555,7 +555,6 @@ export default function CourseFinder() {
         'working': ['postgraduate', 'pg', 'mba'],
         'fresher': ['undergraduate', 'ug', 'diploma', 'certificate'],
         // Specialization
-        'finance': ['finance', 'accounting', 'bcom', 'mcom', 'mba'],
         'marketing': ['marketing', 'sales', 'mba', 'bba'],
         'it_software': ['it', 'software', 'computer', 'bca', 'mca', 'tech'],
         'hr': ['hr', 'human', 'resource', 'management', 'mba'],
