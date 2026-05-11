@@ -79,20 +79,20 @@
 }
 
 .heroCrumb a {
-  color: #002060;
+  color: #1C0D07;
   text-decoration: none;
   transition: color 0.3s;
 }
 
 .heroCrumb a:hover {
-  color: #ef233c;
+  color: #E8502A;
 }
 
 .heroTag {
   display: inline-block;
   background: rgba(239,35,60,0.1);
   border: 1px solid rgba(239,35,60,0.3);
-  color: #ef233c;
+  color: #E8502A;
   font-size: 0.75rem;
   font-weight: 800;
   letter-spacing: 2px;
@@ -105,7 +105,7 @@
 .heroTitle {
   font-size: clamp(2rem, 4vw, 3rem);
   font-weight: 800;
-  color: #002060;
+  color: #1C0D07;
   line-height: 1.15;
   letter-spacing: -1px;
   margin: 0 0 1rem;

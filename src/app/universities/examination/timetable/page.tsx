@@ -63,7 +63,7 @@ export default function TimetablePage() {
     link.style.visibility = 'hidden';
     document.body.appendChild(link);
     link.click();
-    document.body.removeChild(link);
+    if (document.body.contains(link)) document.body.removeChild(link);
   };
 
   return (

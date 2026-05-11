@@ -1,11 +1,11 @@
 'use client';
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { ArrowLeft, Plus, Edit, Trash2, Search, X } from 'lucide-react';
+import { ArrowLeft, Plus, Edit, Trash2, Search, X, RefreshCw } from 'lucide-react';
 import ConfirmModal from '@/components/ConfirmModal';
+import { FALLBACK_QUESTIONS } from '@/components/CourseFinder';
 
-const RBL = '#0a192f'; // Dark Blue
-const BLANK_OPTION = { label: '' };
+const ACCENT = '#E8502A';
 const BLANK_Q = { question: '', options: [{ label: '' }], field: '', order: 0, isActive: true };
 
 export default function CourseFinderAdminPage() {
@@ -95,7 +95,41 @@ export default function CourseFinderAdminPage() {
     finally { setIsDeleting(false); }
   };
 
-  const filteredQuestions = questions.filter(q => 
+  const [seeding, setSeeding] = useState(false);
+
+  const seedDefaults = async () => {
+    if (!confirm('This will add any missing default questions to the database. Existing questions will not be changed. Continue?')) return;
+    setSeeding(true);
+    let added = 0;
+    try {
+      const existing = new Set(questions.map((q: any) => q.field));
+      for (const fq of FALLBACK_QUESTIONS) {
+        if (!existing.has(fq.field)) {
+          const payload = {
+            ...fq,
+            _id: undefined,
+            options: fq.options.map((o: any) => ({
+              label: o.label,
+              value: o.value,
+              ...(o.min !== undefined ? { min: o.min } : {}),
+              ...(o.max !== undefined ? { max: o.max } : {}),
+              ...(o.categories ? { categories: o.categories } : {}),
+            })),
+          };
+          const res = await fetch('/api/admin/course-finder-questions', { method: 'POST', headers: getHeaders(), body: JSON.stringify(payload) });
+          if (res.ok) added++;
+        }
+      }
+      showToast(added > 0 ? `Added ${added} default question(s)!` : 'All default questions already exist.');
+      loadQuestions();
+    } catch {
+      showToast('Error seeding questions', 'error');
+    } finally {
+      setSeeding(false);
+    }
+  };
+
+  const filteredQuestions = questions.filter(q =>
     q.question.toLowerCase().includes(searchTerm.toLowerCase()) ||
     (q.field || '').toLowerCase().includes(searchTerm.toLowerCase())
   );
@@ -117,11 +151,16 @@ export default function CourseFinderAdminPage() {
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: 20 }}>
             <div>
               <h1 style={{ fontSize: 'clamp(1.5rem, 5vw, 2.25rem)', fontWeight: 700, margin: '0 0 6px', color: '#111827' }}>Course Finder Questions</h1>
-              <p style={{ color: '#6b7280', margin: 0 }}>Manage the quiz questions shown to students</p>
+              <p style={{ color: '#6b7280', margin: 0 }}>Manage the quiz questions shown to students ({questions.length} of 10 configured)</p>
             </div>
-            <button onClick={openAdd} style={{ padding: '12px 24px', background: RBL, color: '#fff', border: 'none', borderRadius: 10, fontWeight: 600, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 8, transition: 'all 0.2s' }}>
-              <Plus size={20} color="#fff" /> Add Question
-            </button>
+            <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
+              <button onClick={seedDefaults} disabled={seeding} style={{ padding: '12px 20px', background: '#fff', color: ACCENT, border: `2px solid ${ACCENT}`, borderRadius: 10, fontWeight: 600, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 8 }}>
+                <RefreshCw size={16} /> {seeding ? 'Loading…' : 'Load Default Questions'}
+              </button>
+              <button onClick={openAdd} style={{ padding: '12px 24px', background: ACCENT, color: '#fff', border: 'none', borderRadius: 10, fontWeight: 600, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 8 }}>
+                <Plus size={20} color="#fff" /> Add Question
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -135,7 +174,7 @@ export default function CourseFinderAdminPage() {
             value={searchTerm} 
             onChange={e => setSearchTerm(e.target.value)} 
             style={{ width: '100%', padding: '12px 12px 12px 42px', borderRadius: 10, border: '2px solid #e2e8f0', outline: 'none', fontSize: '1rem', fontFamily: 'inherit' }} 
-            onFocus={e => e.target.style.borderColor = RBL} 
+            onFocus={e => e.target.style.borderColor = ACCENT} 
             onBlur={e => e.target.style.borderColor = '#e2e8f0'} 
           />
         </div>
@@ -151,7 +190,7 @@ export default function CourseFinderAdminPage() {
                 <div key={q._id} style={{ background: '#fff', borderRadius: 16, padding: '24px', border: '1px solid #e2e8f0', boxShadow: '0 4px 12px rgba(0,0,0,0.03)', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: 20 }}>
                   <div style={{ flex: 1, minWidth: '250px' }}>
                     <div style={{ display: 'flex', gap: 8, marginBottom: 12 }}>
-                      <span style={{ padding: '4px 10px', background: '#eff6ff', color: RBL, borderRadius: 20, fontSize: '0.75rem', fontWeight: 600 }}>Step {q.order || i + 1}</span>
+                      <span style={{ padding: '4px 10px', background: '#eff6ff', color: ACCENT, borderRadius: 20, fontSize: '0.75rem', fontWeight: 600 }}>Step {q.order || i + 1}</span>
                       <span style={{ padding: '4px 10px', background: q.isActive ? '#dcfce7' : '#fee2e2', color: q.isActive ? '#16a34a' : '#dc2626', borderRadius: 20, fontSize: '0.75rem', fontWeight: 600 }}>{q.isActive ? 'Active' : 'Inactive'}</span>
                     </div>
                     <h3 style={{ margin: '0 0 12px', fontSize: '1.1rem', fontWeight: 600, color: '#1e293b', lineHeight: 1.4 }}>{q.question}</h3>
@@ -163,7 +202,7 @@ export default function CourseFinderAdminPage() {
                   </div>
                   <div style={{ display: 'flex', gap: 8 }}>
                     <button onClick={() => openEdit(q)} style={{ width: 40, height: 40, background: '#eff6ff', border: 'none', borderRadius: 10, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                      <Edit size={18} color={RBL} />
+                      <Edit size={18} color={ACCENT} />
                     </button>
                     <button onClick={() => deleteQ(q._id, q.question)} style={{ width: 40, height: 40, background: '#fff1f2', border: 'none', borderRadius: 10, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                       <Trash2 size={18} color="#ef4444" />
@@ -187,7 +226,7 @@ export default function CourseFinderAdminPage() {
             <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
               <div>
                 <label style={{ display: 'block', fontSize: '0.9rem', fontWeight: 600, marginBottom: 8 }}>Question Text</label>
-                <input value={modal.data.question} onChange={e => setModal({...modal, data: {...modal.data, question: e.target.value}})} style={{ width: '100%', padding: '12px', borderRadius: 10, border: '2px solid #e2e8f0', outline: 'none', fontFamily: 'inherit' }} onFocus={e => e.target.style.borderColor = RBL} onBlur={e => e.target.style.borderColor = '#e2e8f0'} />
+                <input value={modal.data.question} onChange={e => setModal({...modal, data: {...modal.data, question: e.target.value}})} style={{ width: '100%', padding: '12px', borderRadius: 10, border: '2px solid #e2e8f0', outline: 'none', fontFamily: 'inherit' }} onFocus={e => e.target.style.borderColor = ACCENT} onBlur={e => e.target.style.borderColor = '#e2e8f0'} />
               </div>
               
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
@@ -204,7 +243,7 @@ export default function CourseFinderAdminPage() {
               <div>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
                   <label style={{ fontSize: '0.9rem', fontWeight: 600 }}>Options</label>
-                  <button onClick={() => setModal({...modal, data: {...modal.data, options: [...modal.data.options, {label:''}]}})} style={{ background: '#eff6ff', color: RBL, border: 'none', padding: '6px 12px', borderRadius: 8, fontWeight: 600, fontSize: '0.85rem', cursor: 'pointer' }}>+ Add Option</button>
+                  <button onClick={() => setModal({...modal, data: {...modal.data, options: [...modal.data.options, {label:''}]}})} style={{ background: '#eff6ff', color: ACCENT, border: 'none', padding: '6px 12px', borderRadius: 8, fontWeight: 600, fontSize: '0.85rem', cursor: 'pointer' }}>+ Add Option</button>
                 </div>
                 {modal.data.options.map((o: any, idx: number) => (
                   <div key={idx} style={{ display: 'flex', gap: 8, marginBottom: 8 }}>
@@ -223,7 +262,7 @@ export default function CourseFinderAdminPage() {
 
             <div style={{ marginTop: 32, display: 'flex', gap: 12 }}>
                <button onClick={() => setModal(null)} style={{ flex: 1, padding: '12px', background: '#f1f5f9', border: 'none', borderRadius: 12, fontWeight: 600, cursor: 'pointer' }}>Cancel</button>
-               <button onClick={saveQuestion} disabled={saving} style={{ flex: 2, padding: '12px', background: RBL, color: '#fff', border: 'none', borderRadius: 12, fontWeight: 600, cursor: 'pointer' }}>{saving ? 'Saving...' : 'Save Question'}</button>
+               <button onClick={saveQuestion} disabled={saving} style={{ flex: 2, padding: '12px', background: ACCENT, color: '#fff', border: 'none', borderRadius: 12, fontWeight: 600, cursor: 'pointer' }}>{saving ? 'Saving...' : 'Save Question'}</button>
             </div>
           </div>
         </div>

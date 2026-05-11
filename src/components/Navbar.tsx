@@ -132,11 +132,8 @@ const Navbar = () => {
             </li>
           </ul>
 
-          {/* Desktop Actions — Login + Hamburger */}
+          {/* Desktop Actions — Hamburger */}
           <div className={styles.actions}>
-            <Link href="/login" className={styles.loginBtn}>
-              Login
-            </Link>
             <button
               className={styles.menuToggle}
               onClick={() => setMobileOpen(!mobileOpen)}
@@ -259,9 +256,6 @@ const Navbar = () => {
           >
             Course Finder
           </button>
-          <Link href="/login" className={styles.drawerActionPrimary} onClick={() => setMobileOpen(false)}>
-            Login
-          </Link>
         </div>
       </div>
     </>

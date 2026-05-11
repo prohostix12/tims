@@ -1,6 +1,6 @@
 .container {
   min-height: 100vh;
-  background-color: #ffffff;
+  background-color: #F0E6CE;
   overflow-x: hidden;
 }
 
@@ -11,8 +11,8 @@
   min-height: 90vh;
   display: flex;
   align-items: center;
-  background: #fff1f2;
-  border-bottom: 1px solid #ffe4e6;
+  background: rgba(232, 80, 42, 0.07);
+  border-bottom: 1px solid rgba(232, 80, 42, 0.1);
   padding-top: 120px;
 }
 
@@ -35,7 +35,7 @@
   display: inline-flex;
   align-items: center;
   gap: 10px;
-  color: #ef233c;
+  color: #E8502A;
   font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 4px;
@@ -47,13 +47,13 @@
   content: '';
   width: 40px;
   height: 2px;
-  background: #ef233c;
+  background: #E8502A;
 }
 
 .heroTitle {
   font-size: clamp(2rem, 4vw, 3rem);
   font-weight: 800;
-  color: #002060;
+  color: #1C0D07;
   line-height: 1.15;
   letter-spacing: -1px;
   margin-bottom: 2.5rem;
@@ -82,8 +82,8 @@
 
 .heroSearch {
   display: flex;
-  background: #f8fafc;
-  border: 1px solid #e2e8f0;
+  background: #F0E6CE;
+  border: 1px solid rgba(28, 13, 7, 0.1);
   border-radius: 16px;
   padding: 6px;
   margin-bottom: 2rem;
@@ -92,7 +92,7 @@
 }
 
 .heroSearch:focus-within {
-  border-color: #ef233c;
+  border-color: #E8502A;
   box-shadow: 0 10px 30px rgba(239, 35, 60, 0.1);
   background: #ffffff;
 }
@@ -103,12 +103,12 @@
   background: transparent;
   padding: 12px 20px;
   font-size: 1rem;
-  color: #002060;
+  color: #1C0D07;
   outline: none;
 }
 
 .heroSearchBtn {
-  background: #002060;
+  background: #1C0D07;
   color: #ffffff;
   border: none;
   width: 48px;
@@ -122,7 +122,7 @@
 }
 
 .heroSearchBtn:hover {
-  background: #ef233c;
+  background: #E8502A;
 }
 
 .trendingTags {
@@ -152,7 +152,7 @@
 }
 
 .tag:hover {
-  background: #ef233c;
+  background: #E8502A;
   color: #ffffff;
   transform: translateY(-2px);
 }
@@ -176,7 +176,7 @@
 .headerLeft h2 {
   font-size: 3rem;
   font-weight: 900;
-  color: #002060;
+  color: #1C0D07;
   letter-spacing: -2px;
 }
 
@@ -236,7 +236,7 @@
 }
 
 .articleCategory {
-  color: #ef233c;
+  color: #E8502A;
   font-weight: 900;
   font-size: 0.85rem;
   letter-spacing: 2px;
@@ -246,13 +246,13 @@
 .articleTitle {
   font-size: 2.2rem;
   font-weight: 800;
-  color: #002060;
+  color: #1C0D07;
   line-height: 1.2;
   transition: color 0.3s ease;
 }
 
 .blogArticle:hover .articleTitle {
-  color: #ef233c;
+  color: #E8502A;
 }
 
 .articleExcerpt {
@@ -265,7 +265,7 @@
   display: inline-flex;
   align-items: center;
   gap: 12px;
-  color: #002060;
+  color: #1C0D07;
   font-weight: 800;
   text-decoration: none;
   font-size: 1rem;
@@ -275,7 +275,7 @@
 
 .blogArticle:hover .readMore {
   gap: 18px;
-  color: #ef233c;
+  color: #E8502A;
 }
 
 .viewMoreBtn {
@@ -283,7 +283,7 @@
   display: flex;
   align-items: center;
   gap: 1rem;
-  background: #002060;
+  background: #1C0D07;
   color: #ffffff;
   padding: 1.25rem 4rem;
   border-radius: 100px;
@@ -294,7 +294,7 @@
 }
 
 .viewMoreBtn:hover {
-  background: #ef233c;
+  background: #E8502A;
   transform: translateY(-5px);
   box-shadow: 0 20px 40px rgba(239, 35, 60, 0.2);
 }

@@ -59,17 +59,74 @@ const IMPACT_CARDS = [
   { num: '100', label: 'Mentors' },
 ];
 
+const TYPING_WORDS = ['University', 'Online University', 'Programmes', 'Courses', 'Credit Transfer Programs'];
+
+const DEFAULT_MARQUEE = ['BA', 'B.Com', 'BBA', 'MBA', 'BCA', 'MCA', 'B.Sc', 'M.Sc', 'B.Tech', 'M.Tech', 'LLB', 'PGDM', 'M.Com'];
+
 export default function Home() {
   const [universities, setUniversities] = useState<University[]>([]);
   const [newsItems, setNewsItems] = useState<NewsItem[]>([]);
   const [blogs, setBlogs] = useState<any[]>([]);
+  const [marqueeItems, setMarqueeItems] = useState<string[]>(DEFAULT_MARQUEE);
   const [loading, setLoading] = useState(true);
   const [activeImpactIdx, setActiveImpactIdx] = useState(0);
+  const [mustKnowIdx, setMustKnowIdx] = useState(0);
+  const [wordIdx, setWordIdx] = useState(0);
+  const [displayText, setDisplayText] = useState('');
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [showFloating, setShowFloating] = useState(false);
   const router = useRouter();
+
+  const MUST_KNOW_SLIDES = [
+    'Are you confused about the best University?',
+    'Doubt about the value of the certificate?',
+    'Looking for the best university and less fees?',
+    'Going Abroad? Which university is right for you?',
+    'Which is the best Online & Distance university?',
+  ];
 
   useEffect(() => {
     const interval = setInterval(() => {
       setActiveImpactIdx((prev) => (prev + 1) % IMPACT_CARDS.length);
+    }, 3000);
+    return () => clearInterval(interval);
+  }, []);
+
+  // Typewriter cycle: type → pause → backspace → next word
+  useEffect(() => {
+    const current = TYPING_WORDS[wordIdx];
+
+    if (!isDeleting && displayText.length < current.length) {
+      // Still typing forward
+      const t = setTimeout(() => setDisplayText(current.slice(0, displayText.length + 1)), 110);
+      return () => clearTimeout(t);
+    }
+
+    if (!isDeleting && displayText.length === current.length) {
+      // Fully typed — pause 1.8 s then start deleting
+      const t = setTimeout(() => setIsDeleting(true), 1800);
+      return () => clearTimeout(t);
+    }
+
+    if (isDeleting && displayText.length > 0) {
+      // Backspace one letter at a time (faster)
+      const t = setTimeout(() => setDisplayText(displayText.slice(0, -1)), 65);
+      return () => clearTimeout(t);
+    }
+
+    if (isDeleting && displayText.length === 0) {
+      // Fully deleted — brief pause then move to next word
+      const t = setTimeout(() => {
+        setIsDeleting(false);
+        setWordIdx((prev) => (prev + 1) % TYPING_WORDS.length);
+      }, 350);
+      return () => clearTimeout(t);
+    }
+  }, [displayText, isDeleting, wordIdx]);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setMustKnowIdx((prev) => (prev + 1) % MUST_KNOW_SLIDES.length);
     }, 3000);
     return () => clearInterval(interval);
   }, []);
@@ -95,10 +152,11 @@ export default function Home() {
           }
         };
 
-        const [uniData, newsData, blogData] = await Promise.all([
+        const [uniData, newsData, blogData, marqueeData] = await Promise.all([
           safeFetch('/api/admin/universities'),
           safeFetch('/api/admin/news'),
           safeFetch('/api/admin/blogs'),
+          safeFetch('/api/public/marquee'),
         ]);
 
         if (Array.isArray(uniData)) {
@@ -110,6 +168,9 @@ export default function Home() {
         if (Array.isArray(blogData)) {
           setBlogs(blogData.filter((b) => !b.status || b.status.toLowerCase() === 'published').slice(0, 4));
         }
+        if (Array.isArray(marqueeData) && marqueeData.length > 0) {
+          setMarqueeItems(marqueeData.map((m: any) => m.text));
+        }
       } catch (error) {
         console.error('Fatal error in fetchData:', error);
       } finally {
@@ -117,6 +178,12 @@ export default function Home() {
       }
     };
     fetchData();
+  }, []);
+
+  useEffect(() => {
+    const onScroll = () => setShowFloating(window.scrollY > window.innerHeight * 0.85);
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
   const openCourseFinder = () => window.dispatchEvent(new CustomEvent('open-course-finder'));
@@ -158,24 +225,32 @@ export default function Home() {
           {/* Right panel — headline + CTAs */}
           <div className={styles.heroRight}>
             <h1 className={styles.heroTitle}>
-              <span className={styles.heroAccent}>Find Your University</span>
+              <span className={styles.heroAccentTop}>Find Your Best</span>
+              <span className={styles.heroUniversityWrap}>
+                <span className={`${styles.heroAccent}${TYPING_WORDS[wordIdx] === 'Credit Transfer Programs' ? ` ${styles.heroAccentLong}` : ''}`}>
+                  {displayText}
+                  <span className={styles.typeCursor}>|</span>
+                  <span className={styles.letterSpacer} aria-hidden="true">
+                    {TYPING_WORDS[wordIdx].slice(displayText.length)}
+                  </span>
+                </span>
+              </span>
             </h1>
             <div className={styles.heroBtns}>
               <button className={styles.heroBtnPrimary} onClick={openCourseFinder}>
                 Register Now
               </button>
-              <Link href="/courses" className={styles.heroBtnOutline}>
-                Explore Programs
-              </Link>
+              <button className={styles.heroBtnFinder} onClick={openCourseFinder}>
+                Course Finder <ArrowRight size={16} />
+              </button>
             </div>
-
             <div className={styles.heroMarqueeWrapper}>
               <div className={styles.heroMarqueeTrack}>
-                {[...Array(6)].map((_, i) => (
+                {[...Array(4)].map((_, i) => (
                   <React.Fragment key={i}>
-                    <Link href="/universities" className={styles.heroMarqueeItem}>Universities</Link>
-                    <Link href="/courses" className={styles.heroMarqueeItem}>Courses</Link>
-                    <Link href="/services/credit-transfer" className={styles.heroMarqueeItem}>Programmes</Link>
+                    {marqueeItems.map((name, j) => (
+                      <Link key={j} href="/courses" className={styles.heroMarqueeItem}>{name}</Link>
+                    ))}
                   </React.Fragment>
                 ))}
               </div>
@@ -308,21 +383,27 @@ export default function Home() {
         <div className={styles.careerRight}>
           <div className={styles.careerFeatured}>
             <div className={styles.careerBadge}>MUST KNOW BEFORE CHOOSE</div>
-            <h2 className={styles.careerMainTitle}>
-              Looking For Best University And Less Fees?
-            </h2>
+            <div className={styles.mustKnowSlider}>
+              {MUST_KNOW_SLIDES.map((slide, i) => (
+                <h2
+                  key={i}
+                  className={`${styles.careerMainTitle} ${i === mustKnowIdx ? styles.mustKnowActive : styles.mustKnowHidden}`}
+                >
+                  {slide}
+                </h2>
+              ))}
+            </div>
+            <div className={styles.mustKnowDots}>
+              {MUST_KNOW_SLIDES.map((_, i) => (
+                <span
+                  key={i}
+                  className={`${styles.mustKnowDot} ${i === mustKnowIdx ? styles.mustKnowDotActive : ''}`}
+                />
+              ))}
+            </div>
             <button className={styles.careerSuggestBtn} onClick={openCourseFinder}>
               Suggest me a University
             </button>
-            <div className={styles.careerIllustration}>
-              <Image 
-                src="/images/career-guidance.png"
-                alt="Career guidance illustration"
-                width={150}
-                height={150}
-                style={{ objectFit: 'contain' }}
-              />
-            </div>
           </div>
         </div>
       </section>
@@ -357,77 +438,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ===== VALUE PROPS ===== */}
-      <section className={styles.valueSection}>
-        <div className={styles.valueGrid}>
-          {[
-            { icon: <CheckCircle size={32} />, title: 'UGC Approved', desc: 'Nationwide recognition for all programs' },
-            { icon: <Globe size={32} />, title: '100% Online', desc: 'Learn from anywhere, anytime, at your pace' },
-            { icon: <CreditCard size={32} />, title: 'Affordable Fees', desc: 'Competitive pricing with flexible EMI options' },
-            { icon: <Headphones size={32} />, title: '24/7 Support', desc: 'Dedicated guidance always at your side' },
-          ].map((item, i) => (
-            <div key={i} className={styles.valueCard}>
-              <div className={styles.valueIcon}>{item.icon}</div>
-              <h3 className={styles.valueTitle}>{item.title}</h3>
-              <p className={styles.valueDesc}>{item.desc}</p>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* ===== PARTNER UNIVERSITIES ===== */}
-      <section className={styles.uniSection}>
-        <div className={styles.sectionHeader}>
-          <span className={styles.sectionTag}>Global Network</span>
-          <h2 className={styles.sectionTitle}>
-            <span className={styles.red}>Partner</span> Universities
-          </h2>
-          <p className={styles.sectionSub}>
-            Collaborating with world-class institutions to provide the best educational opportunities and global recognition.
-          </p>
-        </div>
-        <div className={styles.uniGrid}>
-          {universities.map((uni) => (
-            <div key={uni._id} className={styles.uniCard}>
-              <div className={styles.uniImg}>
-                <Image
-                  src={uni.image || UNI_PLACEHOLDER}
-                  alt={uni.name}
-                  fill
-                  sizes="(max-width: 768px) 100vw, 33vw"
-                  style={{ objectFit: 'cover' }}
-                  onError={(e) => { e.currentTarget.src = UNI_PLACEHOLDER; }}
-                  unoptimized
-                />
-                {uni.logo && (
-                  <div className={styles.uniLogo}>
-                    <img src={uni.logo} alt={`${uni.name} logo`} style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
-                  </div>
-                )}
-              </div>
-              <div className={styles.uniContent}>
-                <h3>{uni.name}</h3>
-                {uni.description && (
-                  <p>{uni.description.length > 100 ? uni.description.substring(0, 100) + '...' : uni.description}</p>
-                )}
-                <Link href={`/universities/${uni._id}`} className={styles.uniBtn}>
-                  Explore Programs <ArrowRight size={16} />
-                </Link>
-              </div>
-            </div>
-          ))}
-          {universities.length === 0 && !loading && (
-            <div className={styles.uniEmpty}>
-              <p>Stay tuned! Our partner universities will be listed here soon.</p>
-            </div>
-          )}
-        </div>
-        <div className={styles.sectionFooter}>
-          <Link href="/universities" className={styles.viewAllBtn}>
-            View All Universities <ArrowRight size={18} />
-          </Link>
-        </div>
-      </section>
 
       {/* ===== CONSULTATION CTA ===== */}
       <section className={styles.consultSection}>
@@ -445,32 +455,6 @@ export default function Home() {
               Get Free Guidance <ArrowRight size={16} />
             </Link>
           </div>
-        </div>
-      </section>
-
-      {/* ===== SERVICES ===== */}
-      <section className={styles.servicesSection}>
-        <div className={styles.sectionHeader}>
-          <h2 className={styles.sectionTitle}>Make Your Dream Come True!</h2>
-          <p className={styles.sectionSub}>Provide better education to the society at an affordable cost</p>
-        </div>
-        <div className={styles.servicesGrid}>
-          {[
-            { icon: <Award size={36} />, title: 'Embassy Attestation', desc: 'Global document verification and authentication services.', href: '/services/attestation', variant: 'dark' },
-            { icon: <Globe size={36} />, title: 'Online Studies', desc: 'Accredited online degrees from top-tier universities.', href: '/courses', variant: 'red' },
-            { icon: <BookOpen size={36} />, title: 'Distance Education', desc: 'Flexible learning programs for students worldwide.', href: '/services/distance-education', variant: 'dark' },
-          ].map((item, i) => (
-            <Link
-              key={i}
-              href={item.href}
-              className={`${styles.serviceCard} ${item.variant === 'red' ? styles.serviceCardRed : styles.serviceCardDark}`}
-            >
-              <div className={styles.serviceIcon}>{item.icon}</div>
-              <h3 className={styles.serviceTitle}>{item.title}</h3>
-              <p className={styles.serviceDesc}>{item.desc}</p>
-              <span className={styles.serviceArrow}><ArrowRight size={20} /></span>
-            </Link>
-          ))}
         </div>
       </section>
 
@@ -501,79 +485,6 @@ export default function Home() {
               </div>
             ))}
           </div>
-        </div>
-      </section>
-
-      {/* ===== BLOG ===== */}
-      <section className={styles.blogSection}>
-        <div className={styles.sectionHeader}>
-          <span className={styles.sectionTag}>Expert Insights</span>
-          <h2 className={styles.sectionTitle}>From Our Blog</h2>
-        </div>
-        <div className={styles.blogGrid}>
-          {blogs.map((post) => (
-            <Link href={`/blogs/${post._id}`} key={post._id} className={styles.blogCard}>
-              <Image
-                src={post.image || '/images/blog-placeholder.png'}
-                alt={post.title}
-                fill
-                sizes="(max-width: 768px) 100vw, 25vw"
-                style={{ objectFit: 'cover' }}
-                unoptimized
-              />
-              <div className={styles.blogOverlay}>
-                <span className={styles.blogDate}>
-                  {new Date(post.publishedAt).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}
-                </span>
-                <h3>{post.title}</h3>
-              </div>
-            </Link>
-          ))}
-          {blogs.length === 0 && !loading && (
-            <div style={{ gridColumn: '1/-1', textAlign: 'center', padding: '3rem', color: '#64748b' }}>
-              Our educational blog posts are coming soon!
-            </div>
-          )}
-        </div>
-        <div className={styles.sectionFooter}>
-          <Link href="/blogs" className={styles.viewAllBtn}>
-            View All Blogs <ArrowRight size={18} />
-          </Link>
-        </div>
-      </section>
-
-      {/* ===== NEWS ===== */}
-      <section className={styles.newsSection}>
-        <div className={styles.sectionHeader}>
-          <h2 className={styles.sectionTitle}>Latest News & Updates</h2>
-        </div>
-        <div className={styles.newsGrid}>
-          {newsItems.map((item) => (
-            <Link href={`/news/${item._id}`} key={item._id} className={styles.newsCard}>
-              <div className={styles.newsDateBox}>
-                <span className={styles.newsDay}>{new Date(item.publishedAt).getDate()}</span>
-                <span className={styles.newsMonth}>
-                  {new Date(item.publishedAt).toLocaleString('en-US', { month: 'short' })}
-                </span>
-              </div>
-              <div className={styles.newsContent}>
-                {item.category && <span className={styles.newsCat}>{item.category}</span>}
-                <h3>{item.title}</h3>
-                <p>{item.excerpt}</p>
-              </div>
-              <ArrowRight size={22} className={styles.newsArrow} />
-            </Link>
-          ))}
-          {newsItems.length === 0 && !loading && (
-            <div style={{ textAlign: 'center', padding: '3rem', color: '#64748b' }}>
-              No recent news available.
-            </div>
-          )}
-        </div>
-        <div className={styles.sectionFooter}>
-          <Link href="/news" className={styles.viewAllBtn}>
-            View All News <ArrowRight size={18} />
-          </Link>
         </div>
       </section>
 
@@ -645,7 +556,10 @@ export default function Home() {
         </div>
       </section>
 
-      <button className={styles.floatingFinderBtn} onClick={openCourseFinder}>
+      <button
+        className={`${styles.floatingFinderBtn}${showFloating ? ` ${styles.floatingFinderBtnVisible}` : ''}`}
+        onClick={openCourseFinder}
+      >
         Course Finder <ArrowRight size={20} />
       </button>
     </main>

@@ -40,14 +40,14 @@
 .heroTitle {
   font-size: clamp(2.2rem, 4vw, 3.5rem);
   font-weight: 800;
-  color: #1f2937;
+  color: #1C0D07;
   line-height: 1.2;
   letter-spacing: -1px;
   margin: 0;
 }
 
 .heroTitleAccent {
-  color: #ef233c; /* Brand Red */
+  color: #E8502A; /* Brand Red */
   position: relative;
   display: inline-block;
 }
@@ -92,13 +92,13 @@
   padding: 14px 20px;
   border-radius: 50px;
   font-size: 1rem;
-  color: #1a1a1a;
+  color: #1C0D07;
   outline: none;
   background: #ffffff;
 }
 
 .heroSearch button {
-  background: #002060; /* Brand Dark Blue */
+  background: #1C0D07; /* Brand Dark Blue */
   color: #ffffff;
   border: none;
   padding: 14px 35px;
@@ -110,7 +110,7 @@
 }
 
 .heroSearch button:hover {
-  background: #ef233c; /* Brand Red on hover */
+  background: #E8502A; /* Brand Red on hover */
   transform: translateY(-2px);
   box-shadow: 0 6px 15px rgba(239, 35, 60, 0.3);
 }
@@ -151,7 +151,7 @@
 /* ===== Filter Bar ===== */
 .filterBar {
   background: #ffffff;
-  border-bottom: 2px solid #ef233c;
+  border-bottom: 2px solid #E8502A;
   padding: 2rem 5%;
   position: sticky;
   top: 80px;
@@ -174,7 +174,7 @@
   align-items: center;
   gap: 0.75rem;
   background: transparent;
-  border-bottom: 2px solid #f1f5f9;
+  border-bottom: 2px solid #F0E6CE;
   padding: 0.6rem 1.25rem;
   flex: 1;
   max-width: 400px;
@@ -182,11 +182,11 @@
 }
 
 .searchBox:focus-within {
-  border-color: #ef233c;
+  border-color: #E8502A;
 }
 
 .searchBox svg {
-  color: #ef233c;
+  color: #E8502A;
 }
 
 .searchBox input {
@@ -196,7 +196,7 @@
   font-size: 1.1rem;
   font-weight: 700;
   outline: none;
-  color: #002060;
+  color: #1C0D07;
 }
 
 .filterLabel {
@@ -219,7 +219,7 @@
 .filterBtn {
   padding: 0.6rem 1.5rem;
   border-radius: 8px;
-  border: 2px solid #f1f5f9;
+  border: 2px solid #F0E6CE;
   background: #ffffff;
   color: #64748b;
   font-size: 0.85rem;
@@ -229,14 +229,14 @@
 }
 
 .filterBtn:hover {
-  border-color: #ef233c;
-  color: #ef233c;
+  border-color: #E8502A;
+  color: #E8502A;
 }
 
 .filterBtnActive {
-  background: #ef233c;
+  background: #E8502A;
   color: white;
-  border-color: #ef233c;
+  border-color: #E8502A;
   box-shadow: 0 8px 20px rgba(239, 35, 60, 0.2);
 }
 
@@ -258,7 +258,7 @@
 .card {
   background: #ffffff;
   border-radius: 24px;
-  border: 1px solid #e2e8f0;
+  border: 1px solid rgba(28, 13, 7, 0.1);
   overflow: hidden;
   display: flex;
   flex-direction: column;
@@ -269,7 +269,7 @@
 .card:hover {
   transform: translateY(-10px);
   box-shadow: 0 30px 60px rgba(0, 0, 0, 0.08);
-  border-color: #ef233c;
+  border-color: #E8502A;
 }
 
 .cardImg {
@@ -293,7 +293,7 @@
   position: absolute;
   top: 0;
   right: 0;
-  background: #ef233c;
+  background: #E8502A;
   color: white;
   padding: 0.75rem 1.5rem;
   font-size: 0.75rem;
@@ -315,7 +315,7 @@
   align-items: center;
   gap: 0.5rem;
   font-size: 0.8rem;
-  color: #ef233c;
+  color: #E8502A;
   font-weight: 900;
   text-transform: uppercase;
   letter-spacing: 2px;
@@ -325,7 +325,7 @@
 .cardName {
   font-size: 1.25rem;
   font-weight: 900;
-  color: #002060;
+  color: #1C0D07;
   line-height: 1.2;
   margin-bottom: 1rem;
 }
@@ -351,8 +351,8 @@
 .cardTag {
   font-size: 0.7rem;
   font-weight: 800;
-  background: #f1f5f9;
-  color: #002060;
+  background: #F0E6CE;
+  color: #1C0D07;
   padding: 0.4rem 1rem;
   border-radius: 4px;
   text-transform: uppercase;
@@ -368,9 +368,9 @@
 .detailsBtn {
   flex: 1;
   background: #ffffff;
-  color: #ef233c;
+  color: #E8502A;
   padding: 0.8rem;
-  border: 2px solid #ef233c;
+  border: 2px solid #E8502A;
   text-decoration: none;
   font-size: 0.8rem;
   font-weight: 900;
@@ -381,7 +381,7 @@
 }
 
 .detailsBtn:hover {
-  background: #ef233c;
+  background: #E8502A;
   color: #ffffff;
 }
 
@@ -392,7 +392,7 @@
   justify-content: center;
   gap: 0.5rem;
   padding: 0.8rem;
-  background: #ef233c;
+  background: #E8502A;
   color: #ffffff;
   border: none;
   font-size: 0.8rem;
@@ -405,13 +405,13 @@
 
 .enquiryBtn:hover {
   background: rgba(0, 18, 46, 0.05);
-  color: #002060;
-  box-shadow: inset 0 0 0 2px #002060;
+  color: #1C0D07;
+  box-shadow: inset 0 0 0 2px #1C0D07;
 }
 
 /* ===== CTA Banner ===== */
 .ctaBanner {
-  background: #000000;
+  background: #241008;
   padding: 8rem 5%;
   position: relative;
   overflow: hidden;
@@ -445,7 +445,7 @@
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  background: #ef233c;
+  background: #E8502A;
   color: #ffffff;
   font-weight: 900;
   font-size: 1.1rem;
@@ -459,7 +459,7 @@
 
 .ctaBtn:hover {
   background: #ffffff;
-  color: #000000;
+  color: #241008;
   transform: translateY(-5px);
 }
 

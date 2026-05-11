@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
   GraduationCap, Monitor, BarChart2, FlaskConical, BookOpen, Cpu,
   Briefcase, Database, Landmark, Globe, Music, Layers, PenTool, Package, Stethoscope,
@@ -35,16 +35,27 @@ const courseData: Record<string, { name: string; icon: React.ReactNode }[]> = {
     { name: 'IT',             icon: <Layers size={32} /> },
   ],
   'Credit Transfer Programme': [
-    { name: 'Fast Track Degree', icon: <ArrowRightLeft size={32} /> },
-    { name: 'Lateral Entry', icon: <ArrowRightLeft size={32} /> },
-    { name: 'Credit Mapping', icon: <ArrowRightLeft size={32} /> },
-    { name: 'Degree Completion', icon: <GraduationCap size={32} /> },
+    { name: 'B.Tech Credit Transfer', icon: <ArrowRightLeft size={32} /> },
+    { name: 'UG Credit Transfer', icon: <ArrowRightLeft size={32} /> },
+    { name: 'PG Credit Transfer', icon: <ArrowRightLeft size={32} /> },
+    { name: 'Diploma Credit Transfer', icon: <GraduationCap size={32} /> },
   ],
 };
 
 const tabs = Object.keys(courseData);
 
 interface FormState { name: string; email: string; phone: string; }
+
+interface UniversityLogo {
+  _id: string;
+  name: string;
+  logoUrl: string;
+}
+
+const DEFAULT_UNI_NAMES = [
+  'Amity', 'Manipal', 'LPU', 'Jain', 'Chandigarh', 'IGNOU',
+  'Symbiosis', 'Annamalai', 'Andhra', 'SMU', 'NMIMS', 'Sikkim Manipal',
+];
 
 export default function OnlineCoursesSection() {
   const [activeTab, setActiveTab] = useState('Online PG');
@@ -53,6 +64,14 @@ export default function OnlineCoursesSection() {
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState('');
+  const [logos, setLogos] = useState<UniversityLogo[]>([]);
+
+  useEffect(() => {
+    fetch('/api/public/university-logos')
+      .then(r => r.ok ? r.json() : [])
+      .then(data => { if (Array.isArray(data) && data.length > 0) setLogos(data); })
+      .catch(() => {});
+  }, []);
 
   const openModal = (courseName: string) => {
     setSelectedCourse(courseName);
@@ -122,6 +141,30 @@ export default function OnlineCoursesSection() {
         {/* Universities count + CTA */}
         <div className={styles.uniRow}>
           <p className={styles.uniCount}>Available 90+ Universities</p>
+
+          {/* Moving logo banner — always visible */}
+          <div className={styles.logoBannerWrapper}>
+            <div className={styles.logoBannerTrack}>
+              {logos.length > 0
+                ? [...logos, ...logos, ...logos].map((logo, i) => (
+                    <div key={i} className={styles.logoItem}>
+                      <img
+                        src={logo.logoUrl}
+                        alt={logo.name}
+                        className={styles.logoImg}
+                        onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = 'none'; }}
+                      />
+                    </div>
+                  ))
+                : [...DEFAULT_UNI_NAMES, ...DEFAULT_UNI_NAMES, ...DEFAULT_UNI_NAMES].map((name, i) => (
+                    <div key={i} className={styles.logoItem}>
+                      <span className={styles.logoPlaceholder}>{name}</span>
+                    </div>
+                  ))
+              }
+            </div>
+          </div>
+
           <a href="/universities" className={styles.uniBtn}>View All Universities</a>
         </div>
       </section>

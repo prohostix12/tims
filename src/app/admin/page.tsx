@@ -44,7 +44,8 @@ export default function AdminDashboard() {
     { name: 'Add University', link: '/admin/universities/new', color: '#00122e' },
     { name: 'New Program', link: '/admin/programs', color: '#ef233c' },
     { name: 'View Leads', link: '/admin/enrollments', color: '#10b981' },
-    { name: 'SEO Check', link: '/admin/seo', color: '#f59e0b' },
+    { name: 'Marquee Courses', link: '/admin/marquee', color: '#E8502A' },
+    { name: 'University Logos', link: '/admin/university-logos', color: '#7c3aed' },
   ];
 
   return (
