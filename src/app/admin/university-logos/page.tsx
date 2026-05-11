@@ -178,7 +178,7 @@ export default function UniversityLogosAdminPage() {
             {logos.filter(l => l.isActive).map((logo: any) => (
               <img
                 key={logo._id}
-                src={logo.logoUrl}
+                src={`/api/proxy-image?url=${encodeURIComponent(logo.logoUrl)}`}
                 alt={logo.name}
                 style={{ height: '44px', width: 'auto', maxWidth: '120px', objectFit: 'contain', flexShrink: 0, filter: 'grayscale(20%)', opacity: 0.85 }}
                 onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = 'none'; }}

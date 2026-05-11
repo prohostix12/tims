@@ -293,9 +293,6 @@ export default function Home() {
                   <img src="/images/Adv-ShoukathAli-pootheri.jpg" alt="Learner 3" className={styles.impactAvatarImg} style={{ zIndex: 1, marginLeft: '-10px' }} />
                 </div>
               </div>
-              <div className={styles.impactSphereWrapper}>
-                <img src="/images/orange-sphere.png" alt="Orange Swirl Sphere" className={styles.impactSphere} />
-              </div>
             </div>
           </div>
 

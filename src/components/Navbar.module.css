@@ -139,7 +139,7 @@
   align-items: center;
   justify-content: center;
   padding: 0.55rem 1.4rem;
-  background: #EF233C; /* Vibrant Red */
+  background: #E8502A;
   color: #ffffff;
   font-size: 0.85rem;
   font-weight: 700;
@@ -149,13 +149,13 @@
   white-space: nowrap;
   transition: all 0.2s ease;
   font-family: inherit;
-  box-shadow: 0 4px 12px rgba(239, 35, 60, 0.3);
+  box-shadow: 0 4px 12px rgba(232, 80, 42, 0.35);
 }
 
 .courseFinderBtn:hover {
-  background: #d90429;
+  background: #c93c1a;
   transform: translateY(-1px);
-  box-shadow: 0 6px 16px rgba(239, 35, 60, 0.4);
+  box-shadow: 0 6px 16px rgba(232, 80, 42, 0.45);
 }
 
 /* ==============================================

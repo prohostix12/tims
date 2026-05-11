@@ -52,9 +52,13 @@ interface UniversityLogo {
   logoUrl: string;
 }
 
-const DEFAULT_UNI_NAMES = [
-  'Amity', 'Manipal', 'LPU', 'Jain', 'Chandigarh', 'IGNOU',
-  'Symbiosis', 'Annamalai', 'Andhra', 'SMU', 'NMIMS', 'Sikkim Manipal',
+const DEFAULT_UNI_LOGOS = [
+  { name: 'Amity University',      logoUrl: '/images/universities/amity.png' },
+  { name: 'Manipal University',    logoUrl: '/images/universities/manipal.png' },
+  { name: 'LPU',                   logoUrl: '/images/universities/lpu.png' },
+  { name: 'Jain University',       logoUrl: '/images/universities/jain.png' },
+  { name: 'Chandigarh University', logoUrl: '/images/universities/chandigarh.png' },
+  { name: 'IGNOU',                 logoUrl: '/images/universities/ignou.png' },
 ];
 
 export default function OnlineCoursesSection() {
@@ -145,23 +149,18 @@ export default function OnlineCoursesSection() {
           {/* Moving logo banner — always visible */}
           <div className={styles.logoBannerWrapper}>
             <div className={styles.logoBannerTrack}>
-              {logos.length > 0
-                ? [...logos, ...logos, ...logos].map((logo, i) => (
-                    <div key={i} className={styles.logoItem}>
-                      <img
-                        src={logo.logoUrl}
-                        alt={logo.name}
-                        className={styles.logoImg}
-                        onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = 'none'; }}
-                      />
-                    </div>
-                  ))
-                : [...DEFAULT_UNI_NAMES, ...DEFAULT_UNI_NAMES, ...DEFAULT_UNI_NAMES].map((name, i) => (
-                    <div key={i} className={styles.logoItem}>
-                      <span className={styles.logoPlaceholder}>{name}</span>
-                    </div>
-                  ))
-              }
+              {[...(logos.length > 0 ? logos : DEFAULT_UNI_LOGOS),
+                 ...(logos.length > 0 ? logos : DEFAULT_UNI_LOGOS),
+                 ...(logos.length > 0 ? logos : DEFAULT_UNI_LOGOS)].map((logo, i) => (
+                  <div key={i} className={styles.logoItem}>
+                    <img
+                      src={logo.logoUrl}
+                      alt={logo.name}
+                      className={styles.logoImg}
+                      onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = 'none'; }}
+                    />
+                  </div>
+                ))}
             </div>
           </div>
 
