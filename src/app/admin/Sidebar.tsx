@@ -20,7 +20,9 @@ import {
   FileText,
   Book,
   CalendarDays,
-  X
+  X,
+  Users,
+  Calendar
 } from 'lucide-react';
 
 interface SidebarProps {
@@ -43,7 +45,8 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
     { name: 'Results', path: '/admin/results', icon: <ClipboardList size={20} /> },
     { name: 'Course Finder', path: '/admin/course-finder', icon: <Search size={20} /> },
     { name: 'Leads', path: '/admin/leads', icon: <ClipboardList size={20} /> },
-    { name: 'Enrollments', path: '/admin/enrollments', icon: <ClipboardList size={20} /> },
+    { name: 'Enrollments', path: '/admin/enrollments', icon: <Users size={20} /> },
+    { name: 'Batches', path: '/admin/batches', icon: <Calendar size={20} /> },
     { name: 'Messages', path: '/admin/messages', icon: <Mail size={20} /> },
     { name: 'SEO Settings', path: '/admin/seo', icon: <Globe size={20} /> },
   ];

@@ -133,7 +133,7 @@ export default function ContactPage() {
              </div>
              <div className={styles.infoText}>
                <h3>Email Address</h3>
-               <p>info@timseducation.com<br/>admissions@timseducation.com</p>
+               <p>info@findyouruniversity.com<br/>admissions@timseducation.com</p>
              </div>
            </div>
 

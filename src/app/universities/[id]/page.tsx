@@ -20,6 +20,8 @@ import {
 } from 'lucide-react';
 import EnquiryModal from '@/components/EnquiryModal';
 
+import UniversityLogoBanner from '@/components/UniversityLogoBanner';
+
 export default function UniversityDetailPage() {
   const { id } = useParams();
   const [uni, setUni] = useState<any>(null);
@@ -41,7 +43,7 @@ export default function UniversityDetailPage() {
 
   if (loading) {
     return (
-      <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '1rem', background: '#f8fafc' }}>
+      <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '1rem', background: '#F0E6CE' }}>
         <Loader2 className="animate-spin" size={48} color="#00122e" />
         <p style={{ color: '#64748b', fontWeight: 600 }}>Loading university profile...</p>
       </div>
@@ -50,7 +52,7 @@ export default function UniversityDetailPage() {
 
   if (!uni) {
     return (
-      <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', background: '#f8fafc', padding: '20px' }}>
+      <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', background: '#F0E6CE', padding: '20px' }}>
         <h1 style={{ color: '#00122e' }}>University Not Found</h1>
         <p style={{ color: '#64748b', marginBottom: '20px' }}>The university profile you are looking for does not exist.</p>
         <Link href="/universities" style={{ padding: '12px 24px', background: '#00122e', color: 'white', borderRadius: '8px', textDecoration: 'none', fontWeight: 700 }}>Back to Universities</Link>
@@ -60,7 +62,8 @@ export default function UniversityDetailPage() {
 
   return (
     <>
-      <main style={{ minHeight: '100vh', background: '#ffffff', paddingBottom: '100px' }}>
+      <main style={{ minHeight: '100vh', background: '#F0E6CE', paddingBottom: '100px' }}>
+        <UniversityLogoBanner />
         {/* Hero Section */}
         <div style={{ position: 'relative', minHeight: '550px', width: '100%', overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center', paddingTop: '80px' }}>
           <Image 

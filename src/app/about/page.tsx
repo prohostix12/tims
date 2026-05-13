@@ -110,33 +110,20 @@ export default function About() {
           </div>
         </div>
       </section>
-
-      {/* ===== Premium Content Section ===== */}
+      {/* ===== Why This? Section ===== */}
       <section className={styles.aboutSection}>
         <div className={styles.aboutGrid}>
           <div className={styles.aboutTextCol}>
-            <span className={styles.sectionBadge}>About the Institution</span>
+            <span className={styles.sectionBadge}>WHY THIS?</span>
             <h2 className={styles.sectionTitle}>
-              Welcome to <span style={{ color: '#ef233c' }}>TIMS Education</span>
+              Your Ultimate Guide to <span style={{ color: '#E8502A' }}>Academic Success</span>
             </h2>
             <p className={styles.sectionDesc}>
-              Founded in 2009, Tirur Institute of Management Studies (TIMS) is dedicated to providing high-quality education that's accessible to all segments of society. We believe that every individual deserves the chance to pursue academic and career excellence.
+              This platform is designed to simplify the overwhelming process of choosing the right education path. We help students discover the best universities and courses tailored to their career goals.
             </p>
-            <div className={styles.featureList}>
-              {[
-                "Personalized Academic Guidance",
-                "Recognized Global Degrees",
-                "Scholarships for Excellence",
-                "Direct Career Counseling",
-                "Flexible Learning Paths",
-                "Industry-Standard Curriculum"
-              ].map((feature, i) => (
-                <div key={i} className={styles.featureItem}>
-                  <CheckCircle2 className={styles.featureIcon} />
-                  <span>{feature}</span>
-                </div>
-              ))}
-            </div>
+            <p className={styles.sectionDesc}>
+              By providing comprehensive information and personalized guidance, we ensure that every student can identify which course is truly suitable for them, empowering them to make informed decisions for a brighter future.
+            </p>
           </div>
         </div>
       </section>
@@ -185,7 +172,7 @@ export default function About() {
               name: "Mohamed Shameem",
               role: "CEO & Director",
               img: "/images/Mohamed-shameem.jpg",
-              bio: "As CEO, Mohamed Shameem leads TIMS Education's expansion efforts, forging partnerships with renowned global universities."
+              bio: "As CEO, Mohamed Shameem leads TIMS Education&apos;s expansion efforts, forging partnerships with renowned global universities."
             },
           ].map((director, idx) => (
             <div key={idx} className={styles.directorCard}>

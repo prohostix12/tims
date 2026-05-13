@@ -1,9 +1,9 @@
 import mongoose from 'mongoose';
+import dns from 'node:dns';
 
 // Force Google DNS ONLY in development — local DNS blocks SRV queries on this network
 // In production, this causes crashes on serverless platforms.
 if (process.env.NODE_ENV === 'development') {
-  const dns = require('node:dns');
   dns.setServers(['8.8.8.8', '8.8.4.4', '1.1.1.1']);
   dns.setDefaultResultOrder('ipv4first');
 }

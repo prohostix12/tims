@@ -14,7 +14,7 @@
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  background: linear-gradient(135deg, rgba(232, 80, 42, 0.12) 0%, rgba(232, 80, 42, 0.1) 100%);
+  background: #F0E6CE;
   padding-top: 100px;
 }
 
@@ -133,7 +133,7 @@
   position: relative;
   z-index: 10;
   background-image: 
-    linear-gradient(rgba(248, 250, 252, 0.95), rgba(248, 250, 252, 0.95)),
+    linear-gradient(rgba(240, 230, 206, 0.95), rgba(240, 230, 206, 0.95)),
     url('https://images.unsplash.com/photo-1521737711867-e3b97375f902?q=80&w=2000');
   background-size: cover;
   background-position: center;

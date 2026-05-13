@@ -1,11 +1,11 @@
 .container {
   min-height: 100vh;
-  background: var(--bg-light);
+  background: #F0E6CE;
 }
 
 /* Hero */
 .hero {
-  background: linear-gradient(135deg, #F0E6CE 0%, rgba(232, 80, 42, 0.15) 100%);
+  background: #F0E6CE;
   padding: 8rem 5% 5rem;
   position: relative;
   overflow: hidden;
@@ -121,7 +121,7 @@
 
 /* Tabs */
 .tabSection {
-  background: var(--white);
+  background: #F0E6CE;
   border-bottom: 1px solid var(--border);
   padding: 1.25rem 5%;
   position: sticky;

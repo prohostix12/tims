@@ -86,6 +86,16 @@
   color: #E8502A !important;
 }
 
+/* Home link always orange */
+.navItem:first-child .navLink {
+  color: #E8502A;
+  font-weight: 700;
+}
+
+.navItem:first-child .navLink:hover {
+  color: #c93c1a;
+}
+
 /* ---- Right side — hamburger + login ---- */
 .actions {
   display: flex;

@@ -3,14 +3,15 @@
 import React, { useEffect, useState } from 'react';
 import styles from './admin.module.css';
 import Link from 'next/link';
-import { Users, Book, School, MessageSquare, TrendingUp, TrendingDown, Loader2 } from 'lucide-react';
+import { Users, Book, School, MessageSquare, TrendingUp, TrendingDown, Loader2, Calendar } from 'lucide-react';
 
 export default function AdminDashboard() {
   const [statsData, setStatsData] = useState({
     programs: 0,
     leads: 0,
     enrollments: 0,
-    universities: 0
+    universities: 0,
+    batches: 0
   });
   const [loading, setLoading] = useState(true);
 
@@ -38,11 +39,13 @@ export default function AdminDashboard() {
     { label: 'Student Leads', value: statsData.leads, trend: 'New', isUp: true, icon: <Users size={24} color="#00122e" /> },
     { label: 'Enrollments', value: statsData.enrollments, trend: 'Confirmed', isUp: true, icon: <TrendingUp size={24} color="#10b981" /> },
     { label: 'Partner Universities', value: statsData.universities, trend: 'Global', isUp: true, icon: <School size={24} color="#00122e" /> },
+    { label: 'Active Batches', value: statsData.batches, trend: 'Academic', isUp: true, icon: <Calendar size={24} color="#E8502A" /> },
   ];
 
   const quickActions = [
     { name: 'Add University', link: '/admin/universities/new', color: '#00122e' },
     { name: 'New Program', link: '/admin/programs', color: '#ef233c' },
+    { name: 'New Batch', link: '/admin/batches/new', color: '#E8502A' },
     { name: 'View Leads', link: '/admin/enrollments', color: '#10b981' },
     { name: 'Marquee Courses', link: '/admin/marquee', color: '#E8502A' },
     { name: 'University Logos', link: '/admin/university-logos', color: '#7c3aed' },

@@ -2,7 +2,7 @@ import Link from 'next/link';
 
 export default function ExaminationPage() {
   return (
-    <main style={{ minHeight: '100vh', background: '#f8fafc', padding: '8rem 5%' }}>
+    <main style={{ minHeight: '100vh', background: '#F0E6CE', padding: '8rem 5%' }}>
       <div style={{ maxWidth: '900px', margin: '0 auto', textAlign: 'center' }}>
         <span style={{ color: 'var(--accent)', fontWeight: 700, letterSpacing: '2px', fontSize: '0.8rem', textTransform: 'uppercase' }}>Academics</span>
         <h1 style={{ fontSize: 'clamp(2rem, 5vw, 3.5rem)', fontWeight: 800, color: 'var(--primary)', margin: '1rem 0 1.5rem', letterSpacing: '-0.5px' }}>Examination</h1>

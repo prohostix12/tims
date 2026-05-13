@@ -16,6 +16,7 @@ const EnrollmentSchema: Schema = new Schema({
   phone: { type: String, required: true },
   program: { type: String, required: true },
   university: { type: String, required: true },
+  batchId: { type: Schema.Types.ObjectId, ref: 'Batch' },
   status: { 
     type: String, 
     enum: ['Pending', 'Approved', 'Rejected'], 

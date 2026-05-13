@@ -61,7 +61,7 @@ export default function NewsDetailPage() {
 
   if (loading) {
     return (
-      <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '1rem', background: '#f8fafc' }}>
+      <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '1rem', background: '#F0E6CE' }}>
         <Loader2 className="animate-spin" size={48} color="#2563eb" />
         <p style={{ color: '#64748b', fontWeight: 600 }}>Loading news article...</p>
       </div>
@@ -70,7 +70,7 @@ export default function NewsDetailPage() {
 
   if (!news) {
     return (
-      <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', background: '#f8fafc', padding: '20px' }}>
+      <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', background: '#F0E6CE', padding: '20px' }}>
         <h1 style={{ color: '#00122e' }}>Article Not Found</h1>
         <p style={{ color: '#64748b', marginBottom: '20px' }}>The news article you are looking for does not exist or has been removed.</p>
         <Link href="/news" style={{ padding: '12px 24px', background: '#2563eb', color: 'white', borderRadius: '8px', textDecoration: 'none', fontWeight: 700 }}>Back to News</Link>
@@ -79,9 +79,9 @@ export default function NewsDetailPage() {
   }
 
   return (
-    <main style={{ minHeight: '100vh', background: '#ffffff', paddingBottom: '100px' }}>
+    <main style={{ minHeight: '100vh', background: '#F0E6CE', paddingBottom: '100px' }}>
       {/* Header Section */}
-      <div style={{ background: '#f8fafc', paddingTop: '120px', paddingBottom: '60px', borderBottom: '1px solid #e2e8f0' }}>
+      <div style={{ background: '#F0E6CE', paddingTop: '120px', paddingBottom: '60px', borderBottom: '1px solid rgba(232, 80, 42, 0.1)' }}>
         <div style={{ maxWidth: '900px', margin: '0 auto', padding: '0 20px' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.9rem', color: '#64748b', marginBottom: '1.5rem' }}>
             <Link href="/" style={{ color: 'inherit', textDecoration: 'none' }}>Home</Link>
@@ -135,7 +135,7 @@ export default function NewsDetailPage() {
           dangerouslySetInnerHTML={{ __html: news.content }}
         />
 
-        <div style={{ marginTop: '80px', padding: '40px', background: '#f8fafc', borderRadius: '24px', border: '1px solid #e2e8f0', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '20px' }}>
+        <div style={{ marginTop: '80px', padding: '40px', background: '#F0E6CE', borderRadius: '24px', border: '1px solid rgba(28, 13, 7, 0.1)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '20px' }}>
           <div>
             <h4 style={{ margin: '0 0 8px', color: '#00122e' }}>Share this article</h4>
             <p style={{ margin: 0, color: '#64748b' }}>Spread the word with your academic network.</p>

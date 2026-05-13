@@ -23,7 +23,7 @@
   display: flex;
   align-items: center;
   padding: 8rem 5% 4rem;
-  background: linear-gradient(135deg, rgba(232, 80, 42, 0.12) 0%, rgba(232, 80, 42, 0.1) 100%);
+  background: #F0E6CE;
   position: relative;
 }
 
@@ -121,7 +121,7 @@
 /* Results List Section */
 .resultsListSection {
   padding: 6rem 5%;
-  background: #ffffff;
+  background: #F0E6CE;
   position: relative;
   z-index: 2;
 }
@@ -134,7 +134,7 @@
 }
 
 .universitySection {
-  background: #ffffff;
+  background: #F0E6CE;
   border-radius: 24px;
   padding: 3rem;
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.05);

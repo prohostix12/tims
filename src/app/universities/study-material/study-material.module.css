@@ -1,11 +1,11 @@
 .container {
   min-height: 100vh;
-  background: var(--bg-light);
+  background: #F0E6CE;
 }
 
 /* Hero */
 .hero {
-  background: linear-gradient(135deg, #e0f2fe 0%, #fee2e2 100%);
+  background: #F0E6CE;
   padding: 8rem 5% 5rem;
   position: relative;
   overflow: hidden;
@@ -121,7 +121,7 @@
 
 /* Filter Section */
 .filterSection {
-  background: var(--white);
+  background: #F0E6CE;
   border-bottom: 1px solid var(--border);
   padding: 1.5rem 5%;
   position: sticky;

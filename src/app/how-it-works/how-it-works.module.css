@@ -1,0 +1,199 @@
+.container {
+  min-height: 100vh;
+  background-color: #F0E6CE;
+  color: #1C0D07;
+  overflow-x: hidden;
+}
+
+/* ===== Hero Section ===== */
+.hero {
+  padding: 160px 5% 100px;
+  text-align: center;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.heroTag {
+  display: inline-block;
+  color: #E8502A;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 4px;
+  font-size: 0.9rem;
+  margin-bottom: 1.5rem;
+}
+
+.heroTitle {
+  font-size: clamp(2.5rem, 6vw, 4.5rem);
+  font-weight: 900;
+  line-height: 1.1;
+  letter-spacing: -2px;
+  margin-bottom: 2rem;
+}
+
+.heroDesc {
+  font-size: 1.25rem;
+  color: #475569;
+  line-height: 1.7;
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+/* ===== Steps Section ===== */
+.stepsSection {
+  padding: 100px 5%;
+  max-width: 1300px;
+  margin: 0 auto;
+}
+
+.stepRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8rem;
+  align-items: center;
+  margin-bottom: 12rem;
+}
+
+.stepRow:nth-child(even) {
+  direction: rtl;
+}
+
+.stepRow:nth-child(even) .stepContent {
+  direction: ltr;
+}
+
+.stepImage {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16/10;
+  border-radius: 40px;
+  overflow: hidden;
+  box-shadow: 0 40px 100px rgba(0, 32, 96, 0.1);
+  background: white;
+  transition: transform 0.5s ease;
+}
+
+.stepImage:hover {
+  transform: translateY(-10px);
+}
+
+.stepContent {
+  max-width: 500px;
+}
+
+.stepNum {
+  font-size: 1rem;
+  font-weight: 900;
+  color: #E8502A;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin-bottom: 1rem;
+  display: block;
+}
+
+.stepTitle {
+  font-size: 2.8rem;
+  font-weight: 900;
+  margin-bottom: 1.5rem;
+  line-height: 1.2;
+}
+
+.stepDesc {
+  font-size: 1.1rem;
+  line-height: 1.8;
+  color: #64748b;
+  margin-bottom: 2.5rem;
+}
+
+.stepDetailList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.stepDetailItem {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  font-weight: 700;
+  color: #1C0D07;
+  font-size: 1rem;
+}
+
+.checkCircle {
+  color: #E8502A;
+  flex-shrink: 0;
+}
+
+/* ===== Final CTA ===== */
+.finalCta {
+  padding: 120px 5%;
+  background: #241008;
+  color: white;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.finalCtaTitle {
+  font-size: 3.5rem;
+  font-weight: 900;
+  margin-bottom: 1.5rem;
+  letter-spacing: -2px;
+}
+
+.finalCtaDesc {
+  font-size: 1.3rem;
+  color: rgba(255, 255, 255, 0.8);
+  margin-bottom: 3rem;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.ctaBtn {
+  background: #E8502A;
+  color: white;
+  padding: 1.5rem 4rem;
+  border-radius: 100px;
+  font-weight: 900;
+  font-size: 1.2rem;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.ctaBtn:hover {
+  transform: scale(1.05);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 1024px) {
+  .stepRow {
+    grid-template-columns: 1fr;
+    gap: 4rem;
+    text-align: center;
+  }
+  .stepContent {
+    max-width: 100%;
+    margin: 0 auto;
+  }
+  .stepDetailList {
+    align-items: center;
+  }
+  .stepRow:nth-child(even) {
+    direction: ltr;
+  }
+}
+
+@media (max-width: 768px) {
+  .heroTitle { font-size: 2.8rem; }
+  .stepTitle { font-size: 2.2rem; }
+  .finalCtaTitle { font-size: 2.5rem; }
+}

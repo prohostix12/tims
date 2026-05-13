@@ -1,6 +1,6 @@
 .container {
   min-height: 100vh;
-  background: var(--bg-light);
+  background: #F0E6CE;
 }
 
 /* ===== Clean Highlight Hero - Universities ===== */
@@ -8,7 +8,7 @@
   position: relative;
   width: 100%;
   padding: 0 5%;
-  background: #ffffff;
+  background: #F0E6CE;
   overflow: hidden;
   height: 90vh;
   min-height: 600px;
@@ -150,7 +150,7 @@
 
 /* ===== Filter Bar ===== */
 .filterBar {
-  background: #ffffff;
+  background: #F0E6CE;
   border-bottom: 2px solid #E8502A;
   padding: 2rem 5%;
   position: sticky;
@@ -243,7 +243,7 @@
 /* ===== Grid ===== */
 .gridSection {
   padding: 5rem 5% 10rem;
-  background: #ffffff;
+  background: #F0E6CE;
 }
 
 .gridWrap {

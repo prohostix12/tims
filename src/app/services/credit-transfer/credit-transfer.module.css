@@ -272,7 +272,7 @@
   display: flex;
   gap: 1.5rem;
   align-items: flex-start;
-  background: #ffffff;
+  background: #F0E6CE;
   padding: 2.5rem;
   border-radius: 12px;
   border: 1px solid rgba(28, 13, 7, 0.1);
@@ -384,7 +384,7 @@
 .splitSection {
   display: grid;
   grid-template-columns: 1fr 1.1fr;
-  background: #ffffff;
+  background: #F0E6CE;
   min-height: 300px;
   overflow: hidden;
 }

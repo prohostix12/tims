@@ -1,0 +1,66 @@
+.bannerWrapper {
+  width: 100%;
+  overflow: hidden;
+  background: transparent;
+  padding: 2.5rem 0;
+  position: relative;
+}
+
+.bannerTrack {
+  display: flex;
+  width: max-content;
+  animation: scroll 35s linear infinite;
+  gap: 2rem;
+  align-items: center;
+  padding: 0 1rem;
+}
+
+@keyframes scroll {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-33.333%); }
+}
+
+.logoCard {
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 1rem 2rem;
+  height: 100px;
+  width: 220px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  border: 1px solid rgba(0, 0, 0, 0.03);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  flex-shrink: 0;
+}
+
+.logoCard:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
+}
+
+.logoImg {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  filter: grayscale(10%);
+  opacity: 0.9;
+  transition: filter 0.3s ease, opacity 0.3s ease;
+}
+
+.logoCard:hover .logoImg {
+  filter: grayscale(0%);
+  opacity: 1;
+}
+
+@media (max-width: 768px) {
+  .logoCard {
+    width: 160px;
+    height: 80px;
+    padding: 0.75rem 1.5rem;
+  }
+  .bannerTrack {
+    gap: 1.5rem;
+  }
+}

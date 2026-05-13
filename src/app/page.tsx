@@ -16,6 +16,9 @@ import {
   CreditCard,
   Play,
   Phone,
+  Target,
+  Sparkles,
+  UserPlus,
 } from 'lucide-react';
 import OnlineCoursesSection from '@/components/OnlineCoursesSection';
 
@@ -75,6 +78,7 @@ export default function Home() {
   const [displayText, setDisplayText] = useState('');
   const [isDeleting, setIsDeleting] = useState(false);
   const [showFloating, setShowFloating] = useState(false);
+  const [activeStep, setActiveStep] = useState(1);
   const router = useRouter();
 
   const MUST_KNOW_SLIDES = [
@@ -203,11 +207,11 @@ export default function Home() {
               <BookOpen size={26} />
             </div>
             <div className={styles.heroStack}>
-              <span style={{ fontSize: '0.85rem' }}>India's No.1</span>
+              <span style={{ fontSize: '0.85rem' }}>India&apos;s No.1</span>
               <span style={{ fontSize: '0.85rem' }}>Course finding</span>
               <span style={{ fontSize: '0.85rem' }}>platform</span>
             </div>
-            <Link href="/about" className={styles.heroStoryLink}>
+            <Link href="#how-it-works" className={styles.heroStoryLink}>
               Explore Now <ArrowRight size={14} />
             </Link>
             <div className={styles.heroLeftOrangeBar} />
@@ -435,7 +439,6 @@ export default function Home() {
         </div>
       </section>
 
-
       {/* ===== CONSULTATION CTA ===== */}
       <section className={styles.consultSection}>
         <div className={styles.consultInner}>
@@ -501,6 +504,104 @@ export default function Home() {
               Contact Us
             </Link>
           </div>
+        </div>
+      </section>
+
+      {/* ===== HOW IT WORKS — interactive accordion ===== */}
+      <section id="how-it-works" className={styles.howItWorksSection}>
+        <div className={styles.sectionHeader}>
+          <span className={styles.sectionTag}>The Process</span>
+          <h2 className={styles.sectionTitle}>Your Journey to the Perfect Course</h2>
+          <p className={styles.sectionSub}>
+            Discover how our intelligent Course Finder algorithm matches your profile
+            with the best universities in India and abroad.
+          </p>
+        </div>
+
+        <div className={styles.howItWorksGrid}>
+          {/* Left — step accordion */}
+          <div className={styles.stepSelectors}>
+            {[
+              {
+                id: 1,
+                title: 'Identity & Interest',
+                icon: <UserPlus size={22} />,
+                desc: 'Tell us who you are. We verify your basic details to personalise every recommendation from the start.',
+                bullets: ['Quick Name & Contact entry', 'Secure and private lead handling'],
+              },
+              {
+                id: 2,
+                title: 'Smart 10-Step Quiz',
+                icon: <BookOpen size={22} />,
+                desc: 'Answer 10 targeted questions covering your qualification, preferred study mode, field of interest, budget, and career goals.',
+                bullets: ['Qualification & Status analysis', 'Study Mode, Field & Budget preferences'],
+              },
+              {
+                id: 3,
+                title: 'Algorithmic Matching',
+                icon: <Sparkles size={22} />,
+                desc: 'Our engine scores every program across 50+ UGC-approved universities in real-time against your answers.',
+                bullets: ['Keyword-based interest scoring', 'Real-time fee & accreditation filtering'],
+              },
+              {
+                id: 4,
+                title: 'Curated Results',
+                icon: <Target size={22} />,
+                desc: 'We present your personalised course matches ranked by relevance. No clutter — just the best paths for your success.',
+                bullets: ['Personalised course recommendations', 'Instant link to expert counselors'],
+              },
+            ].map((s) => (
+              <div
+                key={s.id}
+                className={`${styles.stepSelectorItem} ${activeStep === s.id ? styles.stepActive : ''}`}
+                onClick={() => setActiveStep(s.id)}
+              >
+                <div className={styles.stepSelectorHeader}>
+                  <div className={styles.stepIconBox}>{s.icon}</div>
+                  <div className={styles.stepHeaderText}>
+                    <span className={styles.stepMiniTag}>Step 0{s.id}</span>
+                    <h3 className={styles.stepTitleLabel}>{s.title}</h3>
+                  </div>
+                  <div className={`${styles.stepChevron} ${activeStep === s.id ? styles.stepChevronOpen : ''}`}>
+                    <ArrowRight size={16} />
+                  </div>
+                </div>
+                <div className={`${styles.stepRevealContent} ${activeStep === s.id ? styles.stepRevealOpen : ''}`}>
+                  <p className={styles.stepRevealDesc}>{s.desc}</p>
+                  <ul className={styles.stepBulletList}>
+                    {s.bullets.map((b, bi) => (
+                      <li key={bi}><CheckCircle size={14} /><span>{b}</span></li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Right — image panel */}
+          <div className={styles.howItWorksDisplay}>
+            <div className={styles.displayFrame}>
+              {[1, 2, 3, 4].map((id) => (
+                <div
+                  key={id}
+                  className={`${styles.displayImage} ${activeStep === id ? styles.displayActive : ''}`}
+                >
+                  <Image
+                    src={`/images/how-it-works/step${id}.png`}
+                    alt={`Step ${id} visual`}
+                    fill
+                    style={{ objectFit: 'cover' }}
+                  />
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        <div style={{ textAlign: 'center', marginTop: '4rem' }}>
+          <button className={styles.redBtn} onClick={openCourseFinder}>
+            Start Course Finder Now <ArrowRight size={18} />
+          </button>
         </div>
       </section>
 

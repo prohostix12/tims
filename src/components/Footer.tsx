@@ -29,11 +29,25 @@ const Footer = () => {
           <div className={styles.contactInfo}>
             <div className={styles.contactItem}>
               <Mail size={16} color="#E8502A" className={styles.iconMargin} />
-              <a href="mailto:info@timseducation.com">info@timseducation.com</a>
+              <a href="mailto:info@findyouruniversity.com">info@findyouruniversity.com</a>
             </div>
             <div className={styles.contactItem}>
               <Phone size={16} color="#E8502A" className={styles.iconMargin} />
               <a href="tel:+919961967777">+91 9961967777</a>
+            </div>
+            <div className={styles.contactItem} style={{ marginTop: '0.75rem', alignItems: 'flex-start' }}>
+              <MapPin size={16} color="#E8502A" className={styles.iconMargin} style={{ flexShrink: 0 }} />
+              <span style={{ fontSize: '0.85rem', lineHeight: '1.5' }}>
+                2nd Floor, Pamls Tower, near Central Bank,<br />
+                Thazhepalam, Tirur, Kerala 676101
+              </span>
+            </div>
+            <div className={styles.contactItem} style={{ marginTop: '0.75rem', alignItems: 'flex-start' }}>
+              <MapPin size={16} color="#E8502A" className={styles.iconMargin} style={{ flexShrink: 0 }} />
+              <span style={{ fontSize: '0.85rem', lineHeight: '1.5' }}>
+                2nd floor Al madeela complex, Calicut road,<br />
+                Edappal 679576 MALAPPURAM
+              </span>
             </div>
           </div>
           <div className={styles.socialIcons}>
@@ -54,6 +68,21 @@ const Footer = () => {
               <Phone size={16} color="#E8502A" className={styles.iconMargin} />
               <a href="tel:+919961967777">+91 9961967777</a>
             </div>
+            <div className={styles.contactItem} style={{ marginTop: '0.75rem', alignItems: 'flex-start' }}>
+              <MapPin size={16} color="#E8502A" className={styles.iconMargin} style={{ flexShrink: 0 }} />
+              <span style={{ fontSize: '0.85rem', lineHeight: '1.5' }}>
+                YMCA Cross Road,<br />
+                Kozhikode<br />
+                Kerala – 673001
+              </span>
+            </div>
+            <div className={styles.contactItem} style={{ marginTop: '0.75rem', alignItems: 'flex-start' }}>
+              <MapPin size={16} color="#E8502A" className={styles.iconMargin} style={{ flexShrink: 0 }} />
+              <span style={{ fontSize: '0.85rem', lineHeight: '1.5' }}>
+                6th Floor, National Pearl Star building,Edappally,<br />
+                Kochi, Ernakulam, Kerala 682024
+              </span>
+            </div>
           </div>
           <div className={styles.socialIcons}>
             <a href="https://facebook.com" aria-label="Facebook" className={styles.socialIcon} target="_blank" rel="noopener noreferrer"><Facebook size={18} /></a>
@@ -73,6 +102,13 @@ const Footer = () => {
               <Phone size={16} color="#E8502A" className={styles.iconMargin} />
               <a href="tel:+919961967777">+91 9961967777</a>
             </div>
+            <div className={styles.contactItem} style={{ marginTop: '0.75rem', alignItems: 'flex-start' }}>
+              <MapPin size={16} color="#E8502A" className={styles.iconMargin} style={{ flexShrink: 0 }} />
+              <span style={{ fontSize: '0.85rem', lineHeight: '1.5' }}>
+                2nd Floor, Pamls Tower, near Central Bank,<br />
+                Thazhepalam, Tirur, Kerala 676101
+              </span>
+            </div>
           </div>
           <div className={styles.socialIcons}>
             <a href="https://facebook.com" aria-label="Facebook" className={styles.socialIcon} target="_blank" rel="noopener noreferrer"><Facebook size={18} /></a>
@@ -86,7 +122,7 @@ const Footer = () => {
           <div className={styles.contactInfo}>
             <div className={styles.contactItem}>
               <Mail size={16} color="#E8502A" className={styles.iconMargin} />
-              <a href="mailto:info@timseducation.com">info@timseducation.com</a>
+              <a href="mailto:info@findyouruniversity.com">info@findyouruniversity.com</a>
             </div>
             <div className={styles.contactItem}>
               <Phone size={16} color="#E8502A" className={styles.iconMargin} />
