@@ -4,14 +4,15 @@ import Batch from '@/models/Batch';
 
 export async function GET(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params;
     await connectDB();
-    const batch = await Batch.findById(params.id)
+    const batch = await Batch.findById(id)
       .populate('universityId', 'name')
       .populate('programId', 'name');
-      
+
     if (!batch) {
       return NextResponse.json({ error: 'Batch not found' }, { status: 404 });
     }
@@ -23,13 +24,14 @@ export async function GET(
 
 export async function PUT(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params;
     await connectDB();
     const body = await request.json();
-    
-    const updatedBatch = await Batch.findByIdAndUpdate(params.id, body, { new: true });
+
+    const updatedBatch = await Batch.findByIdAndUpdate(id, body, { new: true });
     if (!updatedBatch) {
       return NextResponse.json({ error: 'Batch not found' }, { status: 404 });
     }
@@ -41,11 +43,12 @@ export async function PUT(
 
 export async function DELETE(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params;
     await connectDB();
-    const deletedBatch = await Batch.findByIdAndDelete(params.id);
+    const deletedBatch = await Batch.findByIdAndDelete(id);
     if (!deletedBatch) {
       return NextResponse.json({ error: 'Batch not found' }, { status: 404 });
     }
