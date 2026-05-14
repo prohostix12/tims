@@ -2,6 +2,7 @@
   min-height: 100vh;
   background-color: #F0E6CE;
   color: #1C0D07;
+  overflow-x: hidden;
 }
 
 .pageGlow {
@@ -680,8 +681,13 @@
   }
   .coursesGrid {
     grid-template-columns: 1fr;
-    padding: 0 0.75rem 2.5rem;
+    padding: 0 1rem 2.5rem;
     gap: 1.25rem;
+    justify-items: center;
+  }
+  .courseCard {
+    width: 100%;
+    max-width: 400px;
   }
   .searchBar { padding: 0 1rem; }
   .instTitle { font-size: clamp(1.4rem, 7vw, 2rem); }
