@@ -2082,15 +2082,18 @@
     font-size: 1.25em;
   }
   .heroBtns {
-    flex-wrap: wrap;
-    gap: 0.6rem;
+    flex-direction: column;
+    gap: 0.75rem;
   }
   .heroBtnPrimary,
   .heroBtnFinder {
     width: 100%;
     justify-content: center;
-    padding: 0.75rem 1.25rem;
-    font-size: 0.9rem;
+    padding: 1rem 1.5rem;
+    font-size: 1rem;
+    font-weight: 800;
+    border-radius: 8px;
+    letter-spacing: 0.3px;
   }
   .heroCredRow {
     gap: 0.6rem;
@@ -2287,8 +2290,8 @@
   }
   .heroBtnPrimary,
   .heroBtnFinder {
-    font-size: 0.9rem;
-    padding: 12px 18px;
+    font-size: 1rem;
+    padding: 1rem 1.5rem;
   }
 
   .statsBar {
