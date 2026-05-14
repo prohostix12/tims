@@ -287,11 +287,6 @@ export default function Home() {
                     <p className={styles.impactLabel}>{IMPACT_CARDS[activeImpactIdx].label}</p>
                   </div>
                 </div>
-                <div className={styles.impactAvatars}>
-                  <img src="/images/Mohamed-shameem.jpg" alt="Learner 1" className={styles.impactAvatarImg} style={{ zIndex: 3 }} />
-                  <img src="/images/Nabeel-cm.jpg" alt="Learner 2" className={styles.impactAvatarImg} style={{ zIndex: 2, marginLeft: '-10px' }} />
-                  <img src="/images/Adv-ShoukathAli-pootheri.jpg" alt="Learner 3" className={styles.impactAvatarImg} style={{ zIndex: 1, marginLeft: '-10px' }} />
-                </div>
               </div>
             </div>
           </div>
@@ -317,12 +312,9 @@ export default function Home() {
 
           {/* Right — dark panel */}
           <div className={styles.impactRight}>
-            <div className={styles.impactPlayRow}>
               <div className={styles.impactPlayBtn}>
                 <Play size={18} fill="currentColor" style={{ marginLeft: '3px' }} />
               </div>
-              <img src="/images/Mohamed-shameem.jpg" alt="Expert Mentor" className={styles.impactExpertAv} />
-            </div>
             <p className={styles.impactExpertText}>
               Perfect your learning with expert faculties
             </p>
@@ -601,54 +593,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ===== SEO ===== */}
-      <section className={styles.seoSection}>
-        <div className={styles.seoInner}>
-          <h2 className={styles.seoTitle}>
-            Best Distance Education Centre in Kerala – Building Futures with Flexible Learning
-          </h2>
-          <div className={styles.seoGrid}>
-            <div className={styles.seoImg}>
-              <Image
-                src="https://timseducation.com/wp-content/uploads/2025/11/A-beautiful-girl-student-smiling-holding-a-book-photography-_-Premium-AI-generated-image.webp"
-                alt="Student smiling"
-                fill
-                sizes="(max-width: 768px) 100vw, 50vw"
-                style={{ objectFit: 'contain' }}
-                unoptimized
-              />
-            </div>
-            <div className={styles.seoContent}>
-              <p>
-                TIMS Education has grown by helping students and working professionals complete their studies without
-                disturbing their daily routine. Over the years, many learners have trusted us because they feel comfortable
-                learning at their own pace with the right guidance beside them. That&apos;s one of the reasons people often
-                call us the <strong>best distance education centre in Kerala</strong>.
-              </p>
-              <p>
-                We focus on simple admission procedures, clear support, and courses that genuinely help in building a
-                career. We try to make the process as easy as possible for people who want to finish a degree they dropped
-                years ago or get a better job by getting a higher level of education. Many who studied with us say they
-                chose TIMS because it felt like the <strong>best distance education centre in Kerala</strong> for their needs.
-              </p>
-              <p>
-                With experienced mentors and reliable university tie-ups, we continue to be the{' '}
-                <strong>best distance education centre in Kerala</strong> for learners who want steady progress. If
-                you&apos;re planning your next step, you&apos;ll understand why so many consider us the{' '}
-                <strong>best distance education centre in Kerala</strong>.
-              </p>
-              <div className={styles.seoLinks}>
-                <Link href="/services/attestation" className={styles.viewAllBtn}>
-                  Embassy Attestation <ArrowRight size={18} />
-                </Link>
-                <Link href="/services/credit-transfer" className={styles.viewAllBtnOutline}>
-                  Credit Transfer <ArrowRight size={18} />
-                </Link>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
 
       <button
         className={`${styles.floatingFinderBtn}${showFloating ? ` ${styles.floatingFinderBtnVisible}` : ''}`}

@@ -4,6 +4,20 @@ import React, { useState, useEffect } from 'react';
 import styles from './results.module.css';
 import { Award, GraduationCap, ArrowUpRight, Loader2, ClipboardCheck } from 'lucide-react';
 
+const handleResultOpen = (marksheetUrl: string, courseName: string) => {
+  if (!marksheetUrl) return;
+  if (marksheetUrl.startsWith('data:')) {
+    const link = document.createElement('a');
+    link.href = marksheetUrl;
+    link.download = `${courseName || 'result'}.pdf`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  } else {
+    window.open(marksheetUrl, '_blank', 'noopener,noreferrer');
+  }
+};
+
 export default function ResultsPage() {
   const [results, setResults] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -77,16 +91,18 @@ export default function ResultsPage() {
                   <div className={styles.resultsGrid}>
                     {groupedResults[uniName].map((result: any) => (
                       <div key={result._id} className={styles.resultItem}>
-                        <div className={styles.semesterTag}>{result.semester}</div>
-                        <a 
-                          href={result.marksheetUrl} 
-                          target="_blank" 
-                          rel="noopener noreferrer" 
+                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                          <div className={styles.semesterTag}>{result.semester}</div>
+                          <div className={styles.resultLabel}>Result</div>
+                        </div>
+                        <button
+                          onClick={() => handleResultOpen(result.marksheetUrl, result.course?.name || 'Result Document')}
                           className={styles.courseLink}
+                          style={{ background: 'none', border: 'none', cursor: 'pointer', textAlign: 'left' }}
                         >
                           {result.course?.name || 'Result Document'}
                           <ArrowUpRight size={20} />
-                        </a>
+                        </button>
                       </div>
                     ))}
                   </div>

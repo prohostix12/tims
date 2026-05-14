@@ -15,20 +15,12 @@ const FooterSecondary = () => {
           <div className={styles.brandSection}>
             <div className={styles.brandLogo}>
               <Image
-                src="/images/demo logo5.png"
-                alt="Find My Course"
-                width={150}
-                height={50}
+                src="/images/footer-logo-v2.png.png"
+                alt="Find Ur University"
+                width={140}
+                height={140}
                 style={{ objectFit: 'contain' }}
               />
-              <p className={styles.brandName}>Find Your University</p>
-            </div>
-            <div className={styles.socialIcons}>
-              <a href="#" className={styles.socialIcon} aria-label="Facebook"><Facebook size={18} /></a>
-              <a href="#" className={styles.socialIcon} aria-label="Twitter"><Twitter size={18} /></a>
-              <a href="#" className={styles.socialIcon} aria-label="Instagram"><Instagram size={18} /></a>
-              <a href="#" className={styles.socialIcon} aria-label="LinkedIn"><Linkedin size={18} /></a>
-              <a href="#" className={styles.socialIcon} aria-label="Youtube"><Youtube size={18} /></a>
             </div>
           </div>
         </div>
@@ -54,10 +46,16 @@ const FooterSecondary = () => {
             <div className={styles.contactItem}>
               <MapPin className={styles.icon} size={18} />
               <div className={styles.contactText}>
-                2nd Floor, Pamls Tower, near Central Bank,<br />
-                Thazhepalam, Tirur, Kerala 676101
+                Delhi | UAE | Kochi | Malappuram | Calicut
               </div>
             </div>
+          </div>
+          <div className={styles.socialIcons} style={{ marginTop: '1.5rem' }}>
+            <a href="#" className={styles.socialIcon} aria-label="Facebook"><Facebook size={18} /></a>
+            <a href="#" className={styles.socialIcon} aria-label="Twitter"><Twitter size={18} /></a>
+            <a href="#" className={styles.socialIcon} aria-label="Instagram"><Instagram size={18} /></a>
+            <a href="#" className={styles.socialIcon} aria-label="LinkedIn"><Linkedin size={18} /></a>
+            <a href="#" className={styles.socialIcon} aria-label="Youtube"><Youtube size={18} /></a>
           </div>
         </div>
 

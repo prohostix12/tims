@@ -9,11 +9,23 @@ import styles from './syllabus.module.css';
 
 interface Syllabus {
   _id: string;
-  courseName: string;
-  universityName: string;
+  course: { _id: string; name: string } | null;
+  university: { _id: string; name: string } | null;
+  semester: string;
   fileUrl: string;
+  status: string;
   createdAt: string;
 }
+
+const handleDownload = (fileUrl: string, courseName: string) => {
+  if (!fileUrl) return;
+  const link = document.createElement('a');
+  link.href = fileUrl;
+  link.download = `${courseName || 'syllabus'}.pdf`;
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+};
 
 export default function SyllabusPage() {
   const [syllabusList, setSyllabusList] = useState<Syllabus[]>([]);
@@ -26,7 +38,7 @@ export default function SyllabusPage() {
         const res = await fetch('/api/admin/syllabus');
         const data = await res.json();
         if (Array.isArray(data)) {
-          setSyllabusList(data);
+          setSyllabusList(data.filter((s: Syllabus) => s.status !== 'archived'));
         }
       } catch (err) {
         setError('Failed to load syllabus data.');
@@ -86,17 +98,16 @@ export default function SyllabusPage() {
                     <BookOpen size={30} />
                   </div>
                   <div className={styles.cardContent}>
-                    <h3>{item.courseName}</h3>
-                    <p>{item.universityName}</p>
+                    <h3>{item.course?.name ?? 'Unknown Course'}</h3>
+                    <p>{item.university?.name ?? 'Unknown University'}</p>
+                    {item.semester && <span style={{ fontSize: '0.8rem', color: '#94a3b8' }}>Semester: {item.semester}</span>}
                   </div>
-                  <a 
-                    href={item.fileUrl} 
-                    target="_blank" 
-                    rel="noopener noreferrer"
+                  <button
+                    onClick={() => handleDownload(item.fileUrl, item.course?.name ?? 'syllabus')}
                     className={styles.downloadBtn}
                   >
                     <Download size={18} /> Download Syllabus
-                  </a>
+                  </button>
                 </div>
               ))}
             </div>

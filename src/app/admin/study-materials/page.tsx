@@ -72,6 +72,16 @@ export default function StudyMaterialsAdminPage() {
     }
   };
 
+  const handleDownload = (fileUrl: string, subject: string) => {
+    if (!fileUrl) return;
+    const link = document.createElement('a');
+    link.href = fileUrl;
+    link.download = `${subject || 'study-material'}.pdf`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
@@ -233,9 +243,9 @@ export default function StudyMaterialsAdminPage() {
                   </td>
                   <td>
                     <div style={{ display: 'flex', gap: '8px' }}>
-                      <a href={item.fileUrl} target="_blank" rel="noopener noreferrer" className={styles.iconBtn} title="Download">
+                      <button onClick={() => handleDownload(item.fileUrl, item.subject)} className={styles.iconBtn} title="Download" style={{ background: 'none', border: 'none', cursor: 'pointer' }}>
                         <Download size={18} />
-                      </a>
+                      </button>
                       <button className={styles.iconBtn} onClick={() => handleEdit(item)} title="Edit">
                         <Edit size={18} />
                       </button>

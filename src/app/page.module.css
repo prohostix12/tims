@@ -108,7 +108,7 @@
   z-index: 2;
   position: relative;
   overflow: hidden;
-  height: 100%;
+  height: calc(100% + 95px);
 }
 
 .heroLeftOrangeBar {
@@ -176,20 +176,23 @@
   overflow: visible;
   background: #F0E6CE;
   padding: 68px 0 0;
-  height: 100%;
+  height: calc(100% + 95px);
   z-index: 50;
 }
 
 .heroImg {
-  display: block;
+  position: absolute;
+  top: 10px;
+  bottom: -3px;
+  left: 50%;
+  transform: translateX(-50%);
   width: auto;
-  height: 75%;
-  max-width: 100%;
+  height: auto;
+  max-width: 90%;
   object-fit: contain;
-  object-position: top center;
-  position: relative;
+  object-position: bottom center;
   z-index: 50;
-  margin-bottom: 0;
+  display: block;
 }
 
 /* Right panel — huge headline + CTAs */
@@ -202,7 +205,7 @@
   overflow: hidden;
   background: #F0E6CE;
   padding: 1.5rem 2rem 1.5rem;
-  height: 100%;
+  height: calc(100% + 95px);
 }
 
 
@@ -485,6 +488,9 @@
   display: flex;
   flex-direction: column;
   flex: 1;
+  justify-content: flex-end;
+  align-items: center;
+  padding-bottom: 3.5rem;
   animation: cardFadeSlide 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) both;
 }
 
@@ -501,9 +507,10 @@
 
 .impactMiddleRow {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
   margin-bottom: 0.5rem;
+  width: 100%;
 }
 
 .impactStatBlock {
@@ -513,11 +520,11 @@
 }
 
 .impactNum {
-  font-size: 2.6rem;
-  font-weight: 300;
+  font-size: 3.5rem;
+  font-weight: 800;
   color: #ffffff;
   line-height: 1;
-  letter-spacing: -1px;
+  letter-spacing: -1.5px;
   margin: 0;
 }
 
@@ -529,9 +536,10 @@
 }
 
 .impactPlus {
-  font-size: 1.2rem;
+  font-size: 2.2rem;
+  font-weight: 700;
   line-height: 1;
-  margin-bottom: 2px;
+  margin-bottom: -2px;
 }
 
 .impactLabel {
@@ -598,6 +606,7 @@
   overflow: hidden;
   position: relative;
   z-index: 1;
+  border-top: 1px solid rgba(28, 13, 7, 0.12);
 }
 
 .impactCenterLeft {
@@ -2004,10 +2013,10 @@
 
   /* Compact orange banner on mobile */
   .heroLeft {
-    padding: 1rem 1.25rem;
-    padding-top: 1rem;
+    order: 3;
+    padding: 1.5rem 1.25rem;
     border-right: none;
-    border-bottom: 2px solid rgba(255, 255, 255, 0.15);
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
     flex-direction: row;
     flex-wrap: wrap;
     gap: 0.75rem;
@@ -2040,7 +2049,7 @@
 
   /* Center image — show after text on mobile */
   .heroCenter {
-    order: 3;
+    order: 2;
     min-height: 260px;
     max-height: 360px;
     border-right: none;
@@ -2053,7 +2062,7 @@
 
   /* Right panel — headline first on mobile */
   .heroRight {
-    order: 2;
+    order: 1;
     padding: 2rem 1.25rem;
     gap: 1.25rem;
   }

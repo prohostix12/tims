@@ -14,6 +14,16 @@ interface StudyMaterial {
   createdAt: string;
 }
 
+const handleDownload = (fileUrl: string, subject: string) => {
+  if (!fileUrl) return;
+  const link = document.createElement('a');
+  link.href = fileUrl;
+  link.download = `${subject || 'study-material'}.pdf`;
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+};
+
 export default function StudyMaterialPage() {
   const [search, setSearch] = useState('');
   const [materials, setMaterials] = useState<StudyMaterial[]>([]);
@@ -117,14 +127,12 @@ export default function StudyMaterialPage() {
                   </div>
                   <div className={styles.cardFooter}>
                     <span className={styles.cardSize}>DOC/PDF</span>
-                    <a 
-                      href={m.fileUrl} 
-                      target="_blank" 
-                      rel="noopener noreferrer" 
+                    <button
+                      onClick={() => handleDownload(m.fileUrl, m.subject)}
                       className={styles.downloadBtn}
                     >
                       <Download size={15} /> View / Download
-                    </a>
+                    </button>
                   </div>
                 </div>
               ))

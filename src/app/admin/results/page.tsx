@@ -89,6 +89,20 @@ export default function ResultsAdminPage() {
     }
   };
 
+  const handleResultOpen = (marksheetUrl: string, courseName: string) => {
+    if (!marksheetUrl) return;
+    if (marksheetUrl.startsWith('data:')) {
+      const link = document.createElement('a');
+      link.href = marksheetUrl;
+      link.download = `${courseName || 'result'}.pdf`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    } else {
+      window.open(marksheetUrl, '_blank', 'noopener,noreferrer');
+    }
+  };
+
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
@@ -256,9 +270,9 @@ export default function ResultsAdminPage() {
                   </td>
                   <td>
                     <div style={{ display: 'flex', gap: '8px' }}>
-                      <a href={item.marksheetUrl} target="_blank" rel="noopener noreferrer" className={styles.iconBtn} title="View Result">
+                      <button onClick={() => handleResultOpen(item.marksheetUrl, item.course?.name)} className={styles.iconBtn} title="View Result" style={{ background: 'none', border: 'none', cursor: 'pointer' }}>
                         {item.marksheetUrl?.startsWith('data:') ? <FileText size={18} /> : <ExternalLink size={18} />}
-                      </a>
+                      </button>
                       <button className={styles.iconBtn} onClick={() => handleEdit(item)} title="Edit">
                         <Plus size={18} style={{ transform: 'rotate(45deg)' }} />
                       </button>

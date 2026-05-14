@@ -72,6 +72,16 @@ export default function SyllabusAdminPage() {
     }
   };
 
+  const handleDownload = (fileUrl: string, name: string) => {
+    if (!fileUrl) return;
+    const link = document.createElement('a');
+    link.href = fileUrl;
+    link.download = `${name || 'syllabus'}.pdf`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
@@ -222,9 +232,9 @@ export default function SyllabusAdminPage() {
                     </div>
                   </td>
                   <td>
-                    <a href={item.fileUrl} target="_blank" rel="noopener noreferrer" style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', color: '#2563eb', fontWeight: 600, fontSize: '0.85rem' }}>
+                    <button onClick={() => handleDownload(item.fileUrl, item.course?.name)} style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', color: '#2563eb', fontWeight: 600, fontSize: '0.85rem', background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}>
                       <Download size={16} /> View PDF
-                    </a>
+                    </button>
                   </td>
                   <td>
                     <div style={{ display: 'flex', gap: '12px' }}>

@@ -59,9 +59,7 @@ export default function ContactPage() {
       <section className={styles.heroHeader}>
         <div className={styles.heroContent}>
           <div className={styles.heroLeft}>
-            <p className={styles.heroCrumb}>
-              <Link href="/">Home</Link> / Contact
-            </p>
+
             <span className={styles.heroTag}>Support Center</span>
             <h1 className={styles.heroTitle}>
               Dedicated <span style={{ color: '#ef233c' }}>Academic Support</span>

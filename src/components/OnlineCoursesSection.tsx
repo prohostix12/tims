@@ -15,7 +15,6 @@ const courseData: Record<string, { name: string; icon: React.ReactNode }[]> = {
     { name: 'M.Com',  icon: <BarChart2 size={32} /> },
     { name: 'M.Sc',   icon: <FlaskConical size={32} /> },
     { name: 'MA',     icon: <BookOpen size={32} /> },
-    { name: 'M.Tech', icon: <Cpu size={32} /> },
   ],
   'Online UG': [
     { name: 'BBA',   icon: <Briefcase size={32} /> },
@@ -23,7 +22,6 @@ const courseData: Record<string, { name: string; icon: React.ReactNode }[]> = {
     { name: 'B.Com', icon: <Landmark size={32} /> },
     { name: 'B.Sc',  icon: <FlaskConical size={32} /> },
     { name: 'BA',    icon: <Globe size={32} /> },
-    { name: 'B.Ed',  icon: <BookOpen size={32} /> },
   ],
   'Diploma': [
     { name: 'Data Science',   icon: <BarChart2 size={32} /> },
@@ -39,6 +37,16 @@ const courseData: Record<string, { name: string; icon: React.ReactNode }[]> = {
     { name: 'UG Credit Transfer', icon: <ArrowRightLeft size={32} /> },
     { name: 'PG Credit Transfer', icon: <ArrowRightLeft size={32} /> },
     { name: 'Diploma Credit Transfer', icon: <GraduationCap size={32} /> },
+  ],
+  'SIDP': [
+    { name: 'BBA + HR MANAGEMENT', icon: <Briefcase size={32} /> },
+    { name: 'BBA + HOSPITAL ADMINISTRATION', icon: <Stethoscope size={32} /> },
+    { name: 'BBA + DIGITAL MARKETING', icon: <Globe size={32} /> },
+    { name: 'BBA + LOGISTICS', icon: <Package size={32} /> },
+    { name: 'BBA + BUSINESS MANAGEMENT', icon: <BarChart2 size={32} /> },
+    { name: 'BA + MTTC', icon: <Globe size={32} /> },
+    { name: 'BCOM + ACCA', icon: <Landmark size={32} /> },
+    { name: 'BCOM + ADVANCED ACCOUNTANTS', icon: <Database size={32} /> },
   ],
 };
 

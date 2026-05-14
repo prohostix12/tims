@@ -14,13 +14,12 @@ const Footer = () => {
         <div className={styles.footerCol}>
           <div style={{ marginBottom: '1rem' }}>
             <Image
-              src="/images/demo logo5.png"
-              alt="Find Your University"
-              width={280}
-              height={90}
-              style={{ objectFit: 'contain', display: 'block', marginLeft: '-60px' }}
+              src="/images/footer-logo-v2.png.png"
+              alt="Find Ur University"
+              width={180}
+              height={180}
+              style={{ objectFit: 'contain', display: 'block', margin: '0 0 1rem 0' }}
             />
-            <p className={styles.footerBrandName}>Find Your University</p>
           </div>
         </div>
 
@@ -28,22 +27,22 @@ const Footer = () => {
           <h3>TIMS</h3>
           <div className={styles.contactInfo}>
             <div className={styles.contactItem}>
-              <Mail size={16} color="#E8502A" className={styles.iconMargin} />
+              <Mail size={16} color="#ffffff" className={styles.iconMargin} />
               <a href="mailto:info@findyouruniversity.com">info@findyouruniversity.com</a>
             </div>
             <div className={styles.contactItem}>
-              <Phone size={16} color="#E8502A" className={styles.iconMargin} />
+              <Phone size={16} color="#ffffff" className={styles.iconMargin} />
               <a href="tel:+919961967777">+91 9961967777</a>
             </div>
             <div className={styles.contactItem} style={{ marginTop: '0.75rem', alignItems: 'flex-start' }}>
-              <MapPin size={16} color="#E8502A" className={styles.iconMargin} style={{ flexShrink: 0 }} />
+              <MapPin size={16} color="#ffffff" className={styles.iconMargin} style={{ flexShrink: 0 }} />
               <span style={{ fontSize: '0.85rem', lineHeight: '1.5' }}>
                 2nd Floor, Pamls Tower, near Central Bank,<br />
                 Thazhepalam, Tirur, Kerala 676101
               </span>
             </div>
             <div className={styles.contactItem} style={{ marginTop: '0.75rem', alignItems: 'flex-start' }}>
-              <MapPin size={16} color="#E8502A" className={styles.iconMargin} style={{ flexShrink: 0 }} />
+              <MapPin size={16} color="#ffffff" className={styles.iconMargin} style={{ flexShrink: 0 }} />
               <span style={{ fontSize: '0.85rem', lineHeight: '1.5' }}>
                 2nd floor Al madeela complex, Calicut road,<br />
                 Edappal 679576 MALAPPURAM
@@ -61,15 +60,15 @@ const Footer = () => {
           <h3>EDUMENTORA</h3>
           <div className={styles.contactInfo}>
             <div className={styles.contactItem}>
-              <Mail size={16} color="#E8502A" className={styles.iconMargin} />
+              <Mail size={16} color="#ffffff" className={styles.iconMargin} />
               <a href="mailto:info@edumentora.in">info@edumentora.in</a>
             </div>
             <div className={styles.contactItem}>
-              <Phone size={16} color="#E8502A" className={styles.iconMargin} />
+              <Phone size={16} color="#ffffff" className={styles.iconMargin} />
               <a href="tel:+919961967777">+91 9961967777</a>
             </div>
             <div className={styles.contactItem} style={{ marginTop: '0.75rem', alignItems: 'flex-start' }}>
-              <MapPin size={16} color="#E8502A" className={styles.iconMargin} style={{ flexShrink: 0 }} />
+              <MapPin size={16} color="#ffffff" className={styles.iconMargin} style={{ flexShrink: 0 }} />
               <span style={{ fontSize: '0.85rem', lineHeight: '1.5' }}>
                 YMCA Cross Road,<br />
                 Kozhikode<br />
@@ -77,7 +76,7 @@ const Footer = () => {
               </span>
             </div>
             <div className={styles.contactItem} style={{ marginTop: '0.75rem', alignItems: 'flex-start' }}>
-              <MapPin size={16} color="#E8502A" className={styles.iconMargin} style={{ flexShrink: 0 }} />
+              <MapPin size={16} color="#ffffff" className={styles.iconMargin} style={{ flexShrink: 0 }} />
               <span style={{ fontSize: '0.85rem', lineHeight: '1.5' }}>
                 6th Floor, National Pearl Star building,Edappally,<br />
                 Kochi, Ernakulam, Kerala 682024
@@ -95,15 +94,15 @@ const Footer = () => {
           <h3>PROFESSIONAL SKILL CAMPUS</h3>
           <div className={styles.contactInfo}>
             <div className={styles.contactItem}>
-              <Mail size={16} color="#E8502A" className={styles.iconMargin} />
+              <Mail size={16} color="#ffffff" className={styles.iconMargin} />
               <a href="mailto:info@pscampus.in">info@pscampus.in</a>
             </div>
             <div className={styles.contactItem}>
-              <Phone size={16} color="#E8502A" className={styles.iconMargin} />
+              <Phone size={16} color="#ffffff" className={styles.iconMargin} />
               <a href="tel:+919961967777">+91 9961967777</a>
             </div>
             <div className={styles.contactItem} style={{ marginTop: '0.75rem', alignItems: 'flex-start' }}>
-              <MapPin size={16} color="#E8502A" className={styles.iconMargin} style={{ flexShrink: 0 }} />
+              <MapPin size={16} color="#ffffff" className={styles.iconMargin} style={{ flexShrink: 0 }} />
               <span style={{ fontSize: '0.85rem', lineHeight: '1.5' }}>
                 2nd Floor, Pamls Tower, near Central Bank,<br />
                 Thazhepalam, Tirur, Kerala 676101
@@ -121,21 +120,21 @@ const Footer = () => {
           <h3>CONTACT US</h3>
           <div className={styles.contactInfo}>
             <div className={styles.contactItem}>
-              <Mail size={16} color="#E8502A" className={styles.iconMargin} />
+              <Mail size={16} color="#ffffff" className={styles.iconMargin} />
               <a href="mailto:info@findyouruniversity.com">info@findyouruniversity.com</a>
             </div>
             <div className={styles.contactItem}>
-              <Phone size={16} color="#E8502A" className={styles.iconMargin} />
+              <Phone size={16} color="#ffffff" className={styles.iconMargin} />
               <a href="tel:+919961967777">+91 9961967777</a>
             </div>
             <div className={styles.contactItem} style={{ marginTop: '0.75rem', alignItems: 'flex-start' }}>
-              <MapPin size={16} color="#E8502A" className={styles.iconMargin} style={{ flexShrink: 0 }} />
+              <MapPin size={16} color="#ffffff" className={styles.iconMargin} style={{ flexShrink: 0 }} />
               <span style={{ fontSize: '0.85rem', lineHeight: '1.5' }}>
                 2nd floor Al madeela complex Calicut road Edappal 679576 MALAPPURAM DT Kerala
               </span>
             </div>
             <div className={styles.contactItem} style={{ marginTop: '0.75rem', alignItems: 'flex-start' }}>
-              <MapPin size={16} color="#E8502A" className={styles.iconMargin} style={{ flexShrink: 0 }} />
+              <MapPin size={16} color="#ffffff" className={styles.iconMargin} style={{ flexShrink: 0 }} />
               <span style={{ fontSize: '0.85rem', lineHeight: '1.5' }}>
                 TIMS Tower, Thazhepalam, Tirur, Kerala 676101
               </span>

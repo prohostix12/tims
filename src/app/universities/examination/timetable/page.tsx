@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { Calendar, Clock, BookOpen, ChevronRight, Download, Loader2, FileText } from 'lucide-react';
+import { Calendar, Clock, ChevronRight, ChevronDown, Download, Loader2 } from 'lucide-react';
 import styles from './timetable.module.css';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
@@ -20,6 +20,9 @@ export default function TimetablePage() {
   const [timetables, setTimetables] = useState<Timetable[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [openId, setOpenId] = useState<string | null>(null);
+
+  const toggleOpen = (id: string) => setOpenId(prev => prev === id ? null : id);
 
   useEffect(() => {
     const fetchTimetables = async () => {
@@ -37,6 +40,16 @@ export default function TimetablePage() {
     };
     fetchTimetables();
   }, []);
+
+  const downloadPDF = (fileUrl: string, examName: string) => {
+    if (!fileUrl) return;
+    const link = document.createElement('a');
+    link.href = fileUrl;
+    link.download = `${examName || 'timetable'}.pdf`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
 
   const downloadCSV = (tt: Timetable) => {
     if (!tt.entries) return;
@@ -74,9 +87,6 @@ export default function TimetablePage() {
         <section className={styles.hero}>
           <div className={styles.heroContent}>
             <div className={styles.heroLeft}>
-              <p className={styles.heroCrumb}>
-                <Link href="/">Home</Link> / <Link href="/universities">Universities</Link> / Time Table
-              </p>
               <span className={styles.heroTag}>Official Schedule</span>
               <h1 className={styles.heroTitle}>
                 Examination <span style={{ color: '#ef233c' }}>Timetables</span>
@@ -104,47 +114,68 @@ export default function TimetablePage() {
                 <p style={{ color: '#ef4444' }}>{error}</p>
               </div>
             ) : timetables.length > 0 ? (
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '3rem' }}>
-                {timetables.map((tt) => (
-                  <div key={tt._id} style={{ borderBottom: '1px solid #e2e8f0', paddingBottom: '3rem' }}>
-                    <div className={styles.tableHeader}>
-                      <h2 className={styles.tableTitle}>{tt.examName}</h2>
-                      {tt.type === 'file' ? (
-                        <a href={tt.fileUrl} target="_blank" rel="noopener noreferrer" className={styles.downloadBtn}>
-                          <Download size={15} /> Download PDF
-                        </a>
-                      ) : (
-                        <button onClick={() => downloadCSV(tt)} className={styles.downloadBtn}>
-                          <Download size={15} /> Download CSV
-                        </button>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+                {timetables.map((tt) => {
+                  const isOpen = openId === tt._id;
+                  return (
+                    <div key={tt._id} style={{ border: '1px solid #e2e8f0', borderRadius: '14px', overflow: 'hidden', background: '#fff' }}>
+                      {/* Accordion Header */}
+                      <button
+                        onClick={() => toggleOpen(tt._id)}
+                        style={{
+                          width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                          padding: '1.25rem 1.5rem', background: isOpen ? '#00122e' : '#fff',
+                          color: isOpen ? '#fff' : '#0f172a', border: 'none', cursor: 'pointer',
+                          fontWeight: 700, fontSize: '1rem', transition: 'background 0.2s',
+                        }}
+                      >
+                        <span>{tt.examName}</span>
+                        <ChevronDown size={20} style={{ transition: 'transform 0.25s', transform: isOpen ? 'rotate(180deg)' : 'rotate(0deg)' }} />
+                      </button>
+
+                      {/* Accordion Body */}
+                      {isOpen && (
+                        <div style={{ padding: '1.5rem' }}>
+                          {/* Download button */}
+                          <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '1.25rem' }}>
+                            {tt.type === 'file' ? (
+                              <button onClick={() => downloadPDF(tt.fileUrl!, tt.examName)} className={styles.downloadBtn}>
+                                <Download size={15} /> Download PDF
+                              </button>
+                            ) : (
+                              <button onClick={() => downloadCSV(tt)} className={styles.downloadBtn}>
+                                <Download size={15} /> Download CSV
+                              </button>
+                            )}
+                          </div>
+
+                          {tt.type === 'manual' && tt.entries && (
+                            <div className={styles.table}>
+                              <div className={styles.tableHeadRow}>
+                                <span>Date</span>
+                                <span>Time</span>
+                                <span>Subject</span>
+                                <span>Code</span>
+                              </div>
+                              {tt.entries.map((row, i) => (
+                                <div key={i} className={`${styles.tableRow} ${i % 2 === 0 ? styles.tableRowAlt : ''}`}>
+                                  <div className={styles.dateCell}>
+                                    <span className={styles.dateMain}>{new Date(row.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</span>
+                                  </div>
+                                  <div className={styles.timeCell}>
+                                    <Clock size={14} /> {row.time}
+                                  </div>
+                                  <div className={styles.subjectCell}>{row.subject}</div>
+                                  <div className={styles.codeCell}>{row.code}</div>
+                                </div>
+                              ))}
+                            </div>
+                          )}
+                        </div>
                       )}
                     </div>
-
-                    {tt.type === 'manual' && tt.entries && (
-                      <div className={styles.table} style={{ marginTop: '1.5rem' }}>
-                        <div className={styles.tableHeadRow}>
-                          <span>Date</span>
-                          <span>Time</span>
-                          <span>Subject</span>
-                          <span>Code</span>
-                        </div>
-                        {tt.entries.map((row, i) => (
-                          <div key={i} className={`${styles.tableRow} ${i % 2 === 0 ? styles.tableRowAlt : ''}`}>
-                            <div className={styles.dateCell}>
-                              <span className={styles.dateMain}>{new Date(row.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</span>
-                            </div>
-                            <div className={styles.timeCell}>
-                              <Clock size={14} />
-                              {row.time}
-                            </div>
-                            <div className={styles.subjectCell}>{row.subject}</div>
-                            <div className={styles.codeCell}>{row.code}</div>
-                          </div>
-                        ))}
-                      </div>
-                    )}
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             ) : (
               <div style={{ textAlign: 'center', padding: '6rem 2rem', background: '#ffffff', borderRadius: '24px', border: '1px dashed #cbd5e1' }}>

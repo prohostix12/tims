@@ -28,6 +28,26 @@ const nextConfig: NextConfig = {
         hostname: 'i.pravatar.cc',
         pathname: '/**',
       },
+      {
+        protocol: 'https',
+        hostname: 'webfiles.amrita.edu',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'images.shiksha.com',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'timseducation.com',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'upload.wikimedia.org',
+        pathname: '/**',
+      },
     ],
     qualities: [75, 80, 90],
   },
