@@ -269,7 +269,7 @@
   background: white;
   border-radius: 20px;
   border: 1px solid #e2e8f0;
-  overflow: hidden;
+  overflow-x: auto;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.02);
 }
 

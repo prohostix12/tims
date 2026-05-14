@@ -5,6 +5,7 @@ import Navbar from './Navbar';
 import Footer from './Footer';
 import FooterSecondary from './FooterSecondary';
 import CourseFinder from './CourseFinder';
+import RegisterModal from './RegisterModal';
 
 export default function NavigationWrapper({
   children,
@@ -25,6 +26,7 @@ export default function NavigationWrapper({
       <Navbar />
       {children}
       <CourseFinder />
+      <RegisterModal />
       {isAboutPage ? <Footer /> : <FooterSecondary />}
     </>
   );

@@ -9,8 +9,8 @@
   max-width: 1400px;
   margin: 0 auto;
   display: grid;
-  grid-template-columns: 1fr 0.8fr 1.2fr 1.2fr 1.2fr;
-  gap: 3rem;
+  grid-template-columns: 1fr 1.2fr 1.2fr;
+  gap: 5rem;
 }
 
 .footerCol h3 {

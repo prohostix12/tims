@@ -115,7 +115,7 @@ export default function NewsDetailPage() {
       {/* Content Section */}
       <div style={{ maxWidth: '900px', margin: '0 auto', padding: '60px 20px' }}>
         {news.image && (
-          <div style={{ position: 'relative', width: '100%', height: '500px', borderRadius: '24px', overflow: 'hidden', marginBottom: '60px', boxShadow: '0 20px 40px rgba(0,0,0,0.1)' }}>
+          <div style={{ position: 'relative', width: '100%', height: 'clamp(250px, 50vw, 500px)', borderRadius: '24px', overflow: 'hidden', marginBottom: '60px', boxShadow: '0 20px 40px rgba(0,0,0,0.1)' }}>
             <Image 
               src={news.image} 
               alt={news.title} 

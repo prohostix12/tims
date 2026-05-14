@@ -102,7 +102,12 @@ export default function EnrollmentsPage() {
                       </div>
                       <div style={{ display: 'flex', flexDirection: 'column' }}>
                         <span style={{ fontWeight: 600, color: '#00122e' }}>{enroll.studentName}</span>
-                        <span style={{ fontSize: '0.75rem', color: '#64748b' }}>{enroll.email}</span>
+                        <span style={{ fontSize: '0.75rem', color: '#64748b', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                          <Mail size={12} /> {enroll.email}
+                        </span>
+                        <span style={{ fontSize: '0.75rem', color: '#64748b', display: 'flex', alignItems: 'center', gap: '4px', marginTop: '2px' }}>
+                          <Phone size={12} /> {enroll.phone}
+                        </span>
                       </div>
                     </div>
                   </td>

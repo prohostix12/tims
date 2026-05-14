@@ -191,6 +191,7 @@ export default function Home() {
   }, []);
 
   const openCourseFinder = () => window.dispatchEvent(new CustomEvent('open-course-finder'));
+  const openRegisterModal = () => window.dispatchEvent(new CustomEvent('open-register-modal'));
 
   return (
     <main className={styles.page}>
@@ -241,7 +242,7 @@ export default function Home() {
               </span>
             </h1>
             <div className={styles.heroBtns}>
-              <button className={styles.heroBtnPrimary} onClick={openCourseFinder}>
+              <button className={styles.heroBtnPrimary} onClick={openRegisterModal}>
                 Register Now
               </button>
               <button className={styles.heroBtnFinder} onClick={openCourseFinder}>

@@ -226,6 +226,10 @@
   z-index: 1;
 }
 
+.drawerHeader .logoText {
+  color: #ffffff;
+}
+
 .drawerClose {
   display: flex;
   align-items: center;
@@ -381,6 +385,12 @@
 @media (max-width: 480px) {
   .navbar {
     padding: 0 1.25rem;
+    gap: 1rem;
+  }
+
+  .logoText {
+    font-size: 1rem;
+    white-space: normal;
   }
 
   .logoImage {

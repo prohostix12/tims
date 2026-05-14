@@ -247,6 +247,13 @@ const Navbar = () => {
 
         {/* Drawer Footer */}
         <div className={styles.drawerActions}>
+          <Link
+            href="/login"
+            className={styles.drawerActionPrimary}
+            onClick={() => setMobileOpen(false)}
+          >
+            Login
+          </Link>
           <button
             className={styles.drawerActionSecondary}
             onClick={() => {

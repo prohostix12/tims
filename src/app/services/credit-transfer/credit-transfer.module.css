@@ -473,3 +473,34 @@
   .imageSide { height: 400px; }
   .contentSide { padding: 6rem 5%; }
 }
+
+@media (max-width: 768px) {
+  .heroTitle {
+    font-size: clamp(2.2rem, 5vw, 3rem);
+  }
+  .potentialItem {
+    flex-direction: column;
+    padding: 1.5rem;
+    align-items: center;
+    text-align: center;
+  }
+  .contentSide {
+    padding: 4rem 5%;
+  }
+  .journeyCard {
+    padding: 2rem 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .heroWrapper {
+    padding-top: 80px;
+    padding-bottom: 50px;
+  }
+  .partnerSection, .potentialSection {
+    padding: 4rem 5%;
+  }
+  .stepItem {
+    padding-left: 2rem;
+  }
+}
