@@ -260,11 +260,6 @@ export default function Home() {
                 ))}
               </div>
             </div>
-            <div className={styles.heroCredRow}>
-              {['UGC-DEB Approved', 'NAAC Accredited', 'AICTE Approved'].map((b) => (
-                <span key={b} className={styles.heroCred}>{b}</span>
-              ))}
-            </div>
           </div>
         </section>
 

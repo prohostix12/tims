@@ -2038,8 +2038,9 @@
     font-size: 0.85rem;
   }
 
-  /* Center image — constrain height */
+  /* Center image — show after text on mobile */
   .heroCenter {
+    order: 3;
     min-height: 260px;
     max-height: 360px;
     border-right: none;
@@ -2050,8 +2051,9 @@
     max-height: 340px;
   }
 
-  /* Right panel — headline and CTAs */
+  /* Right panel — headline first on mobile */
   .heroRight {
+    order: 2;
     padding: 2rem 1.25rem;
     gap: 1.25rem;
   }
