@@ -5,7 +5,7 @@ import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import styles from './Footer.module.css';
-import { Mail, Facebook, Instagram, Twitter, Phone, MapPin, Linkedin } from 'lucide-react';
+import { Mail, Facebook, Instagram, Phone, MapPin, Linkedin } from 'lucide-react';
 
 const Footer = () => {
   return (

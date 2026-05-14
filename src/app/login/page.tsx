@@ -17,12 +17,10 @@ export default function LoginPage() {
     e.preventDefault();
     setLoading(true);
 
-    // Hardcoded credentials for testing
     if (email === 'admin@tims.edu' && password === 'admin123') {
-      // Success! Redirect to admin
       router.push('/admin');
     } else {
-      alert('Invalid credentials. Hint: use admin@tims.edu / admin123');
+      alert('Invalid credentials. Please try again.');
       setLoading(false);
     }
   };

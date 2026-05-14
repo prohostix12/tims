@@ -139,7 +139,6 @@ export default function Home() {
     const fetchData = async () => {
       try {
         setLoading(true);
-        console.log('Fetching initial data...');
 
         // Helper to fetch with a small timeout/retry or better error reporting
         const safeFetch = async (url: string) => {
