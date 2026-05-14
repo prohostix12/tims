@@ -176,7 +176,7 @@ export default function CoursesPage() {
           </div>
 
           {/* Courses Grid */}
-          <div style={{ maxWidth: '1400px', margin: '0 auto', padding: '0 5%' }}>
+          <div className={styles.gridWrapper}>
             {loading ? (
               <div style={{ textAlign: 'center', padding: '10rem 0', color: '#64748b' }}>
                  <Loader2 className="animate-spin" size={48} color="#ef233c" style={{ margin: '0 auto 1rem' }} />
