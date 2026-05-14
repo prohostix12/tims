@@ -3,8 +3,6 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { FileText, Download, ChevronRight, BookOpen, Loader2 } from 'lucide-react';
-import Navbar from '@/components/Navbar';
-import Footer from '@/components/Footer';
 import styles from './syllabus.module.css';
 
 interface Syllabus {

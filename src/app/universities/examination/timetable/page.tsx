@@ -4,8 +4,6 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { Calendar, Clock, ChevronRight, ChevronDown, Download, Loader2 } from 'lucide-react';
 import styles from './timetable.module.css';
-import Navbar from '@/components/Navbar';
-import Footer from '@/components/Footer';
 
 interface Timetable {
   _id: string;
@@ -81,7 +79,6 @@ export default function TimetablePage() {
 
   return (
     <>
-      <Navbar />
       <main className={styles.container}>
         {/* Hero */}
         <section className={styles.hero}>
@@ -206,7 +203,6 @@ export default function TimetablePage() {
           </div>
         </section>
       </main>
-      <Footer />
     </>
   );
 }

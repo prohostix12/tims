@@ -13,15 +13,12 @@ import {
   ArrowLeft
 } from 'lucide-react';
 import styles from './how-it-works.module.css';
-import Navbar from '@/components/Navbar';
-import Footer from '@/components/Footer';
 
 export default function HowItWorksPage() {
   const openCourseFinder = () => window.dispatchEvent(new CustomEvent('open-course-finder'));
 
   return (
     <div className={styles.container}>
-      <Navbar />
 
       {/* ===== Hero ===== */}
       <section className={styles.hero}>
@@ -186,7 +183,6 @@ export default function HowItWorksPage() {
         </div>
       </section>
 
-      <Footer />
     </div>
   );
 }

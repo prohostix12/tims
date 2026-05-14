@@ -4,8 +4,6 @@ import React, { useState, useEffect } from 'react';
 import styles from './blogs.module.css';
 import Link from 'next/link';
 import { ArrowRight, ChevronDown } from 'lucide-react';
-import Navbar from '@/components/Navbar';
-import Footer from '@/components/Footer';
 
 export default function BlogsPage() {
   const [showAll, setShowAll] = useState(false);

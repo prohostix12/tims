@@ -9,8 +9,6 @@ import {
   Loader2,
   ChevronRight
 } from 'lucide-react';
-import Navbar from '@/components/Navbar';
-import Footer from '@/components/Footer';
 import styles from './news.module.css';
 
 interface NewsItem {

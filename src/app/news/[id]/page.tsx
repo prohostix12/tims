@@ -14,8 +14,6 @@ import {
   Loader2,
   Newspaper
 } from 'lucide-react';
-import Navbar from '@/components/Navbar';
-import Footer from '@/components/Footer';
 
 interface NewsItem {
   _id: string;
