@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import styles from './admin.module.css';
 import Link from 'next/link';
-import { Users, Book, School, TrendingUp, Loader2, Calendar } from 'lucide-react';
+import { Users, Book, School, TrendingUp, TrendingDown, Loader2, Calendar } from 'lucide-react';
 
 type Activity = {
   id: string;
