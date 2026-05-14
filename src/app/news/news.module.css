@@ -384,3 +384,19 @@
   .newsArticle:nth-child(even) { direction: ltr; }
   .sectionHeader { flex-direction: column; align-items: flex-start; gap: 2rem; }
 }
+
+@media (max-width: 768px) {
+  .heroContent { gap: 2.5rem; }
+  .heroRight { height: 280px; }
+  .heroTitle { margin-bottom: 1.5rem; }
+  .heroDesc { font-size: 1rem; margin-bottom: 2rem; }
+  .heroStats { gap: 1.5rem; flex-wrap: wrap; }
+  .newsletter { flex-direction: column; }
+  .newsBtn { padding: 0.75rem 1.5rem; }
+  .newsSection { padding: 5rem 5%; }
+  .headerLeft h2 { font-size: 2rem; }
+  .articleTitle { font-size: 1.6rem; }
+  .newsGrid { gap: 4rem; }
+  .featuredTitle { font-size: 1.2rem; }
+  .featuredOverlay { padding: 1.25rem; left: 16px; right: 16px; bottom: 16px; }
+}

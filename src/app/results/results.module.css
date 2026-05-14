@@ -233,15 +233,27 @@
 }
 
 @media (max-width: 768px) {
+  .heroWrapper {
+    height: auto;
+    min-height: 100dvh;
+    padding: 6rem 5% 3rem;
+  }
+  .heroContent {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    text-align: center;
+  }
+  .heroLeft { align-items: center; }
+  .heroRight { justify-content: center; }
+  .heroImg { max-width: 100%; }
   .universitySection {
     padding: 1.5rem;
   }
-  
   .resultsGrid {
     grid-template-columns: 1fr;
   }
-  
   .resultsListContainer {
     margin-top: -2rem;
   }
+  .uniTitle { font-size: 1.3rem; }
 }

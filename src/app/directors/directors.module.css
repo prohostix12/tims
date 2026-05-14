@@ -224,3 +224,14 @@
   .chairmanGrid { grid-template-columns: 1fr; gap: 4rem; }
   .chairmanName { font-size: 2.5rem; }
 }
+
+@media (max-width: 768px) {
+  .heroHeader { height: 60vh; min-height: 360px; }
+  .chairmanSection { padding: 5rem 5%; }
+  .chairmanName { font-size: 2rem; }
+  .sectionHeading { font-size: 2.2rem; }
+  .directorsGridSection { padding: 5rem 5%; }
+  .directorsGrid { grid-template-columns: 1fr; gap: 2rem; }
+  .directorCard { padding: 2rem; }
+  .sectionHeader { margin-bottom: 3rem; }
+}

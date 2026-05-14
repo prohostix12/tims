@@ -1105,6 +1105,28 @@
   .certificatesGrid { grid-template-columns: 1fr; }
 }
 
+@media (max-width: 768px) {
+  .heroWrapper { padding: 90px 5% 4rem; min-height: auto; }
+  .heroContent { gap: 3rem; }
+  .heroTitle { font-size: clamp(2rem, 7vw, 2.8rem); }
+  .heroCTAGroup { flex-direction: column; width: 100%; }
+  .heroCTABtn, .heroSecondaryBtn { width: 100%; text-align: center; }
+  .showcaseSection, .trustedSection, .timelineSection, .directorySection { padding: 4rem 5%; }
+  .trustedContent { grid-template-columns: 1fr; }
+  .directoryHeader { flex-direction: column; align-items: flex-start; gap: 1.5rem; }
+  .searchBox { width: 100%; }
+  .contentSection { padding: 4rem 5%; }
+  .processGrid { grid-template-columns: 1fr; gap: 2rem; }
+  .listSection { padding: 4rem 5%; }
+  .finalCta { padding: 5rem 5%; }
+  .timelineItem { flex-direction: column !important; align-items: flex-start; }
+  .timelineContent { width: 90%; margin-left: 10%; }
+  .timelineLine { left: 5%; }
+  .timelineDot { left: 5%; }
+  .trustSplit { grid-template-columns: 1fr; gap: 3rem; }
+  .trustSplitImgBox { height: 280px; }
+}
+
 .trustGrid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
