@@ -735,19 +735,47 @@
 }
 
 @media (max-width: 768px) {
-  .heroWrapper { padding: 100px 1.25rem 60px; }
-  .heroContent { gap: 2.5rem; }
+  .heroWrapper { padding: 5rem 1.25rem 3rem; }
+  .heroContent { gap: 2rem; }
+  .heroRight { display: none; }
   .heroTitle { font-size: clamp(1.8rem, 7vw, 2.6rem); }
-  .heroDesc { font-size: 1rem; }
-  .ctaButtons { flex-direction: column; align-items: stretch; width: 100%; max-width: 320px; margin: 0 auto; }
-  .statsContainer { grid-template-columns: repeat(2, 1fr); gap: 1rem; }
-  .successTextCol { padding: 2.5rem 1.25rem; }
-  .sectionTitle { font-size: clamp(1.6rem, 5vw, 2rem); }
-  .visionGrid { grid-template-columns: 1fr; gap: 2rem; }
+  .heroSub { font-size: 1rem; }
+
+  .statsContainer { grid-template-columns: repeat(2, 1fr); gap: 1rem; padding: 0 1.25rem; }
+  .statCard { padding: 1.5rem 1rem; }
+  .statNumber { font-size: 2rem; }
+
+  .getKnowSection { padding: 4rem 1.25rem; }
   .getKnowGrid { grid-template-columns: 1fr; gap: 2rem; }
-  .faqWrapper { grid-template-columns: 1fr; gap: 2rem; }
-  .directorsGrid { grid-template-columns: repeat(2, 1fr); gap: 1.5rem; }
-  .featureList { grid-template-columns: 1fr; }
+  .getKnowTitle { font-size: clamp(1.6rem, 5vw, 2rem); }
+  .getKnowImageCol { display: none; }
+
+  .aboutSection { padding: 4rem 1.25rem; }
+  .sectionTitle { font-size: clamp(1.6rem, 5vw, 2rem); }
+  .featureList { grid-template-columns: 1fr; gap: 1rem; }
+
+  .visionSection { padding: 4rem 1.25rem; }
+  .visionGrid { grid-template-columns: 1fr; gap: 1.5rem; }
+  .visionCard { padding: 2.5rem 1.5rem; }
+  .cardTitle { font-size: 1.6rem; }
+
+  .directorsSection { padding: 4rem 1.25rem; }
+  .directorsGrid { grid-template-columns: repeat(2, 1fr); gap: 1.25rem; }
+  .directorCard { padding: 2rem 1.25rem; }
+  .directorAvatar { width: 120px; height: 120px; }
+
+  .successSection { padding: 4rem 1.25rem; }
+  .successContent { grid-template-columns: 1fr; }
+  .successImageCol { display: none; }
+  .successTextCol { padding: 2.5rem 1.5rem; }
+
+  .faqSection { padding: 4rem 1.25rem; }
+  .faqWrapper { grid-template-columns: 1fr; gap: 1.5rem; }
+  .faqImageCol { display: none; }
+
+  .ctaSection { padding: 4rem 1.25rem; }
+  .ctaButtons { flex-direction: column; align-items: stretch; width: 100%; max-width: 340px; margin: 0 auto; }
+  .ctaPrimary, .ctaOutline { padding: 1rem 2rem; text-align: center; font-size: 1rem; }
 }
 
 @media (max-width: 600px) {

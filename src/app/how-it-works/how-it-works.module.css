@@ -193,7 +193,24 @@
 }
 
 @media (max-width: 768px) {
-  .heroTitle { font-size: 2.8rem; }
-  .stepTitle { font-size: 2.2rem; }
-  .finalCtaTitle { font-size: 2.5rem; }
+  .hero { padding: 5rem 1.25rem 3rem; }
+  .heroTitle { font-size: clamp(1.8rem, 7vw, 2.6rem); letter-spacing: -1px; }
+  .heroDesc { font-size: 1rem; }
+
+  .stepsSection { padding: 3rem 1.25rem; }
+  .stepRow { gap: 3rem; margin-bottom: 5rem; }
+  .stepTitle { font-size: clamp(1.6rem, 5vw, 2rem); }
+  .stepDesc { font-size: 1rem; }
+
+  .finalCta { padding: 5rem 1.25rem; }
+  .finalCtaTitle { font-size: clamp(1.8rem, 7vw, 2.5rem); letter-spacing: -1px; }
+  .finalCtaDesc { font-size: 1rem; }
+  .ctaBtn { width: 100%; padding: 1rem 2rem; font-size: 1rem; }
+}
+
+@media (max-width: 480px) {
+  .hero { padding: 4rem 1rem 2.5rem; }
+  .heroTitle { font-size: clamp(1.6rem, 8vw, 2.2rem); }
+  .stepsSection { padding: 2.5rem 1rem; }
+  .stepRow { margin-bottom: 3.5rem; gap: 2rem; }
 }

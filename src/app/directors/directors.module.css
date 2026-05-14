@@ -226,12 +226,20 @@
 }
 
 @media (max-width: 768px) {
-  .heroHeader { height: 60vh; min-height: 360px; }
-  .chairmanSection { padding: 5rem 5%; }
+  .heroHeader { height: 50vh; min-height: 320px; }
+  .heroTitle { font-size: clamp(2rem, 8vw, 3.5rem); }
+  .chairmanSection { padding: 4rem 1.25rem; }
+  .chairmanGrid { gap: 2.5rem; }
   .chairmanName { font-size: 2rem; }
-  .sectionHeading { font-size: 2.2rem; }
-  .directorsGridSection { padding: 5rem 5%; }
-  .directorsGrid { grid-template-columns: 1fr; gap: 2rem; }
-  .directorCard { padding: 2rem; }
-  .sectionHeader { margin-bottom: 3rem; }
+  .chairmanMessage p { font-size: 1rem; }
+  .sectionHeading { font-size: clamp(1.8rem, 6vw, 2.5rem); }
+  .directorsGridSection { padding: 4rem 1.25rem; }
+  .directorsGrid { grid-template-columns: 1fr; gap: 1.5rem; }
+  .directorCard { padding: 2rem 1.5rem; border-radius: 24px; }
+  .sectionHeader { margin-bottom: 2.5rem; }
+}
+
+@media (max-width: 480px) {
+  .heroHeader { height: 45vh; min-height: 280px; }
+  .chairmanSection, .directorsGridSection { padding: 3rem 1rem; }
 }

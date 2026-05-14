@@ -470,10 +470,30 @@
 }
 
 @media (max-width: 768px) {
-  .heroContent { padding: 0 1.25rem; gap: 2rem; }
+  .heroWrapper {
+    height: auto;
+    min-height: auto;
+    padding: 5rem 1.25rem 2.5rem;
+  }
+  .heroContent { padding: 0; gap: 1.5rem; text-align: center; }
+  .heroLeft { align-items: center; padding-right: 0; }
+  .heroRight { display: none; }
+  .heroSearch {
+    flex-direction: column;
+    max-width: 100%;
+  }
+  .heroSearch input { width: 100%; border-radius: 8px; }
+  .heroSearch button { width: 100%; border-radius: 8px; }
+
+  .filterBar { padding: 1rem 1.25rem; top: 60px; }
+  .filterInner { flex-direction: column; gap: 0.75rem; align-items: stretch; }
+  .searchBox { max-width: 100%; }
+
   .gridWrap { grid-template-columns: repeat(2, 1fr); gap: 1rem; padding: 2rem 1.25rem; }
-  .filterBar { padding: 1.25rem; top: 68px; }
-  .filterInner { gap: 1rem; }
+
+  .ctaBanner { padding: 4rem 1.25rem; }
+  .ctaSub { font-size: 1rem; }
+  .ctaBtn { width: 100%; justify-content: center; padding: 1rem 2rem; font-size: 1rem; }
 }
 
 @media (max-width: 600px) {

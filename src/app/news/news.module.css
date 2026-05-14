@@ -386,17 +386,30 @@
 }
 
 @media (max-width: 768px) {
-  .heroContent { gap: 2.5rem; }
-  .heroRight { height: 280px; }
-  .heroTitle { margin-bottom: 1.5rem; }
-  .heroDesc { font-size: 1rem; margin-bottom: 2rem; }
-  .heroStats { gap: 1.5rem; flex-wrap: wrap; }
-  .newsletter { flex-direction: column; }
+  .hero { padding-top: 5rem; min-height: auto; }
+  .heroContent { gap: 2rem; padding: 0 1.25rem; }
+  .heroRight { height: 260px; border-radius: 20px; }
+  .heroTitle { font-size: clamp(1.6rem, 6vw, 2.2rem); margin-bottom: 1.5rem; }
+  .heroDesc { font-size: 1rem; margin-bottom: 1.5rem; }
+  .heroStats { gap: 1rem; flex-wrap: wrap; }
+  .newsletter { flex-direction: column; max-width: 100%; }
+  .newsInput { width: 100%; }
   .newsBtn { padding: 0.75rem 1.5rem; }
-  .newsSection { padding: 5rem 5%; }
-  .headerLeft h2 { font-size: 2rem; }
-  .articleTitle { font-size: 1.6rem; }
-  .newsGrid { gap: 4rem; }
-  .featuredTitle { font-size: 1.2rem; }
-  .featuredOverlay { padding: 1.25rem; left: 16px; right: 16px; bottom: 16px; }
+  .newsSection { padding: 3.5rem 1.25rem; }
+  .sectionHeader { margin-bottom: 2.5rem; }
+  .headerLeft h2 { font-size: 1.8rem; letter-spacing: -1px; }
+  .articleTitle { font-size: 1.4rem; }
+  .articleExcerpt { font-size: 0.95rem; }
+  .newsGrid { gap: 3rem; }
+  .featuredTitle { font-size: 1.1rem; }
+  .featuredOverlay { padding: 1rem; left: 12px; right: 12px; bottom: 12px; }
+}
+
+@media (max-width: 480px) {
+  .hero { padding-top: 4.5rem; }
+  .heroContent { padding: 0 1rem; }
+  .heroRight { height: 200px; }
+  .newsSection { padding: 2.5rem 1rem; }
+  .articleTitle { font-size: 1.2rem; }
+  .newsGrid { gap: 2rem; }
 }

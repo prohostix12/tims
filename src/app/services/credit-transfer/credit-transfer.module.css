@@ -475,21 +475,31 @@
 }
 
 @media (max-width: 768px) {
-  .heroTitle {
-    font-size: clamp(2.2rem, 5vw, 3rem);
-  }
-  .potentialItem {
-    flex-direction: column;
-    padding: 1.5rem;
-    align-items: center;
-    text-align: center;
-  }
-  .contentSide {
-    padding: 4rem 5%;
-  }
-  .journeyCard {
-    padding: 2rem 1.5rem;
-  }
+  .heroWrapper { padding: 5rem 1.25rem 3rem; min-height: auto; }
+  .heroContent { gap: 2rem; }
+  .heroTitle { font-size: clamp(1.8rem, 7vw, 2.6rem); }
+  .heroSubtext { font-size: 1rem; }
+  .heroCTAGroup { flex-direction: column; width: 100%; }
+  .heroSecondaryBtn { width: 100%; text-align: center; }
+  .heroRight { display: none; }
+
+  .partnerSection { padding: 3rem 1.25rem 4rem; }
+  .potentialSection { padding: 3rem 1.25rem; }
+  .potentialTitle { font-size: 1.6rem; }
+  .potentialGrid { grid-template-columns: 1fr; gap: 1rem; }
+  .potentialItem { flex-direction: column; padding: 1.5rem; align-items: center; text-align: center; }
+
+  .contentSide { padding: 3rem 1.25rem; }
+  .journeyCard { padding: 2rem 1.25rem; }
+
+  .splitSection { grid-template-columns: 1fr; }
+  .imageSide { height: 250px; }
+}
+
+@media (max-width: 480px) {
+  .heroWrapper { padding: 4rem 1rem 2.5rem; }
+  .partnerSection, .potentialSection { padding: 2.5rem 1rem; }
+  .contentSide { padding: 2.5rem 1rem; }
 }
 
 @media (max-width: 480px) {
