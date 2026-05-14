@@ -301,11 +301,41 @@
 
 @media (max-width: 1024px) {
   .hero { height: auto; padding-top: 8rem; }
-  .heroContent { grid-template-columns: 1fr; gap: 4rem; text-align: center; }
+  .heroContent { grid-template-columns: 1fr; gap: 3rem; text-align: center; }
   .heroLeft { max-width: 100%; }
   .heroTag { justify-content: center; }
+  .heroSearch { margin-left: auto; margin-right: auto; }
+  .trendingTags { justify-content: center; }
   .heroRight { height: 400px; }
   .blogArticle { grid-template-columns: 1fr; gap: 3rem; }
   .blogArticle:nth-child(even) { direction: ltr; }
   .sectionHeader { flex-direction: column; align-items: flex-start; gap: 2rem; }
+  .articleTitle { font-size: 1.8rem; }
+  .blogSection { padding: 5rem 5%; }
+}
+
+@media (max-width: 768px) {
+  .hero { padding-top: 5rem; min-height: auto; }
+  .heroContent { padding: 0 1.25rem; gap: 2rem; }
+  .heroTitle { font-size: clamp(1.6rem, 6vw, 2.2rem); margin-bottom: 1.5rem; }
+  .heroDesc { font-size: 1rem; }
+  .heroRight { height: 260px; border-radius: 20px; }
+  .heroSearch { max-width: 100%; }
+
+  .blogSection { padding: 3.5rem 1.25rem; }
+  .sectionHeader { margin-bottom: 3rem; }
+  .headerLeft h2 { font-size: 2rem; letter-spacing: -1px; }
+  .blogGrid { gap: 3.5rem; }
+  .articleTitle { font-size: 1.5rem; }
+  .articleExcerpt { font-size: 0.95rem; }
+  .imageBox { border-radius: 16px; }
+  .viewMoreBtn { padding: 1rem 2.5rem; width: 100%; justify-content: center; }
+}
+
+@media (max-width: 480px) {
+  .heroContent { padding: 0 1rem; }
+  .heroRight { height: 200px; }
+  .blogSection { padding: 2.5rem 1rem; }
+  .articleTitle { font-size: 1.3rem; }
+  .blogGrid { gap: 2.5rem; }
 }

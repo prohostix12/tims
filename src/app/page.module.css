@@ -1949,18 +1949,22 @@
 @media (max-width: 900px) {
   .impact {
     grid-template-columns: 1fr;
+    height: auto;
   }
   .impactLeft {
-    min-height: 280px;
+    min-height: 240px;
+    margin-top: 0;
+    padding-top: 2rem;
   }
-  .impactSphere {
-    width: 140px;
-    height: 140px;
-    bottom: -30px;
-    left: -20px;
+  .impactCenter {
+    height: auto;
+    padding: 1.75rem 2rem;
+    align-self: auto;
   }
-  .careerGrid {
-    grid-template-columns: repeat(2, 1fr);
+  .impactRight {
+    height: auto;
+    align-self: auto;
+    padding: 1.75rem 2rem;
   }
   .uniGrid {
     grid-template-columns: repeat(2, 1fr);
@@ -1973,49 +1977,161 @@
     grid-template-columns: 1fr;
     gap: 3rem;
   }
+  .seoImg {
+    height: 280px;
+  }
+  .careerWrapper {
+    grid-template-columns: 1fr;
+  }
+  .careerSmallGrid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+  }
 }
 
 @media (max-width: 768px) {
+  /* Hero wrapper — allow natural height on mobile */
+  .heroWrapper {
+    height: auto;
+    min-height: 100dvh;
+  }
+
   .hero {
     grid-template-columns: 1fr;
     min-height: auto;
-    padding-top: 70px;
-  }
-  .heroLeft {
-    padding: 2.5rem 1.5rem;
-    border-right: none;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-    flex-direction: row;
-    flex-wrap: wrap;
-    gap: 1.5rem;
-    align-items: center;
-  }
-  .heroStack span {
-    font-size: 1.1rem;
-  }
-  .heroCenter {
-    min-height: 320px;
-    border-right: none;
-  }
-  .heroRight {
-    padding: 2.5rem 1.5rem;
-    gap: 1.75rem;
-  }
-  .heroTitle {
-    font-size: 2.8rem;
-    letter-spacing: -1.5px;
-  }
-  .heroCircle {
-    display: none;
+    padding-top: 68px;
   }
 
+  /* Compact orange banner on mobile */
+  .heroLeft {
+    padding: 1rem 1.25rem;
+    padding-top: 1rem;
+    border-right: none;
+    border-bottom: 2px solid rgba(255, 255, 255, 0.15);
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    align-items: center;
+    justify-content: center;
+  }
+  .heroStack {
+    flex-direction: row;
+    gap: 0.4rem;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .heroStack span {
+    font-size: 0.9rem;
+  }
+  .heroStack span:not(:last-child)::after {
+    content: ' ·';
+    opacity: 0.5;
+  }
+  .heroLeftOrangeBar {
+    display: none;
+  }
+  .heroIconCircle {
+    width: 32px;
+    height: 32px;
+  }
+  .heroStoryLink {
+    font-size: 0.85rem;
+  }
+
+  /* Center image — constrain height */
+  .heroCenter {
+    min-height: 260px;
+    max-height: 360px;
+    border-right: none;
+    padding-top: 1.5rem;
+  }
+  .heroImg {
+    height: 100%;
+    max-height: 340px;
+  }
+
+  /* Right panel — headline and CTAs */
+  .heroRight {
+    padding: 2rem 1.25rem;
+    gap: 1.25rem;
+  }
+  .heroTitle {
+    font-size: clamp(2rem, 7vw, 2.8rem);
+    letter-spacing: -1px;
+  }
+  .heroAccentTop {
+    font-size: 1.4em;
+  }
+  .heroAccent {
+    font-size: 1.4em;
+  }
+  .heroBtns {
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+  .heroBtnPrimary,
+  .heroBtnFinder {
+    width: 100%;
+    justify-content: center;
+  }
+  .heroCredRow {
+    gap: 0.6rem;
+  }
+  .heroMarqueeWrapper {
+    margin-top: 0.5rem;
+  }
+
+  /* Impact panels */
+  .impact {
+    grid-template-columns: 1fr;
+    height: auto;
+  }
+  .impactLeft {
+    min-height: 200px;
+    margin-top: 0;
+    padding: 1.75rem 1.5rem;
+  }
+  .impactCenter {
+    height: auto;
+    flex-direction: column;
+    gap: 1.25rem;
+    padding: 1.5rem 1.25rem;
+    align-self: auto;
+  }
+  .impactCenterLeft {
+    border-right: none;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    padding-right: 0;
+    padding-bottom: 1.25rem;
+  }
+  .impactCenterRight {
+    padding-left: 0;
+  }
+  .impactRight {
+    height: auto;
+    padding: 1.5rem 1.25rem;
+    align-self: auto;
+    flex-direction: row;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 1rem;
+    text-align: left;
+  }
+  .impactExpertText {
+    font-size: 1rem;
+    max-width: 100%;
+  }
+
+  /* Stats */
   .statsBar {
     grid-template-columns: repeat(2, 1fr);
+    border-right: none;
+    border-bottom: 4px solid #1C0D07;
   }
   .statsItem {
     border-right: none;
     border-bottom: 1px solid rgba(28, 13, 7, 0.12);
-    padding: 1.75rem 1rem;
+    padding: 1.5rem 1rem;
   }
   .statsItem:nth-child(odd) {
     border-right: 1px solid rgba(28, 13, 7, 0.12);
@@ -2024,50 +2140,185 @@
   .statsItem:nth-last-child(2):nth-child(odd) {
     border-bottom: none;
   }
+  .statsNum {
+    font-size: 1.8rem;
+  }
 
-  .careerGrid {
+  /* Career section */
+  .careerWrapper {
     grid-template-columns: 1fr;
   }
+  .careerLeft {
+    padding: 2.5rem 1.25rem;
+  }
+  .careerRight {
+    padding: 2.5rem 1.25rem;
+    border-right: none;
+    border-bottom: 4px solid #1C0D07;
+  }
+  .careerSmallGrid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+  }
+  .careerLeftTitle {
+    font-size: 1.6rem;
+  }
+  .careerMainTitle {
+    font-size: 1.4rem;
+  }
+  .mustKnowSlider {
+    height: 75px;
+  }
+
+  /* Process */
   .processGrid {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, 1fr);
   }
-  .valueGrid {
-    grid-template-columns: 1fr;
+  .processSection {
+    padding: 4rem 1.25rem;
   }
-  .uniGrid {
-    grid-template-columns: 1fr;
-  }
-  .blogGrid {
-    grid-template-columns: 1fr;
+
+  /* Consultation CTA */
+  .consultSection {
+    padding: 2.5rem 1.25rem;
   }
   .consultInner {
     flex-direction: column;
     align-items: flex-start;
+    gap: 1.5rem;
+  }
+  .consultBtns {
+    width: 100%;
+    flex-direction: column;
+  }
+  .consultPhone,
+  .consultContact {
+    width: 100%;
+    justify-content: center;
+  }
+
+  /* Testimonials */
+  .testimonialsSection {
+    padding: 4rem 0;
+  }
+  .testimonialCard {
+    width: 280px;
+  }
+
+  /* Ready CTA */
+  .readySection {
+    padding: 5rem 1.25rem;
   }
   .readyBtns {
     flex-direction: column;
-    align-items: center;
+    align-items: stretch;
+    width: 100%;
+    max-width: 320px;
   }
-  .heroBtns {
-    flex-wrap: wrap;
+  .readyBtns .heroBtnPrimary,
+  .readyBtns .heroBtnOutline {
+    width: 100%;
+    justify-content: center;
+  }
+
+  /* SEO */
+  .seoSection {
+    padding: 4rem 1.25rem;
+  }
+  .seoGrid {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+  .seoImg {
+    height: 220px;
+  }
+  .seoLinks {
+    flex-direction: column;
+  }
+
+  /* How it works */
+  .howItWorksSection {
+    padding: 4rem 1.25rem;
+  }
+  .howItWorksGrid {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+  .howItWorksDisplay {
+    position: relative;
+    top: auto;
+    order: -1;
+  }
+
+  /* Floating button */
+  .floatingFinderBtn {
+    right: 1rem;
+    bottom: 1rem;
+    padding: 0.85rem 1.4rem;
+    font-size: 0.8rem;
   }
 }
 
 @media (max-width: 480px) {
+  .hero {
+    padding-top: 60px;
+  }
   .heroTitle {
-    font-size: 2.2rem;
+    font-size: clamp(1.8rem, 8vw, 2.2rem);
+    letter-spacing: -0.5px;
+  }
+  .heroCenter {
+    min-height: 220px;
+  }
+  .heroBtnPrimary,
+  .heroBtnFinder {
+    font-size: 0.9rem;
+    padding: 12px 18px;
+  }
+
+  .statsBar {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .careerSmallGrid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.75rem;
+  }
+  .careerSmallDegree {
+    font-size: 0.88rem;
+  }
+
+  .processGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .impactNum {
+    font-size: 2.4rem;
     letter-spacing: -1px;
   }
-  .impactNum {
-    font-size: 3rem;
-    letter-spacing: -2px;
-  }
+
   .newsCard {
     padding: 1rem 1.25rem;
-    gap: 1rem;
+    gap: 0.75rem;
   }
-  .seoLinks {
-    flex-direction: column;
+
+  .consultSection {
+    padding: 2rem 1rem;
+  }
+  .readySection {
+    padding: 4rem 1rem;
+  }
+  .seoSection {
+    padding: 3rem 1rem;
+  }
+  .processSection {
+    padding: 3rem 1rem;
+  }
+  .testimonialsSection {
+    padding: 3rem 0;
+  }
+  .howItWorksSection {
+    padding: 3rem 1rem;
   }
 }
 

@@ -245,35 +245,17 @@
 }
 
 @media (max-width: 768px) {
-  .heroHeader {
-    min-height: 500px;
-    padding-top: 80px;
-  }
-  .formCard {
-    padding: 2rem;
-  }
-  .infoItem {
-    flex-direction: column;
-    gap: 1rem;
-    text-align: center;
-    align-items: center;
-  }
-  .infoCard h2 {
-    text-align: center;
-  }
-  .infoCard p {
-    text-align: center;
-  }
+  .heroHeader { min-height: 420px; padding-top: 80px; padding-left: 1.25rem; padding-right: 1.25rem; }
+  .formCard { padding: 1.75rem 1.25rem; }
+  .infoItem { flex-direction: column; gap: 1rem; text-align: center; align-items: center; }
+  .infoCard h2 { text-align: center; }
+  .infoCard p { text-align: center; }
+  .contactSplit { padding: 3rem 1.25rem; }
 }
 
 @media (max-width: 480px) {
-  .formCard {
-    padding: 1.5rem;
-  }
-  .heroTitle {
-    font-size: 2.5rem;
-  }
-  .contactSplit {
-    padding: 4rem 5%;
-  }
+  .heroHeader { min-height: 360px; padding-top: 72px; }
+  .formCard { padding: 1.25rem 1rem; }
+  .heroTitle { font-size: clamp(1.8rem, 8vw, 2.5rem); }
+  .contactSplit { padding: 2.5rem 1rem; }
 }

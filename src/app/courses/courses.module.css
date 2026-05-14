@@ -561,7 +561,14 @@
 }
 
 @media (max-width: 768px) {
-  .coursesGrid { grid-template-columns: 1fr; }
-  .searchBar { flex-direction: column; align-items: stretch; gap: 2rem; }
-  .instTitle { font-size: 2.5rem; }
+  .coursesGrid { grid-template-columns: repeat(2, 1fr); gap: 1rem; padding: 0 1.25rem 3rem; }
+  .searchBar { flex-direction: column; align-items: stretch; gap: 1rem; padding: 1.25rem; }
+  .instTitle { font-size: clamp(1.6rem, 6vw, 2.5rem); }
+  .heroContent { padding: 0 1.25rem; gap: 3rem; }
+}
+
+@media (max-width: 480px) {
+  .coursesGrid { grid-template-columns: 1fr; padding: 0 1rem 2.5rem; }
+  .searchBar { padding: 1rem; }
+  .instTitle { font-size: clamp(1.4rem, 7vw, 2rem); }
 }

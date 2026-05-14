@@ -3,7 +3,15 @@
 import React, { useEffect, useState } from 'react';
 import styles from './admin.module.css';
 import Link from 'next/link';
-import { Users, Book, School, MessageSquare, TrendingUp, TrendingDown, Loader2, Calendar } from 'lucide-react';
+import { Users, Book, School, TrendingUp, TrendingDown, Loader2, Calendar } from 'lucide-react';
+
+type Activity = {
+  id: string;
+  activity: string;
+  category: 'Enrollment' | 'Lead';
+  time: string;
+  status: string;
+};
 
 export default function AdminDashboard() {
   const [statsData, setStatsData] = useState({
@@ -14,9 +22,12 @@ export default function AdminDashboard() {
     batches: 0
   });
   const [loading, setLoading] = useState(true);
+  const [activities, setActivities] = useState<Activity[]>([]);
+  const [activitiesLoading, setActivitiesLoading] = useState(true);
 
   useEffect(() => {
     fetchStats();
+    fetchActivities();
   }, []);
 
   const fetchStats = async () => {
@@ -32,6 +43,52 @@ export default function AdminDashboard() {
     } finally {
       setLoading(false);
     }
+  };
+
+  const fetchActivities = async () => {
+    try {
+      setActivitiesLoading(true);
+      const [enrollRes, leadsRes] = await Promise.all([
+        fetch('/api/admin/enrollments'),
+        fetch('/api/admin/leads'),
+      ]);
+      const enrollments = enrollRes.ok ? await enrollRes.json() : [];
+      const leads = leadsRes.ok ? await leadsRes.json() : [];
+
+      const combined: Activity[] = [
+        ...enrollments.slice(0, 10).map((e: any) => ({
+          id: e._id,
+          activity: `${e.studentName} enrolled in ${e.program}`,
+          category: 'Enrollment' as const,
+          time: e.createdAt,
+          status: e.status,
+        })),
+        ...leads.slice(0, 10).map((l: any) => ({
+          id: l._id,
+          activity: `${l.name} submitted a lead`,
+          category: 'Lead' as const,
+          time: l.createdAt,
+          status: l.status,
+        })),
+      ];
+
+      combined.sort((a, b) => new Date(b.time).getTime() - new Date(a.time).getTime());
+      setActivities(combined.slice(0, 8));
+    } catch (error) {
+      console.error('Failed to fetch activities:', error);
+    } finally {
+      setActivitiesLoading(false);
+    }
+  };
+
+  const formatTime = (iso: string) =>
+    new Date(iso).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+
+  const statusColor = (status: string) => {
+    const s = status?.toLowerCase();
+    if (s === 'approved' || s === 'won') return styles.badgeActive;
+    if (s === 'rejected' || s === 'lost') return styles.badgeInactive;
+    return styles.badgePending;
   };
 
   const stats = [
@@ -113,11 +170,34 @@ export default function AdminDashboard() {
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <td colSpan={4} style={{ textAlign: 'center', color: '#94a3b8', padding: '3rem' }}>
-                  No recent activities found.
-                </td>
-              </tr>
+              {activitiesLoading ? (
+                <tr>
+                  <td colSpan={4} style={{ textAlign: 'center', padding: '3rem' }}>
+                    <Loader2 className="animate-spin" size={22} style={{ color: '#94a3b8' }} />
+                  </td>
+                </tr>
+              ) : activities.length > 0 ? activities.map(a => (
+                <tr key={a.id}>
+                  <td style={{ fontWeight: 500 }}>{a.activity}</td>
+                  <td>
+                    <span style={{ fontSize: '0.78rem', fontWeight: 600, color: a.category === 'Enrollment' ? '#00122e' : '#E8502A' }}>
+                      {a.category}
+                    </span>
+                  </td>
+                  <td style={{ color: '#94a3b8', fontSize: '0.82rem' }}>{formatTime(a.time)}</td>
+                  <td>
+                    <span className={`${styles.badge} ${statusColor(a.status)}`}>
+                      {a.status}
+                    </span>
+                  </td>
+                </tr>
+              )) : (
+                <tr>
+                  <td colSpan={4} style={{ textAlign: 'center', color: '#94a3b8', padding: '3rem' }}>
+                    No recent activities found.
+                  </td>
+                </tr>
+              )}
             </tbody>
           </table>
         </div>

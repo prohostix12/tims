@@ -734,29 +734,26 @@
   }
 }
 
+@media (max-width: 768px) {
+  .heroWrapper { padding: 100px 1.25rem 60px; }
+  .heroContent { gap: 2.5rem; }
+  .heroTitle { font-size: clamp(1.8rem, 7vw, 2.6rem); }
+  .heroDesc { font-size: 1rem; }
+  .ctaButtons { flex-direction: column; align-items: stretch; width: 100%; max-width: 320px; margin: 0 auto; }
+  .statsContainer { grid-template-columns: repeat(2, 1fr); gap: 1rem; }
+  .successTextCol { padding: 2.5rem 1.25rem; }
+  .sectionTitle { font-size: clamp(1.6rem, 5vw, 2rem); }
+  .visionGrid { grid-template-columns: 1fr; gap: 2rem; }
+  .getKnowGrid { grid-template-columns: 1fr; gap: 2rem; }
+  .faqWrapper { grid-template-columns: 1fr; gap: 2rem; }
+  .directorsGrid { grid-template-columns: repeat(2, 1fr); gap: 1.5rem; }
+  .featureList { grid-template-columns: 1fr; }
+}
+
 @media (max-width: 600px) {
-  .statsContainer {
-    grid-template-columns: 1fr;
-  }
-
-  .ctaButtons {
-    flex-direction: column;
-    align-items: center;
-  }
-
-  .featureList {
-    grid-template-columns: 1fr;
-  }
-
-  .directorsGrid {
-    grid-template-columns: 1fr;
-  }
-
-  .heroTitle {
-    font-size: 2.5rem;
-  }
-
-  .sectionTitle {
-    font-size: 2.4rem;
-  }
+  .heroWrapper { padding: 90px 1rem 50px; }
+  .statsContainer { grid-template-columns: repeat(2, 1fr); }
+  .directorsGrid { grid-template-columns: 1fr; }
+  .heroTitle { font-size: clamp(1.6rem, 8vw, 2.2rem); }
+  .sectionTitle { font-size: clamp(1.4rem, 6vw, 1.9rem); }
 }
