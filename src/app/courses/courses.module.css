@@ -557,35 +557,66 @@
 @media (max-width: 1024px) {
   .heroWrapper {
     height: auto;
-    padding: 5rem 5% 3rem;
+    padding: 6rem 5% 3rem;
+    overflow: visible;
+    align-items: flex-start;
   }
   .heroContent {
     grid-template-columns: 1fr;
     text-align: center;
-    gap: 2.5rem;
+    gap: 2rem;
   }
   .heroLeft { align-items: center; }
-  .heroSearch { margin: 0 auto; width: 100%; }
+  .heroSearch { margin: 0 auto; width: 100%; max-width: 500px; }
+  .heroSubtext { max-width: 100%; }
   .heroRight { display: none; }
 }
 
 @media (max-width: 768px) {
   .heroWrapper {
-    padding: 4.5rem 1.25rem 2.5rem;
+    height: auto;
+    padding: 5rem 1.25rem 2.5rem;
+    overflow: visible;
+    align-items: flex-start;
   }
   .heroContent {
-    gap: 1.5rem;
-    padding: 0;
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+    text-align: center;
+  }
+  .heroLeft {
+    align-items: center;
+    gap: 1rem;
   }
   .heroTitle {
-    font-size: clamp(1.6rem, 6vw, 2.4rem);
+    font-size: clamp(1.5rem, 6vw, 2.2rem);
+    letter-spacing: -0.5px;
+  }
+  .heroBadge {
+    font-size: 0.85rem;
   }
   .heroSubtext {
     font-size: 0.9rem;
     max-width: 100%;
+    margin-bottom: 0.5rem;
   }
   .heroSearch {
+    flex-direction: column;
     max-width: 100%;
+    padding: 0.5rem;
+    gap: 0.5rem;
+  }
+  .heroSearch input {
+    width: 100%;
+    padding: 12px 1rem;
+  }
+  .heroSearch button {
+    width: 100%;
+    border-radius: 6px;
+    padding: 12px;
+  }
+  .searchIconWrapper {
+    display: none;
   }
 
   .stickyHeader {
