@@ -486,196 +486,50 @@ export default function CourseFinder() {
   const findCourses = async () => {
     setLoading(true);
     try {
-      const normalize = (s: string) => (s || '').toLowerCase().replace(/[\s.\-&]/g, '');
-
       const fieldQuestion = questions.find(q => q.field === 'field');
-      let selectedFieldValue = fieldQuestion ? answers[fieldQuestion.field] : null;
+      const selectedFieldValue = fieldQuestion ? answers[fieldQuestion.field] : null;
 
-      Object.values(answers).forEach((val: any) => {
-        const vstr = String(val).toLowerCase().replace(/[^a-z0-9]/g, '');
-        if (vstr.includes('skill') || vstr.includes('vocational')) selectedFieldValue = 'skill';
-        else if ((vstr.includes('openschool') || vstr === 'open' || vstr === 'nios' || vstr === 'school') && selectedFieldValue !== 'skill') selectedFieldValue = 'openschool';
+      // Skill / open-school use dedicated endpoints (client-side fetch)
+      if (selectedFieldValue === 'skill' || selectedFieldValue === 'openschool') {
+        const endpoint = selectedFieldValue === 'skill' ? '/api/skills' : '/api/open-school';
+        const res = await fetch(endpoint).catch(() => null);
+        let data: any = [];
+        if (res?.ok) {
+          const ct = res.headers.get('content-type');
+          if (ct?.includes('application/json')) data = await res.json();
+        }
+        let allPrograms: any[] = [];
+        if (selectedFieldValue === 'skill') {
+          const arr = Array.isArray(data) ? data : (data.data || []);
+          allPrograms = arr.map((s: any) => ({ ...s, university: s.university || 'CRDC Skill Center', category: s.category || 'Skill', level: 'Skill', mode: s.mode || 'Online', duration: s.duration || 'Flexible', fee: s.fee || s.price || 0 }));
+        } else {
+          const arr = Array.isArray(data) ? data : (data.data || []);
+          arr.forEach((board: any) => {
+            (board.programs || []).forEach((p: any) => {
+              allPrograms.push({ ...p, _id: p._id || Math.random().toString(), university: board.name, category: 'Open School', level: p.level || 'School', mode: p.mode || 'Online', duration: p.duration || '1-2 Years', fee: p.fee || 0 });
+            });
+          });
+        }
+        setResults(allPrograms.slice(0, 6));
+        setFallbackResults([]);
+        setShowResults(true);
+        return;
+      }
+
+      // Main path: server-side filtered query
+      const res = await fetch('/api/public/course-finder-results', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ answers, questions }),
       });
-
-      let endpoint = '/api/admin/programs';
-      if (selectedFieldValue === 'skill') endpoint = '/api/skills';
-      else if (selectedFieldValue === 'openschool') endpoint = '/api/open-school';
-
-      const res = await fetch(endpoint).catch(() => null);
-      let data: any = [];
-      if (res && res.ok) {
-        const ct = res.headers.get('content-type');
-        if (ct && ct.includes('application/json')) data = await res.json();
-      }
-      let allPrograms: any[] = [];
-
-      if (selectedFieldValue === 'skill') {
-        const arr = Array.isArray(data) ? data : (data.data || []);
-        allPrograms = arr.map((s: any) => ({ ...s, name: s.name, university: s.university || 'CRDC Skill Center', category: s.category || 'Skill', level: 'Skill', mode: s.mode || 'Online', duration: s.duration || 'Flexible', fee: s.fee || s.price || 0 }));
-      } else if (selectedFieldValue === 'openschool') {
-        const arr = Array.isArray(data) ? data : (data.data || []);
-        arr.forEach((board: any) => {
-          (board.programs || []).forEach((p: any) => {
-            allPrograms.push({ ...p, _id: p._id || Math.random().toString(), name: p.name, university: board.name, category: 'Open School', level: p.level || 'School', mode: p.mode || 'Online', duration: p.duration || '1-2 Years', fee: p.fee || 0 });
-          });
-        });
-      } else {
-        allPrograms = Array.isArray(data) ? data : (data.data || []);
+      let programs: any[] = [];
+      if (res.ok) {
+        const data = await res.json();
+        programs = data.programs || [];
       }
 
-      const KEYWORD_MAP: Record<string, string[]> = {
-        commerce: ['bcom', 'mcom', 'commerce', 'accounting', 'finance', 'ca'],
-        finance: ['bcom', 'mcom', 'finance', 'commerce', 'accounting', 'mba'],
-        technology: ['btech', 'mtech', 'bca', 'mca', 'computer', 'it', 'software', 'tech', 'engineering'],
-        tech: ['btech', 'mtech', 'bca', 'mca', 'computer', 'it', 'software', 'tech', 'engineering'],
-        science: ['bsc', 'msc', 'science', 'physics', 'chemistry', 'biology', 'mathematics'],
-        arts: ['ba', 'ma', 'arts', 'english', 'history', 'sociology', 'political'],
-        management: ['bba', 'mba', 'management', 'business', 'administration'],
-        business: ['bba', 'mba', 'management', 'business', 'administration'],
-        medical: ['mbbs', 'bams', 'medical', 'nursing', 'pharmacy', 'health'],
-        law: ['llb', 'llm', 'law', 'legal', 'judiciary'],
-        education: ['bed', 'med', 'education', 'teaching'],
-        design: ['design', 'bdes', 'mdes', 'fashion', 'interior', 'graphic'],
-        '12thpass': ['undergraduate', 'ug', 'diploma', 'certificate'],
-        '12th': ['undergraduate', 'ug', 'diploma', 'certificate'],
-        'highersecondary': ['undergraduate', 'ug', 'diploma', 'certificate'],
-        'below12': ['diploma', 'certificate'],
-        'graduate': ['postgraduate', 'pg', 'undergraduate', 'ug'],
-        'bachelors': ['postgraduate', 'pg'],
-        'bachelorsdegree': ['postgraduate', 'pg'],
-        'postgraduate': ['doctorate', 'phd', 'postgraduate', 'pg'],
-        'masters': ['doctorate', 'phd'],
-        'online': ['online'],
-        'offline': ['offline'],
-        'distance': ['distance'],
-        'hybrid': ['hybrid', 'online', 'distance'],
-        'campus': ['offline', 'campus'],
-        // Current status
-        'student': ['undergraduate', 'ug'],
-        'working': ['postgraduate', 'pg', 'mba'],
-        'fresher': ['undergraduate', 'ug', 'diploma', 'certificate'],
-        // Specialization
-        'marketing': ['marketing', 'sales', 'mba', 'bba'],
-        'it_software': ['it', 'software', 'computer', 'bca', 'mca', 'tech'],
-        'hr': ['hr', 'human', 'resource', 'management', 'mba'],
-        'operations': ['operations', 'logistics', 'management'],
-        // Goal
-        'get_job': ['undergraduate', 'ug', 'diploma', 'certificate'],
-        'advance_career': ['postgraduate', 'pg', 'mba'],
-        'switch_field': ['certificate', 'diploma'],
-        'higher_studies': ['postgraduate', 'pg', 'doctorate', 'phd'],
-        // Experience
-        'no_experience': ['undergraduate', 'ug', 'diploma'],
-        'less_2': ['undergraduate', 'ug'],
-        'two_five': ['postgraduate', 'pg', 'mba'],
-        'five_plus': ['postgraduate', 'pg', 'mba', 'doctorate'],
-        // Duration
-        'less_1_year': ['certificate', 'diploma'],
-        'one_two_years': ['diploma', 'undergraduate', 'ug'],
-        'two_three_years': ['undergraduate', 'ug', 'postgraduate'],
-        'undergraduate': ['undergraduate', 'ug'],
-        'ug': ['undergraduate', 'ug'],
-        'pg': ['postgraduate', 'pg'],
-        'skill': ['skill', 'certificate', 'diploma', 'vocational'],
-        'openschool': ['open', 'school', 'nios', '10th', '12th', 'open school'],
-      };
-
-      let fieldTerms: string[] = [];
-      if (selectedFieldValue) {
-        let fieldOpt = fieldQuestion?.options.find((o: any) => o.value === selectedFieldValue);
-        if (selectedFieldValue === 'skill') fieldOpt = { label: 'Skill Program', value: 'skill' };
-        if (selectedFieldValue === 'openschool') fieldOpt = { label: 'Open School', value: 'openschool' };
-        if (fieldOpt) {
-          fieldTerms.push(normalize(fieldOpt.label));
-          fieldOpt.label.toLowerCase().replace(/[^a-z0-9\s]/g, '').split(/\s+/).forEach((word: string) => {
-            const mapped = KEYWORD_MAP[word] || KEYWORD_MAP[normalize(word)];
-            if (mapped) fieldTerms.push(...mapped);
-          });
-        }
-      }
-
-      const otherTerms: string[] = [];
-      questions.filter(q => q.field !== 'field').forEach(q => {
-        const val = answers[q.field];
-        const opt = q.options.find((o: any) => o.value === val);
-        if (opt) {
-          otherTerms.push(normalize(opt.label));
-          const words = opt.label.toLowerCase().replace(/[^a-z0-9\s]/g, '').split(/\s+/);
-          words.forEach((word: string) => {
-            const mapped = KEYWORD_MAP[word] || KEYWORD_MAP[normalize(word)];
-            if (mapped) otherTerms.push(...mapped);
-          });
-          // Also map by option value directly
-          const valMapped = KEYWORD_MAP[val] || KEYWORD_MAP[normalize(val)];
-          if (valMapped) otherTerms.push(...valMapped);
-        }
-      });
-
-      const uniqueFieldTerms = [...new Set(fieldTerms)];
-      const uniqueOtherTerms = [...new Set(otherTerms)];
-
-      const budgetQuestion = questions.find(q => q.field === 'budget' || (q.question || '').toLowerCase().includes('fee') || (q.question || '').toLowerCase().includes('budget'));
-      let minBudget = 0, maxBudget = Infinity;
-      if (budgetQuestion && answers[budgetQuestion.field]) {
-        const opt = budgetQuestion.options.find((o: any) => o.value === answers[budgetQuestion.field]);
-        if (opt && opt.value !== 'any') {
-          minBudget = opt.min ?? 0;
-          maxBudget = opt.max ?? Infinity;
-          if (minBudget === 0 && maxBudget === Infinity) {
-            const str = (opt.label || opt.value || '').toLowerCase().replace(/,/g, '').replace(/_/, '-');
-            const extractNum = (nStr: string, unit: string) => {
-              let n = parseInt(nStr);
-              if (unit && (unit.includes('k') || unit === 'l' || unit.includes('lakh'))) {
-                if (unit.includes('k')) n *= 1000;
-                if (unit.includes('l') || unit.includes('lakh')) n *= 100000;
-              }
-              return n;
-            };
-            const rangeMatch = str.match(/(\d+)(k|lakh|l)?\s*-\s*(\d+)(k|lakh|l)?/);
-            if (rangeMatch) { minBudget = extractNum(rangeMatch[1], rangeMatch[2]); maxBudget = extractNum(rangeMatch[3], rangeMatch[4]); }
-            else if (str.includes('under') || str.includes('below')) { const num = str.match(/(\d+)(k|lakh|l)?/); if (num) maxBudget = extractNum(num[1], num[2]); }
-            else if (str.includes('above') || str.includes('over')) { const num = str.match(/(\d+)(k|lakh|l)?/); if (num) minBudget = extractNum(num[1], num[2]); }
-          }
-        }
-      }
-
-      const scored = allPrograms.map(p => {
-        const pName = normalize(p.name);
-        const pCat = normalize(p.category);
-        const pLevel = normalize(p.level);
-        const pMode = normalize(p.mode);
-        const pSpecs = (p.specializations || []).map(normalize);
-        const pAll = [pName, pCat, pLevel, pMode, ...pSpecs];
-        const pTokens = [...String(p.name || '').toLowerCase().replace(/[\.\-]/g, '').replace(/[^a-z0-9\s]/g, ' ').split(/\s+/).filter(Boolean),
-                        ...String(p.category || '').toLowerCase().replace(/[\.\-]/g, '').replace(/[^a-z0-9\s]/g, ' ').split(/\s+/).filter(Boolean)];
-
-        let fieldMatch = false;
-        if (selectedFieldValue && uniqueFieldTerms.length > 0) {
-          fieldMatch = uniqueFieldTerms.some(term => {
-            const t = term.toLowerCase();
-            if (pTokens.some(w => w === t)) return true;
-            return pAll.some(f => { const fv = f.toLowerCase(); if (fv === t) return true; if (t.length >= 4 && (fv.startsWith(t) || fv.endsWith(t) || fv.includes(t))) return true; return false; });
-          });
-        }
-
-        let score = 0;
-        if (fieldMatch) score += 10;
-        uniqueOtherTerms.forEach(term => {
-          if (pAll.some(f => f === term || (term.length > 3 && f.includes(term)))) score += 1;
-        });
-
-        let budgetMatch = true;
-        if (maxBudget !== Infinity || minBudget > 0) {
-          const pFee = parseInt(String(p.fee).replace(/,/g, '').replace(/[^0-9]/g, ''));
-          if (!isNaN(pFee) && pFee > 0) { if (pFee < minBudget || pFee > maxBudget) budgetMatch = false; }
-        }
-        return { ...p, _score: score, _budgetMatch: budgetMatch, _fieldMatch: fieldMatch };
-      });
-
-      scored.sort((a, b) => b._score - a._score || (b.featured ? 1 : 0) - (a.featured ? 1 : 0));
-      const minExactScore = selectedFieldValue ? 10 : 1;
-      setResults(scored.filter(p => p._score >= minExactScore && p._budgetMatch).slice(0, 6));
-      setFallbackResults(scored.filter(p => p._score > 0 && !(p._score >= minExactScore && p._budgetMatch)).slice(0, 4));
+      setResults(programs);
+      setFallbackResults([]);
       setShowResults(true);
 
       const formattedAnswers = questions.map(q => { const opt = q.options.find((o: any) => o.value === answers[q.field]); return opt ? opt.label : ''; }).filter(Boolean).join(' | ');
@@ -827,7 +681,7 @@ export default function CourseFinder() {
                           <p className="cf-result-university"><IconBuilding /> {program.university?.name || program.university || program.universityId?.name || 'University'}</p>
                           <div className="cf-result-meta">
                             <span className="cf-result-badge"><IconClock /> {program.duration}</span>
-                            <span className="cf-result-badge"><IconMonitor /> {program.mode}</span>
+                            <span className="cf-result-badge"><IconMonitor /> {program.mode || program.type || program.level || 'Program'}</span>
                           </div>
                         </div>
                         {!isOpenSchool && (
