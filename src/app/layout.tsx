@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "TIMS Education | Best Distance Education Centre in Kerala",
+  title: "Find Your University | India's No.1 Course Finding Platform",
   description: "Join thousands of successful alumni who have transformed their careers through TIMS Education. We provide top-tier distance education and online courses.",
 };
 import NavigationWrapper from "@/components/NavigationWrapper";

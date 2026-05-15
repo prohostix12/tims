@@ -10,7 +10,7 @@ export interface ISeoSettings extends Document {
 }
 
 const SeoSettingsSchema = new Schema<ISeoSettings>({
-  siteTitle: { type: String, default: 'TIMS Education' },
+  siteTitle: { type: String, default: "Find Your University | India's No.1 Course Finding Platform" },
   metaDescription: { type: String, default: '' },
   keywords: { type: String, default: '' },
   googleAnalyticsId: { type: String, default: '' },

@@ -102,7 +102,7 @@ export default function SEOPage() {
                     className={styles.input}
                     value={form.siteTitle}
                     onChange={handleChange}
-                    placeholder="e.g. TIMS Education – Best Distance Learning Centre"
+                    placeholder="e.g. Find Your University | India's No.1 Course Finding Platform"
                   />
                 </div>
 
