@@ -4,6 +4,8 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { BookOpen, Download, Search, FileText, ChevronRight, Loader2 } from 'lucide-react';
 import styles from './study-material.module.css';
+import Navbar from '@/components/Navbar';
+import Footer from '@/components/Footer';
 
 interface StudyMaterial {
   _id: string;
@@ -51,6 +53,7 @@ export default function StudyMaterialPage() {
 
   return (
     <>
+      <Navbar />
       <main className={styles.container}>
 
         {/* Hero */}
@@ -149,6 +152,7 @@ export default function StudyMaterialPage() {
         </section>
 
       </main>
+      <Footer />
     </>
   );
 }

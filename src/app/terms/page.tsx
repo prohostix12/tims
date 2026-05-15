@@ -2,11 +2,14 @@
 
 import React from 'react';
 import styles from './terms.module.css';
+import Navbar from '@/components/Navbar';
+import Footer from '@/components/Footer';
 import { ShieldCheck, Scale, FileText, Info } from 'lucide-react';
 
 export default function TermsPage() {
   return (
     <>
+      <Navbar />
       <main className={styles.container}>
         {/* Cinematic Hero */}
         <section className={styles.hero}>
@@ -74,6 +77,7 @@ export default function TermsPage() {
           </div>
         </section>
       </main>
+      <Footer />
     </>
   );
 }

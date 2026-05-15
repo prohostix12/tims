@@ -11,6 +11,7 @@ export default function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
   const router = useRouter();
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -22,7 +23,7 @@ export default function LoginPage() {
       // Success! Redirect to admin
       router.push('/admin');
     } else {
-      alert('Invalid credentials. Hint: use admin@tims.edu / admin123');
+      setError('Invalid email or password. Please try again.');
       setLoading(false);
     }
   };
@@ -57,6 +58,7 @@ export default function LoginPage() {
           </div>
 
           <form className={styles.loginForm} onSubmit={handleSubmit}>
+            {error && <div className={styles.errorMessage}>{error}</div>}
             <div className={styles.inputGroup}>
               <label>Email Address</label>
               <div className={styles.inputWrapper}>
@@ -65,7 +67,10 @@ export default function LoginPage() {
                   type="email"
                   placeholder="admin@tims.edu"
                   value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  onChange={(e) => {
+                    setEmail(e.target.value);
+                    if (error) setError('');
+                  }}
                   required
                 />
               </div>
@@ -79,7 +84,10 @@ export default function LoginPage() {
                   type="password"
                   placeholder="••••••••"
                   value={password}
-                  onChange={(e) => setPassword(e.target.value)}
+                  onChange={(e) => {
+                    setPassword(e.target.value);
+                    if (error) setError('');
+                  }}
                   required
                 />
               </div>
