@@ -3,6 +3,7 @@
 import { usePathname } from 'next/navigation';
 import Navbar from './Navbar';
 import Footer from './Footer';
+import FooterSecondary from './FooterSecondary';
 import CourseFinder from './CourseFinder';
 import RegisterModal from './RegisterModal';
 
@@ -18,13 +19,15 @@ export default function NavigationWrapper({
     return <>{children}</>;
   }
 
+  const isAboutPage = pathname === '/about';
+
   return (
     <>
       <Navbar />
       {children}
       <CourseFinder />
       <RegisterModal />
-      <Footer />
+      {isAboutPage ? <Footer /> : <FooterSecondary />}
     </>
   );
 }
