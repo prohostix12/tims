@@ -23,22 +23,13 @@ const courseData: Record<string, { name: string; icon: React.ReactNode }[]> = {
     { name: 'B.Sc',  icon: <FlaskConical size={32} /> },
     { name: 'BA',    icon: <Globe size={32} /> },
   ],
-  'Diploma': [
-    { name: 'Data Science',   icon: <BarChart2 size={32} /> },
-    { name: 'Cyber Security', icon: <Cpu size={32} /> },
-    { name: 'Fashion Design', icon: <PenTool size={32} /> },
-    { name: 'Supply Chain',   icon: <Package size={32} /> },
-    { name: 'Nutrition',      icon: <Stethoscope size={32} /> },
-    { name: 'Music',          icon: <Music size={32} /> },
-    { name: 'IT',             icon: <Layers size={32} /> },
-  ],
   'Credit Transfer Programme': [
     { name: 'B.Tech Credit Transfer', icon: <ArrowRightLeft size={32} /> },
     { name: 'UG Credit Transfer', icon: <ArrowRightLeft size={32} /> },
     { name: 'PG Credit Transfer', icon: <ArrowRightLeft size={32} /> },
     { name: 'Diploma Credit Transfer', icon: <GraduationCap size={32} /> },
   ],
-  'SIDP': [
+  'SIDP (Skill Integrated Diploma Programs)': [
     { name: 'BBA + HR MANAGEMENT', icon: <Briefcase size={32} /> },
     { name: 'BBA + HOSPITAL ADMINISTRATION', icon: <Stethoscope size={32} /> },
     { name: 'BBA + DIGITAL MARKETING', icon: <Globe size={32} /> },
@@ -47,6 +38,15 @@ const courseData: Record<string, { name: string; icon: React.ReactNode }[]> = {
     { name: 'BA + MTTC', icon: <Globe size={32} /> },
     { name: 'BCOM + ACCA', icon: <Landmark size={32} /> },
     { name: 'BCOM + ADVANCED ACCOUNTANTS', icon: <Database size={32} /> },
+  ],
+  'Diploma': [
+    { name: 'Data Science',   icon: <BarChart2 size={32} /> },
+    { name: 'Cyber Security', icon: <Cpu size={32} /> },
+    { name: 'Fashion Design', icon: <PenTool size={32} /> },
+    { name: 'Supply Chain',   icon: <Package size={32} /> },
+    { name: 'Nutrition',      icon: <Stethoscope size={32} /> },
+    { name: 'Music',          icon: <Music size={32} /> },
+    { name: 'IT',             icon: <Layers size={32} /> },
   ],
 };
 

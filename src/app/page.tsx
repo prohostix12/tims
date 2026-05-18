@@ -331,7 +331,7 @@ export default function Home() {
       {/* ===== STATS BAR ===== */}
       <section className={styles.statsBar}>
         {[
-          { num: '5,000+', label: 'Happy Alumni' },
+          { num: '20,000+', label: 'Happy Alumni' },
           { num: '100+', label: 'Expert Mentors' },
           { num: '90+', label: 'Partner Universities' },
           { num: '18+', label: 'Years Experience' },
