@@ -32,20 +32,13 @@ const Footer = () => {
             </div>
             <div className={styles.contactItem}>
               <Phone size={16} color="#ffffff" className={styles.iconMargin} />
-              <a href="tel:+919961967777">+91 9961967777</a>
+              <a href="tel:+9189435555592">+91 89435555592</a>
             </div>
             <div className={styles.contactItem} style={{ marginTop: '0.75rem', alignItems: 'flex-start' }}>
               <MapPin size={16} color="#ffffff" className={styles.iconMargin} style={{ flexShrink: 0 }} />
               <span style={{ fontSize: '0.85rem', lineHeight: '1.5' }}>
-                2nd Floor, Pamls Tower, near Central Bank,<br />
-                Thazhepalam, Tirur, Kerala 676101
-              </span>
-            </div>
-            <div className={styles.contactItem} style={{ marginTop: '0.75rem', alignItems: 'flex-start' }}>
-              <MapPin size={16} color="#ffffff" className={styles.iconMargin} style={{ flexShrink: 0 }} />
-              <span style={{ fontSize: '0.85rem', lineHeight: '1.5' }}>
-                2nd floor Al madeela complex, Calicut road,<br />
-                Edappal 679576 MALAPPURAM
+                Tirur, Malappuram,<br />
+                Kerala
               </span>
             </div>
           </div>
@@ -65,21 +58,18 @@ const Footer = () => {
             </div>
             <div className={styles.contactItem}>
               <Phone size={16} color="#ffffff" className={styles.iconMargin} />
-              <a href="tel:+919961967777">+91 9961967777</a>
+              <a href="tel:+9189435555592">+91 89435555592</a>
             </div>
             <div className={styles.contactItem} style={{ marginTop: '0.75rem', alignItems: 'flex-start' }}>
               <MapPin size={16} color="#ffffff" className={styles.iconMargin} style={{ flexShrink: 0 }} />
               <span style={{ fontSize: '0.85rem', lineHeight: '1.5' }}>
-                YMCA Cross Road,<br />
-                Kozhikode<br />
-                Kerala – 673001
+                Calicut, Kerala
               </span>
             </div>
             <div className={styles.contactItem} style={{ marginTop: '0.75rem', alignItems: 'flex-start' }}>
               <MapPin size={16} color="#ffffff" className={styles.iconMargin} style={{ flexShrink: 0 }} />
               <span style={{ fontSize: '0.85rem', lineHeight: '1.5' }}>
-                6th Floor, National Pearl Star building,Edappally,<br />
-                Kochi, Ernakulam, Kerala 682024
+                Kochi, Kerala
               </span>
             </div>
           </div>
@@ -99,13 +89,12 @@ const Footer = () => {
             </div>
             <div className={styles.contactItem}>
               <Phone size={16} color="#ffffff" className={styles.iconMargin} />
-              <a href="tel:+919961967777">+91 9961967777</a>
+              <a href="tel:+9189435555592">+91 89435555592</a>
             </div>
             <div className={styles.contactItem} style={{ marginTop: '0.75rem', alignItems: 'flex-start' }}>
               <MapPin size={16} color="#ffffff" className={styles.iconMargin} style={{ flexShrink: 0 }} />
               <span style={{ fontSize: '0.85rem', lineHeight: '1.5' }}>
-                2nd Floor, Pamls Tower, near Central Bank,<br />
-                Thazhepalam, Tirur, Kerala 676101
+                Tirur, Kerala
               </span>
             </div>
           </div>
@@ -125,7 +114,7 @@ const Footer = () => {
             </div>
             <div className={styles.contactItem}>
               <Phone size={16} color="#ffffff" className={styles.iconMargin} />
-              <a href="tel:+919961967777">+91 9961967777</a>
+              <a href="tel:+9189435555592">+91 89435555592</a>
             </div>
             <div className={styles.contactItem} style={{ marginTop: '0.75rem', alignItems: 'flex-start' }}>
               <MapPin size={16} color="#ffffff" className={styles.iconMargin} style={{ flexShrink: 0 }} />

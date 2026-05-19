@@ -43,6 +43,22 @@
 }
 .cf-input::placeholder { color: #94A3B8; }
 .cf-input:focus { outline: none; border-color: #E8502A; background: #fff; box-shadow: 0 0 0 3px rgba(232,80,42,0.1); }
+
+.cf-phone-group { 
+  display: flex; width: 100%; border-radius: 10px; border: 2px solid #E2E8F0; 
+  background: #F8FAFC; overflow: hidden; transition: border-color 0.2s, background 0.2s; 
+}
+.cf-phone-group:focus-within { border-color: #E8502A; background: #fff; box-shadow: 0 0 0 3px rgba(232,80,42,0.1); }
+.cf-country-select { 
+  border: none; background: transparent; padding: 13px 5px 13px 40px; 
+  font-size: 0.95rem; font-weight: 600; color: #334155; outline: none; 
+  cursor: pointer; border-right: 1px solid #E2E8F0; 
+  flex-shrink: 0;
+}
+.cf-phone-input { 
+  border: none !important; border-radius: 0 !important; padding-left: 12px !important; 
+  background: transparent !important; box-shadow: none !important; flex: 1; 
+}
 .cf-submit-btn {
   width: 100%; padding: 14px; margin-top: 6px;
   background: #E8502A; color: #fff; border: none; border-radius: 10px;

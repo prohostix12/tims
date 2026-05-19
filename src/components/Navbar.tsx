@@ -21,38 +21,10 @@ interface NavLink {
 
 const navLinks: NavLink[] = [
   { name: 'Home', path: '/' },
-  {
-    name: 'Services',
-    path: '/services',
-    submenu: [
-      { name: 'Attestation', path: '/services/attestation' },
-      { name: 'Credit Transfer', path: '/services/credit-transfer' },
-    ],
-  },
+  { name: 'Services', path: '/services' },
   { name: 'Courses', path: '/courses' },
-  {
-    name: 'Universities',
-    path: '/universities',
-    submenu: [
-      { name: 'All Universities', path: '/universities' },
-      { name: 'Study Material', path: '/universities/study-material' },
-      {
-        name: 'Examination',
-        path: '/universities/examination',
-        submenu: [
-          { name: 'Time Table', path: '/universities/examination/timetable' },
-          { name: 'Results', path: '/results' },
-        ],
-      },
-    ],
-  },
-  {
-    name: 'Students',
-    path: '/students',
-    submenu: [
-      { name: 'Syllabus', path: '/students/syllabus' },
-    ],
-  },
+  { name: 'Universities', path: '/universities' },
+
   {
     name: 'About',
     path: '/about',
@@ -180,15 +152,39 @@ const Navbar = () => {
             <div key={link.name} className={styles.drawerItem}>
               {link.submenu ? (
                 <>
-                  <button
-                    className={`${styles.drawerLink} ${openMobileItem === link.name ? styles.drawerLinkActive : ''}`}
-                    onClick={() => toggleMobileItem(link.name)}
-                  >
-                    {link.name}
-                    <span className={`${styles.drawerChevron} ${openMobileItem === link.name ? styles.drawerChevronOpen : ''}`}>
-                      <ChevronDown size={16} />
-                    </span>
-                  </button>
+                  <div style={{ display: 'flex', alignItems: 'center', width: '100%' }}>
+                    <Link
+                      href={link.path}
+                      className={`${styles.drawerLink} ${isActive(link) ? styles.drawerLinkActive : ''}`}
+                      onClick={() => setMobileOpen(false)}
+                      style={{ flex: 1, display: 'flex', justifyContent: 'space-between', width: 'auto', borderTopRightRadius: 0, borderBottomRightRadius: 0 }}
+                    >
+                      {link.name}
+                    </Link>
+                    <button
+                      onClick={() => toggleMobileItem(link.name)}
+                      aria-label={`Toggle ${link.name} submenu`}
+                      style={{
+                        background: 'none',
+                        border: 'none',
+                        color: 'inherit',
+                        padding: '0.75rem 1rem',
+                        cursor: 'pointer',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        borderTopLeftRadius: 0,
+                        borderBottomLeftRadius: 0,
+                        width: 'auto',
+                        borderLeft: '1px solid rgba(255, 255, 255, 0.05)'
+                      }}
+                      className={styles.drawerLink}
+                    >
+                      <span className={`${styles.drawerChevron} ${openMobileItem === link.name ? styles.drawerChevronOpen : ''}`}>
+                        <ChevronDown size={16} />
+                      </span>
+                    </button>
+                  </div>
                   {openMobileItem === link.name && (
                     <div className={styles.drawerSub}>
                       {link.submenu.map((sub) => (

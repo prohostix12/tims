@@ -10,6 +10,7 @@ export default function RegisterModal() {
     studentName: '',
     email: '',
     phone: '',
+    countryCode: '+91',
     program: '',
     university: '',
   });
@@ -36,6 +37,7 @@ export default function RegisterModal() {
           studentName: '',
           email: '',
           phone: '',
+          countryCode: '+91',
           program: '',
           university: '',
         });
@@ -63,11 +65,22 @@ export default function RegisterModal() {
     setLoading(true);
     setError('');
 
+    if (!/^\d{10}$/.test(formData.phone)) {
+      setError('Please enter exactly a 10-digit phone number.');
+      setLoading(false);
+      return;
+    }
+
     try {
+      const payload = {
+        ...formData,
+        phone: `${formData.countryCode} ${formData.phone}`
+      };
+
       const res = await fetch('/api/public/enrollments', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(payload),
       });
 
       const data = await res.json();
@@ -150,16 +163,33 @@ export default function RegisterModal() {
 
               <div className={styles.inputGroup}>
                 <label className={styles.label} htmlFor="phone">Phone Number</label>
-                <input
-                  type="tel"
-                  id="phone"
-                  name="phone"
-                  className={styles.input}
-                  placeholder="Enter your phone number"
-                  value={formData.phone}
-                  onChange={handleChange}
-                  required
-                />
+                <div className={styles.phoneGroup}>
+                  <select 
+                    name="countryCode"
+                    className={styles.countrySelect}
+                    value={formData.countryCode}
+                    onChange={handleChange}
+                  >
+                    <option value="+91">+91 (IN)</option>
+                    <option value="+971">+971 (AE)</option>
+                    <option value="+966">+966 (SA)</option>
+                    <option value="+965">+965 (KW)</option>
+                    <option value="+968">+968 (OM)</option>
+                    <option value="+974">+974 (QA)</option>
+                    <option value="+973">+973 (BH)</option>
+                  </select>
+                  <input
+                    type="tel"
+                    id="phone"
+                    name="phone"
+                    className={styles.phoneInput}
+                    placeholder="10-Digit Phone Number"
+                    maxLength={10}
+                    value={formData.phone}
+                    onChange={(e) => setFormData({ ...formData, phone: e.target.value.replace(/\D/g, '').slice(0, 10) })}
+                    required
+                  />
+                </div>
               </div>
 
               <div className={styles.inputGroup}>

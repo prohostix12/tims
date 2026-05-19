@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from 'react';
 import styles from './universities.module.css';
 import Link from 'next/link';
 import Image from 'next/image';
-import { MapPin, ArrowRight, GraduationCap, Loader2, Search, Info, Globe } from 'lucide-react';
+import { MapPin, ArrowRight, GraduationCap, Loader2, Search, Info, Globe, BookOpen, Award, Building } from 'lucide-react';
 import EnquiryModal from '@/components/EnquiryModal';
 
 export default function UniversitiesPage() {
@@ -103,8 +103,35 @@ export default function UniversitiesPage() {
           </div>
 
           <div className={styles.heroRight}>
-            <div className={styles.imageWrapper}>
-              <img src="/images/hero-campus.png" alt="University Campus" className={styles.campusImg} />
+            <div className={styles.orbitContainer}>
+              {/* Glowing Background Sparkles */}
+              <div className={`${styles.glowSparkle} ${styles.sparkle1}`} />
+              <div className={`${styles.glowSparkle} ${styles.sparkle2}`} />
+              <div className={`${styles.glowSparkle} ${styles.sparkle3}`} />
+              
+              {/* Rotating Orbit Path with Floating Nodes */}
+              <div className={styles.orbitPath}>
+                <div className={`${styles.orbitNode} ${styles.node1}`}>
+                  <BookOpen size={24} />
+                </div>
+                <div className={`${styles.orbitNode} ${styles.node2}`}>
+                  <Globe size={24} />
+                </div>
+                <div className={`${styles.orbitNode} ${styles.node3}`}>
+                  <Building size={24} />
+                </div>
+                <div className={`${styles.orbitNode} ${styles.node4}`}>
+                  <Award size={24} />
+                </div>
+              </div>
+              
+              {/* Center Hub */}
+              <div className={styles.centerHub}>
+                <GraduationCap size={44} />
+                <span className={styles.centerHubText}>
+                  Partner <br /> Hub
+                </span>
+              </div>
             </div>
           </div>
 

@@ -40,7 +40,7 @@ const FooterSecondary = () => {
             <div className={styles.contactItem}>
               <Phone className={styles.icon} size={18} />
               <div className={styles.contactText}>
-                <a href="tel:+919961967777">+91 9961967777</a>
+                <a href="tel:+9189435555592">+91 89435555592</a>
               </div>
             </div>
             <div className={styles.contactItem}>
@@ -52,9 +52,7 @@ const FooterSecondary = () => {
           </div>
           <div className={styles.socialIcons} style={{ marginTop: '1.5rem' }}>
             <a href="#" className={styles.socialIcon} aria-label="Facebook"><Facebook size={18} /></a>
-            <a href="#" className={styles.socialIcon} aria-label="Twitter"><Twitter size={18} /></a>
             <a href="#" className={styles.socialIcon} aria-label="Instagram"><Instagram size={18} /></a>
-            <a href="#" className={styles.socialIcon} aria-label="LinkedIn"><Linkedin size={18} /></a>
             <a href="#" className={styles.socialIcon} aria-label="Youtube"><Youtube size={18} /></a>
           </div>
         </div>

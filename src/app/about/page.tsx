@@ -38,26 +38,16 @@ export default function About() {
               For over a decade, TIMS Education has been at the forefront of global academic excellence, bridging the gap between potential and world-class opportunity.
             </p>
           </div>
-          <div className={styles.heroRight}>
-            <div className={styles.heroImageWrap}>
-              <img 
-                src="/images/about-hero-bg-v2.png" 
-                alt="TIMS Modern Campus" 
-                className={styles.heroImage}
-              />
-              <div className={styles.heroGlow} />
-            </div>
-          </div>
         </div>
       </section>
 
       {/* ===== Stats Bento Grid ===== */}
       <section className={styles.statsContainer}>
         {[
-          { number: "15,000+", label: "Success Stories", icon: <Users /> },
-          { number: "13+", label: "University Partners", icon: <Globe /> },
-          { number: "98%", label: "Employment Rate", icon: <Target /> },
-          { number: "100%", label: "Degree Recognition", icon: <ShieldCheck /> },
+          { number: "20,000+", label: "Happy Alumni", icon: <Users /> },
+          { number: "100+", label: "Expert Mentors", icon: <GraduationCap /> },
+          { number: "90+", label: "Partner Universities", icon: <Globe /> },
+          { number: "18+", label: "Years Experience", icon: <Award /> },
         ].map((stat, idx) => (
           <div key={idx} className={styles.statCard}>
             <span className={styles.statNumber}>{stat.number}</span>
@@ -190,9 +180,6 @@ export default function About() {
       {/* ===== Success Section ===== */}
       <section className={styles.successSection}>
         <div className={styles.successContent}>
-          <div className={styles.successImageCol}>
-            <img src="/images/trusted-partner.png" alt="Success" />
-          </div>
           <div className={styles.successTextCol}>
             <h2 className={styles.sectionTitle}>Your Trusted Partner for Management Studies</h2>
             <p className={styles.sectionDesc}>

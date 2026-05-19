@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import {
   GraduationCap, Monitor, BarChart2, FlaskConical, BookOpen, Cpu,
   Briefcase, Database, Landmark, Globe, Music, Layers, PenTool, Package, Stethoscope,
-  ArrowRightLeft,
+  ArrowRightLeft, HeartPulse,
 } from 'lucide-react';
 import styles from './OnlineCoursesSection.module.css';
 
@@ -31,7 +31,7 @@ const courseData: Record<string, { name: string; icon: React.ReactNode }[]> = {
   ],
   'SIDP (Skill Integrated Diploma Programs)': [
     { name: 'BBA + HR MANAGEMENT', icon: <Briefcase size={32} /> },
-    { name: 'BBA + HOSPITAL ADMINISTRATION', icon: <Stethoscope size={32} /> },
+    { name: 'BBA + HOSPITAL ADMINISTRATION', icon: <HeartPulse size={32} /> },
     { name: 'BBA + DIGITAL MARKETING', icon: <Globe size={32} /> },
     { name: 'BBA + LOGISTICS', icon: <Package size={32} /> },
     { name: 'BBA + BUSINESS MANAGEMENT', icon: <BarChart2 size={32} /> },

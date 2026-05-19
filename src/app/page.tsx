@@ -44,7 +44,7 @@ interface University {
   status: string;
 }
 
-const TESTIMONIALS = [
+const DEFAULT_TESTIMONIALS = [
   { name: 'Aisha Raheem', role: 'MBA Graduate, Dubai', avatar: 'A', rating: 5, text: 'TIMS transformed my career. The distance MBA program was incredibly flexible and the faculty support was world-class. I went from a junior executive to a regional manager within a year of graduating.' },
   { name: 'Rahul Nair', role: 'B.Tech Graduate, Bangalore', avatar: 'R', rating: 5, text: "The credit transfer guidance from TIMS was exceptional. They helped me transition my Indian engineering degree to a Canadian university seamlessly. Couldn't have done it without their team." },
   { name: 'Priya Menon', role: 'BBA Graduate, Kochi', avatar: 'P', rating: 5, text: 'I completed my BBA through distance learning while working full-time. TIMS made it possible with their structured study materials and responsive support. Highly recommended for working professionals.' },
@@ -62,7 +62,7 @@ const IMPACT_CARDS = [
   { num: '100', label: 'Mentors' },
 ];
 
-const TYPING_WORDS = ['University', 'Online University', 'Programmes', 'Courses', 'Credit Transfer Programs'];
+const TYPING_WORDS = ['University', 'Online University', 'Programmes', 'Courses', 'Credit Transfer'];
 
 const DEFAULT_MARQUEE = ['BA', 'B.Com', 'BBA', 'MBA', 'BCA', 'MCA', 'B.Sc', 'M.Sc', 'B.Tech', 'M.Tech', 'LLB', 'PGDM', 'M.Com'];
 
@@ -70,6 +70,7 @@ export default function Home() {
   const [universities, setUniversities] = useState<University[]>([]);
   const [newsItems, setNewsItems] = useState<NewsItem[]>([]);
   const [blogs, setBlogs] = useState<any[]>([]);
+  const [testimonials, setTestimonials] = useState<{name:string;role:string;avatar:string;rating:number;text:string}[]>(DEFAULT_TESTIMONIALS);
   const [marqueeItems, setMarqueeItems] = useState<string[]>(DEFAULT_MARQUEE);
   const [loading, setLoading] = useState(true);
   const [activeImpactIdx, setActiveImpactIdx] = useState(0);
@@ -156,11 +157,12 @@ export default function Home() {
           }
         };
 
-        const [uniData, newsData, blogData, marqueeData] = await Promise.all([
+        const [uniData, newsData, blogData, marqueeData, testimonialData] = await Promise.all([
           safeFetch('/api/admin/universities'),
           safeFetch('/api/admin/news'),
           safeFetch('/api/admin/blogs'),
           safeFetch('/api/public/marquee'),
+          safeFetch('/api/public/testimonials'),
         ]);
 
         if (Array.isArray(uniData)) {
@@ -174,6 +176,9 @@ export default function Home() {
         }
         if (Array.isArray(marqueeData) && marqueeData.length > 0) {
           setMarqueeItems(marqueeData.map((m: any) => m.text));
+        }
+        if (Array.isArray(testimonialData) && testimonialData.length > 0) {
+          setTestimonials(testimonialData);
         }
       } catch (error) {
         console.error('Fatal error in fetchData:', error);
@@ -232,7 +237,7 @@ export default function Home() {
             <h1 className={styles.heroTitle}>
               <span className={styles.heroAccentTop}>Find Your Best</span>
               <span className={styles.heroUniversityWrap}>
-                <span className={`${styles.heroAccent}${TYPING_WORDS[wordIdx] === 'Credit Transfer Programs' ? ` ${styles.heroAccentLong}` : ''}`}>
+                <span className={styles.heroAccent}>
                   {displayText}
                   <span className={styles.typeCursor}>|</span>
                   <span className={styles.letterSpacer} aria-hidden="true">
@@ -435,9 +440,9 @@ export default function Home() {
             <p className={styles.consultText}>Talk to our experts and get personalised guidance — completely free.</p>
           </div>
           <div className={styles.consultBtns}>
-            <a href="tel:+919961967777" className={styles.consultPhone}>
+            <a href="tel:+9189435555592" className={styles.consultPhone}>
               <Phone size={20} />
-              +91 9961967777
+              +91 89435555592
             </a>
             <Link href="/contact" className={styles.consultContact}>
               Get Free Guidance <ArrowRight size={16} />
@@ -459,7 +464,7 @@ export default function Home() {
         </div>
         <div className={styles.marqueeWrapper}>
           <div className={styles.marqueeTrack}>
-            {[...TESTIMONIALS, ...TESTIMONIALS.slice(0, 4)].map((t, i) => (
+            {[...testimonials, ...testimonials.slice(0, 4)].map((t, i) => (
               <div key={i} className={styles.testimonialCard}>
                 <div className={styles.testimonialStars}>{'★'.repeat(t.rating)}</div>
                 <p className={styles.testimonialText}>&ldquo;{t.text}&rdquo;</p>

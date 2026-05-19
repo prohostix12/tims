@@ -23,7 +23,8 @@ import {
   X,
   Users,
   Calendar,
-  Image as ImageIcon
+  Image as ImageIcon,
+  MessageSquare
 } from 'lucide-react';
 
 interface SidebarProps {
@@ -49,6 +50,7 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
     { name: 'Enrollments', path: '/admin/enrollments', icon: <Users size={20} /> },
     { name: 'Batches', path: '/admin/batches', icon: <Calendar size={20} /> },
     { name: 'University Logos', path: '/admin/university-logos', icon: <ImageIcon size={20} /> },
+    { name: 'Success Stories', path: '/admin/testimonials', icon: <MessageSquare size={20} /> },
     { name: 'Messages', path: '/admin/messages', icon: <Mail size={20} /> },
     { name: 'SEO Settings', path: '/admin/seo', icon: <Globe size={20} /> },
   ];

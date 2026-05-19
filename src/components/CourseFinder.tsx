@@ -232,7 +232,7 @@ const OPTION_ICON_MAP: Record<string, React.ReactNode> = {
 
 // ── EnquiryGate ────────────────────────────────────────────────────────────────
 function EnquiryGate({ onSuccess }: { onSuccess: (data: { name: string, email: string, phone: string }) => void }) {
-  const [form, setForm] = useState({ name: '', email: '', phone: '' });
+  const [form, setForm] = useState({ name: '', email: '', phone: '', countryCode: '+91' });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
@@ -240,15 +240,16 @@ function EnquiryGate({ onSuccess }: { onSuccess: (data: { name: string, email: s
     e.preventDefault();
     setError('');
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) { setError('Please enter a valid email address.'); return; }
-    if (!/^\d{10}$/.test(form.phone.replace(/\D/g, ''))) { setError('Please enter a valid 10-digit phone number.'); return; }
+    if (!/^\d{10}$/.test(form.phone)) { setError('Please enter exactly a 10-digit phone number.'); return; }
     setLoading(true);
     try {
+      const fullPhone = `${form.countryCode} ${form.phone}`;
       await fetch('/api/leads', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name: form.name, email: form.email, phone: form.phone.replace(/\D/g, ''), source: 'Course Finder' }),
+        body: JSON.stringify({ name: form.name, email: form.email, phone: fullPhone, source: 'Course Finder' }),
       });
-      onSuccess({ ...form, phone: form.phone.replace(/\D/g, '') });
+      onSuccess({ ...form, phone: fullPhone });
     } catch {
       setError('Something went wrong. Please try again.');
     } finally {
@@ -273,7 +274,30 @@ function EnquiryGate({ onSuccess }: { onSuccess: (data: { name: string, email: s
         </div>
         <div className="cf-field">
           <span className="cf-field-icon"><IconPhone /></span>
-          <input className="cf-input" type="tel" placeholder="10-Digit Phone Number" required value={form.phone} onChange={e => setForm({ ...form, phone: e.target.value.replace(/\D/g, '') })} />
+          <div className="cf-phone-group">
+            <select 
+              className="cf-country-select"
+              value={form.countryCode}
+              onChange={e => setForm({ ...form, countryCode: e.target.value })}
+            >
+              <option value="+91">+91 (IN)</option>
+              <option value="+971">+971 (AE)</option>
+              <option value="+966">+966 (SA)</option>
+              <option value="+965">+965 (KW)</option>
+              <option value="+968">+968 (OM)</option>
+              <option value="+974">+974 (QA)</option>
+              <option value="+973">+973 (BH)</option>
+            </select>
+            <input 
+              className="cf-input cf-phone-input" 
+              type="tel" 
+              placeholder="10-Digit Phone Number" 
+              required 
+              maxLength={10}
+              value={form.phone} 
+              onChange={e => setForm({ ...form, phone: e.target.value.replace(/\D/g, '').slice(0, 10) })} 
+            />
+          </div>
         </div>
         <button type="submit" className="cf-submit-btn" disabled={loading}>
           {loading ? 'Submitting...' : <><IconArrow /> Continue to Quiz</>}
@@ -426,7 +450,7 @@ export default function CourseFinder() {
   }, [isOpen]);
 
   useEffect(() => {
-    if (!gateCleared || questions.length) return;
+    if (!isOpen || questions.length) return;
     setQuestionsLoading(true);
     fetch('/api/public/course-finder-questions')
       .then(r => {
@@ -461,7 +485,7 @@ export default function CourseFinder() {
       })
       .catch(() => setQuestions(FALLBACK_QUESTIONS))
       .finally(() => setQuestionsLoading(false));
-  }, [gateCleared]);
+  }, [isOpen, questions.length]);
 
   const closeModal = () => { setIsOpen(false); reset(); };
   const reset = () => {
@@ -579,18 +603,20 @@ export default function CourseFinder() {
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
             </button>
 
-            {!gateCleared && <EnquiryGate onSuccess={(data) => { setUserData(data); setGateCleared(true); }} />}
-
-            {gateCleared && questionsLoading && (
+            {questionsLoading && (
               <div className="cf-loading-screen"><p>Loading questions…</p></div>
             )}
 
-            {gateCleared && !questionsLoading && !showResults && questions.length > 0 && currentQ && (
+            {!questionsLoading && step === 4 && !gateCleared && (
+              <EnquiryGate onSuccess={(data) => { setUserData(data); setGateCleared(true); }} />
+            )}
+
+            {!questionsLoading && !(step === 4 && !gateCleared) && !showResults && questions.length > 0 && currentQ && (
               <>
                 {/* Header */}
                 <div className="cf-header">
                   <div className="cf-header-icon"><IconCompass /></div>
-                  <h2 className="cf-title">Hi {userData.name}! Let&apos;s find your course</h2>
+                  <h2 className="cf-title">{userData.name ? `Hi ${userData.name}! Let's find your course` : "Let's find your perfect course"}</h2>
                   <p className="cf-subtitle">Answer a few questions for personalised recommendations</p>
                 </div>
 
@@ -655,13 +681,13 @@ export default function CourseFinder() {
               </>
             )}
 
-            {gateCleared && !questionsLoading && !showResults && questions.length === 0 && (
+            {!questionsLoading && !showResults && questions.length === 0 && (
               <div className="cf-loading-screen">
                 <p>No questions configured yet. Please ask an admin to set up the course finder.</p>
               </div>
             )}
 
-            {gateCleared && showResults && (
+            {showResults && (
               <>
                 <div className="cf-results-header">
                   <div className="cf-results-icon"><IconStar /></div>
