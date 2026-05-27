@@ -23,9 +23,7 @@ import {
   MessageSquare,
   HelpCircle,
   Layers,
-  BarChart2,
   UserSquare2,
-  ListChecks,
 } from 'lucide-react';
 
 interface SidebarProps {
@@ -49,8 +47,7 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
     { name: 'Success Stories', path: '/admin/testimonials', icon: <MessageSquare size={20} /> },
     { name: 'FAQs', path: '/admin/faqs', icon: <HelpCircle size={20} /> },
     { name: 'Services', path: '/admin/services', icon: <Layers size={20} /> },
-    { name: 'How It Works', path: '/admin/how-it-works', icon: <ListChecks size={20} /> },
-    { name: 'Site Stats', path: '/admin/site-stats', icon: <BarChart2 size={20} /> },
+
     { name: 'Directors', path: '/admin/directors', icon: <UserSquare2 size={20} /> },
     { name: 'Messages', path: '/admin/messages', icon: <Mail size={20} /> },
     { name: 'SEO Settings', path: '/admin/seo', icon: <Globe size={20} /> },
