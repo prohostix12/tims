@@ -95,17 +95,44 @@ export async function POST(req: Request) {
       }
     }
 
-    // Fetch programs
-    let programs = await Program.find(query)
-      .populate({ path: 'university', model: University, select: 'name _id slug type location logo' })
-      .lean()
-      .limit(20);
+    const uniTypeAnswer = answers['university_type'];
+
+    // Build relaxed queries upfront, then run all in parallel
+    const relaxedNoFee = { ...query };
+    delete relaxedNoFee.fee;
+
+    const relaxedNoEdu = { ...relaxedNoFee };
+    if (relaxedNoEdu.$and) {
+      relaxedNoEdu.$and = relaxedNoEdu.$and.filter((c: any) => c !== eduFilter);
+      if (relaxedNoEdu.$and.length === 0) delete relaxedNoEdu.$and;
+    }
+    if (relaxedNoEdu.$or && JSON.stringify(relaxedNoEdu.$or) === JSON.stringify(eduFilter?.$or)) {
+      delete relaxedNoEdu.$or;
+    }
+
+    // Build university query in parallel
+    const uniQuery: any = {};
+    if (uniTypeAnswer && uniTypeAnswer !== 'any') {
+      uniQuery.type = new RegExp(uniTypeAnswer, 'i');
+    }
+
+    // Run primary program query and university query in parallel
+    const [primaryPrograms, extraUnis] = await Promise.all([
+      Program.find(query)
+        .populate({ path: 'university', model: University, select: 'name _id slug type location logo' })
+        .lean()
+        .limit(20),
+      University.find(uniQuery)
+        .select('name _id slug type location logo')
+        .lean()
+        .limit(6),
+    ]);
+
+    let programs: any[] = primaryPrograms;
 
     // Relax fee filter if no results
     if (programs.length === 0 && query.fee) {
-      const relaxed = { ...query };
-      delete relaxed.fee;
-      programs = await Program.find(relaxed)
+      programs = await Program.find(relaxedNoFee)
         .populate({ path: 'university', model: University, select: 'name _id slug type location logo' })
         .lean()
         .limit(20);
@@ -113,13 +140,7 @@ export async function POST(req: Request) {
 
     // Relax education filter if still nothing
     if (programs.length === 0 && eduFilter) {
-      const noEdu = { ...query };
-      if (noEdu.$and) {
-        noEdu.$and = noEdu.$and.filter((c: any) => c !== eduFilter);
-        if (noEdu.$and.length === 0) delete noEdu.$and;
-      }
-      if (noEdu.$or && JSON.stringify(noEdu.$or) === JSON.stringify(eduFilter.$or)) delete noEdu.$or;
-      programs = await Program.find(noEdu)
+      programs = await Program.find(relaxedNoEdu)
         .populate({ path: 'university', model: University, select: 'name _id slug type location logo' })
         .lean()
         .limit(20);
@@ -134,7 +155,6 @@ export async function POST(req: Request) {
     }
 
     // 4. University type post-filter
-    const uniTypeAnswer = answers['university_type'];
     if (uniTypeAnswer && uniTypeAnswer !== 'any') {
       const typeFiltered = programs.filter((p: any) => {
         const uType = (p.university?.type || '').toLowerCase();
@@ -155,17 +175,8 @@ export async function POST(req: Request) {
     });
     let universities: any[] = Array.from(uniMap.values());
 
-    // If fewer than 3 universities from programs, fetch extras based on type preference
+    // Merge extra unis fetched in parallel if we have fewer than 3
     if (universities.length < 3) {
-      const uniQuery: any = {};
-      if (uniTypeAnswer && uniTypeAnswer !== 'any') {
-        uniQuery.type = new RegExp(uniTypeAnswer, 'i');
-      }
-      const extraUnis = await University.find(uniQuery)
-        .select('name _id slug type location logo')
-        .lean()
-        .limit(6);
-
       const existingIds = new Set(universities.map((u: any) => String(u._id)));
       extraUnis.forEach((u: any) => {
         if (!existingIds.has(String(u._id))) universities.push(u);

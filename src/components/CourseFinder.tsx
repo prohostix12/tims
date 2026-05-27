@@ -474,7 +474,10 @@ export default function CourseFinder() {
       .then(data => {
         const dbArr = Array.isArray(data) ? data : [];
         if (dbArr.length > 0) {
-          setQuestions(dbArr.filter((q: any) => q.field !== 'field'));
+          setQuestions(dbArr.filter((q: any) =>
+            q.field !== 'field' &&
+            !q.question?.toLowerCase().includes('what do you prefer in a university')
+          ));
         } else {
           setQuestions(FALLBACK_QUESTIONS);
         }
@@ -506,12 +509,22 @@ export default function CourseFinder() {
   const findCourses = async () => {
     setLoading(true);
     try {
-      // Main path: server-side filtered query
+      // Fire lead save in background — don't await it
+      const formattedAnswers = questions.map(q => { const opt = q.options.find((o: any) => o.value === answers[q.field]); return opt ? opt.label : ''; }).filter(Boolean).join(' | ');
+      fetch('/api/leads', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ name: userData.name, email: userData.email, phone: userData.phone || 'N/A', source: 'Course Finder Quiz', description: `Preferences: ${formattedAnswers}` }) }).catch(() => {});
+
+      // Main path: server-side filtered query with timeout
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), 8000);
+
       const res = await fetch('/api/public/course-finder-results', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ answers, questions }),
+        signal: controller.signal,
       });
+      clearTimeout(timeout);
+
       let programs: any[] = [];
       let universities: any[] = [];
       if (res.ok) {
@@ -524,11 +537,10 @@ export default function CourseFinder() {
       setFallbackResults([]);
       setMatchedUniversities(universities);
       setShowResults(true);
-
-      const formattedAnswers = questions.map(q => { const opt = q.options.find((o: any) => o.value === answers[q.field]); return opt ? opt.label : ''; }).filter(Boolean).join(' | ');
-      await fetch('/api/leads', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ name: userData.name, email: userData.email, phone: userData.phone || 'N/A', source: 'Course Finder Quiz', description: `Preferences: ${formattedAnswers}` }) }).catch(() => {});
     } catch (err) {
       console.error(err);
+      // Still show results screen even on error
+      setShowResults(true);
     } finally {
       setLoading(false);
     }
