@@ -474,10 +474,17 @@ export default function CourseFinder() {
       .then(data => {
         const dbArr = Array.isArray(data) ? data : [];
         if (dbArr.length > 0) {
-          setQuestions(dbArr.filter((q: any) =>
-            q.field !== 'field' &&
-            !q.question?.toLowerCase().includes('what do you prefer in a university')
-          ));
+          const REMOVED_OPTION_VALUES = new Set(['affordable_fees', 'easy_admission', 'fast_degree', 'university_brand', 'placement_support']);
+          setQuestions(dbArr.filter((q: any) => {
+            if (q.field === 'field') return false;
+            if (q.question?.toLowerCase().includes('prefer in a university')) return false;
+            // Also catch by options — if any option matches the known removed set
+            if (Array.isArray(q.options) && q.options.some((o: any) => REMOVED_OPTION_VALUES.has(o.value?.toLowerCase()))) return false;
+            // Catch by option labels
+            const labels = (q.options || []).map((o: any) => o.label?.toLowerCase() || '');
+            if (labels.some((l: string) => l.includes('affordable fees') || l.includes('easy admission') || l.includes('fast degree') || l.includes('placement support') || l.includes('university brand'))) return false;
+            return true;
+          }));
         } else {
           setQuestions(FALLBACK_QUESTIONS);
         }
