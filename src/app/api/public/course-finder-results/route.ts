@@ -110,14 +110,14 @@ export async function POST(req: Request) {
       delete relaxedNoEdu.$or;
     }
 
-    // Build university query in parallel
+    // Build university query in parallel — always fetch all universities
     const uniQuery: any = {};
     if (uniTypeAnswer && uniTypeAnswer !== 'any') {
       uniQuery.type = new RegExp(uniTypeAnswer, 'i');
     }
 
     // Run primary program query and university query in parallel
-    const [primaryPrograms, extraUnis] = await Promise.all([
+    const [primaryPrograms, allUnis] = await Promise.all([
       Program.find(query)
         .populate({ path: 'university', model: University, select: 'name _id slug type location logo' })
         .lean()
@@ -125,7 +125,7 @@ export async function POST(req: Request) {
       University.find(uniQuery)
         .select('name _id slug type location logo')
         .lean()
-        .limit(6),
+        .limit(20),
     ]);
 
     let programs: any[] = primaryPrograms;
@@ -167,25 +167,25 @@ export async function POST(req: Request) {
     programs.sort((a: any, b: any) => (b.featured ? 1 : 0) - (a.featured ? 1 : 0));
     const finalPrograms = programs.slice(0, 8);
 
-    // Extract unique universities from matched programs
+    // Extract unique universities from matched programs first (show them first)
     const uniMap = new Map<string, any>();
     finalPrograms.forEach((p: any) => {
       const u = p.university;
       if (u && u._id) uniMap.set(String(u._id), u);
     });
-    let universities: any[] = Array.from(uniMap.values());
 
-    // Merge extra unis fetched in parallel if we have fewer than 3
-    if (universities.length < 3) {
-      const existingIds = new Set(universities.map((u: any) => String(u._id)));
-      extraUnis.forEach((u: any) => {
-        if (!existingIds.has(String(u._id))) universities.push(u);
-      });
-    }
+    // Always merge all universities from DB, deduplicating
+    allUnis.forEach((u: any) => {
+      if (u && u._id && !uniMap.has(String(u._id))) {
+        uniMap.set(String(u._id), u);
+      }
+    });
+
+    const universities: any[] = Array.from(uniMap.values());
 
     return NextResponse.json({
       programs: finalPrograms,
-      universities: universities.slice(0, 6),
+      universities: universities.slice(0, 10),
     });
   } catch (err) {
     console.error('course-finder-results error:', err);
