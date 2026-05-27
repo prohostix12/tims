@@ -110,22 +110,16 @@ export async function POST(req: Request) {
       delete relaxedNoEdu.$or;
     }
 
-    // Build university query in parallel — always fetch all universities
-    const uniQuery: any = {};
-    if (uniTypeAnswer && uniTypeAnswer !== 'any') {
-      uniQuery.type = new RegExp(uniTypeAnswer, 'i');
-    }
-
-    // Run primary program query and university query in parallel
+    // Run primary program query and ALL universities in parallel (no type filter — show everything)
     const [primaryPrograms, allUnis] = await Promise.all([
       Program.find(query)
         .populate({ path: 'university', model: University, select: 'name _id slug type location logo' })
         .lean()
         .limit(20),
-      University.find(uniQuery)
+      University.find({ status: { $ne: 'inactive' } })
         .select('name _id slug type location logo')
         .lean()
-        .limit(20),
+        .limit(50),
     ]);
 
     let programs: any[] = primaryPrograms;
@@ -167,21 +161,30 @@ export async function POST(req: Request) {
     programs.sort((a: any, b: any) => (b.featured ? 1 : 0) - (a.featured ? 1 : 0));
     const finalPrograms = programs.slice(0, 8);
 
-    // Extract unique universities from matched programs first (show them first)
+    // Extract unique universities from matched programs first (most relevant)
     const uniMap = new Map<string, any>();
     finalPrograms.forEach((p: any) => {
       const u = p.university;
       if (u && u._id) uniMap.set(String(u._id), u);
     });
 
-    // Always merge all universities from DB, deduplicating
+    // Merge ALL universities from DB, deduplicating
     allUnis.forEach((u: any) => {
       if (u && u._id && !uniMap.has(String(u._id))) {
         uniMap.set(String(u._id), u);
       }
     });
 
-    const universities: any[] = Array.from(uniMap.values());
+    let universities: any[] = Array.from(uniMap.values());
+
+    // If user picked a university type, sort matching ones to the top
+    if (uniTypeAnswer && uniTypeAnswer !== 'any') {
+      universities.sort((a: any, b: any) => {
+        const aMatch = (a.type || '').toLowerCase().includes(uniTypeAnswer.toLowerCase()) ? 0 : 1;
+        const bMatch = (b.type || '').toLowerCase().includes(uniTypeAnswer.toLowerCase()) ? 0 : 1;
+        return aMatch - bMatch;
+      });
+    }
 
     return NextResponse.json({
       programs: finalPrograms,
