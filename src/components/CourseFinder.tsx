@@ -354,18 +354,6 @@ export const FALLBACK_QUESTIONS = [
     ],
   },
   {
-    _id: 'fq4', field: 'field', order: 4, isActive: true,
-    question: 'Which field of study interests you?',
-    options: [
-      { value: 'commerce',   label: 'Commerce',   categories: ['B.Com', 'M.Com', 'Com'] },
-      { value: 'arts',       label: 'Arts',       categories: ['BA', 'MA'] },
-      { value: 'science',    label: 'Science',    categories: ['B.Sc', 'M.Sc', 'BSc', 'MSc', 'Sc'] },
-      { value: 'technology', label: 'Technology', categories: ['BCA', 'MCA', 'B.Tech', 'M.Tech'] },
-      { value: 'management', label: 'Management', categories: ['MBA', 'BBA', 'PGDM'] },
-      { value: 'law',        label: 'Law',        categories: ['LLB', 'LLM'] },
-    ],
-  },
-  {
     _id: 'fq5', field: 'specialization', order: 5, isActive: true,
     question: 'Which specialization interests you most?',
     options: [
@@ -433,7 +421,6 @@ const STEP_LABELS = [
   'Course Interest',
   'Qualification',
   'Current Status',
-  'Field',
   'Specialization',
   'Career Goal',
   'University Location',
@@ -487,7 +474,7 @@ export default function CourseFinder() {
       .then(data => {
         const dbArr = Array.isArray(data) ? data : [];
         if (dbArr.length > 0) {
-          setQuestions(dbArr);
+          setQuestions(dbArr.filter((q: any) => q.field !== 'field'));
         } else {
           setQuestions(FALLBACK_QUESTIONS);
         }
@@ -519,37 +506,6 @@ export default function CourseFinder() {
   const findCourses = async () => {
     setLoading(true);
     try {
-      const fieldQuestion = questions.find(q => q.field === 'field');
-      const selectedFieldValue = fieldQuestion ? answers[fieldQuestion.field] : null;
-
-      // Skill / open-school use dedicated endpoints (client-side fetch)
-      if (selectedFieldValue === 'skill' || selectedFieldValue === 'openschool') {
-        const endpoint = selectedFieldValue === 'skill' ? '/api/skills' : '/api/open-school';
-        const res = await fetch(endpoint).catch(() => null);
-        let data: any = [];
-        if (res?.ok) {
-          const ct = res.headers.get('content-type');
-          if (ct?.includes('application/json')) data = await res.json();
-        }
-        let allPrograms: any[] = [];
-        if (selectedFieldValue === 'skill') {
-          const arr = Array.isArray(data) ? data : (data.data || []);
-          allPrograms = arr.map((s: any) => ({ ...s, university: s.university || 'CRDC Skill Center', category: s.category || 'Skill', level: 'Skill', mode: s.mode || 'Online', duration: s.duration || 'Flexible', fee: s.fee || s.price || 0 }));
-        } else {
-          const arr = Array.isArray(data) ? data : (data.data || []);
-          arr.forEach((board: any) => {
-            (board.programs || []).forEach((p: any) => {
-              allPrograms.push({ ...p, _id: p._id || Math.random().toString(), university: board.name, category: 'Open School', level: p.level || 'School', mode: p.mode || 'Online', duration: p.duration || '1-2 Years', fee: p.fee || 0 });
-            });
-          });
-        }
-        setResults(allPrograms.slice(0, 6));
-        setFallbackResults([]);
-        setMatchedUniversities([]);
-        setShowResults(true);
-        return;
-      }
-
       // Main path: server-side filtered query
       const res = await fetch('/api/public/course-finder-results', {
         method: 'POST',
@@ -580,44 +536,8 @@ export default function CourseFinder() {
 
   const currentQ = questions[step - 1];
 
-  // UG/PG sublabels shown on the field question based on education level
-  const UG_SUBLABELS: Record<string, string> = {
-    commerce: 'B.Com / BBA / BMS',
-    arts: 'BA / BJMC / B.Des',
-    science: 'B.Sc / B.Tech / B.Pharm',
-    technology: 'BCA / B.Tech (CS)',
-    management: 'BBA / BMS / BHM',
-    law: 'BA LLB (5-year Integrated)',
-  };
-  const PG_SUBLABELS: Record<string, string> = {
-    commerce: 'M.Com / MBA (Finance)',
-    arts: 'MA / MJMC / M.Des',
-    science: 'M.Sc / M.Tech',
-    technology: 'MCA / M.Tech (CS)',
-    management: 'MBA / PGDM / MMS',
-    law: 'LLM',
-  };
-
-  const eduAnswer = answers[questions.find(q => q.field === 'education')?.field ?? ''];
-
   // Determine options based on education selection
   let currentOptions = currentQ?.options || [];
-  if (currentQ?.field === 'field') {
-    if (eduAnswer === 'below_12' || String(eduAnswer).toLowerCase().includes('below 12')) {
-      currentOptions = [
-        { value: 'skill', label: 'Skill Program' },
-        { value: 'openschool', label: 'Open School' },
-      ];
-    } else if (eduAnswer === '12th') {
-      currentOptions = currentOptions.map((opt: any) =>
-        UG_SUBLABELS[opt.value] ? { ...opt, sublabel: UG_SUBLABELS[opt.value] } : opt
-      );
-    } else if (eduAnswer === 'graduate') {
-      currentOptions = currentOptions.map((opt: any) =>
-        PG_SUBLABELS[opt.value] ? { ...opt, sublabel: PG_SUBLABELS[opt.value] } : opt
-      );
-    }
-  }
 
   const allAnswered = currentQ && answers[currentQ.field];
 
@@ -626,8 +546,6 @@ export default function CourseFinder() {
       await fetch('/api/leads', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ name: userData.name, email: userData.email, phone: userData.phone || 'N/A', source: 'Course Finder Click', course: `${program.name} at ${program.university?.name || program.university || program.universityId?.name || 'Unknown'}` }) });
     } catch { /* fire and forget */ }
   };
-
-  const isOpenSchool = Object.values(answers).some(v => v === 'openschool' || String(v).toLowerCase().includes('open school'));
 
   const optionIcon = (value: string) => OPTION_ICON_MAP[value] ?? <IconStar />;
 
@@ -743,31 +661,7 @@ export default function CourseFinder() {
                   </p>
                 </div>
                 <div className="cf-results-list">
-                  {/* Course results */}
-                  {(results.length > 0 ? results : (matchedUniversities.length === 0 ? fallbackResults : [])).map(program => {
-                    const uniName = program.university?.name || program.university || program.universityId?.name || 'University';
-                    const courseHref = program.slug ? `/courses/${program.slug}` : '/courses';
-                    return (
-                      <Link key={program._id} href={courseHref} className="cf-result-card" onClick={() => { trackCourseClick(program); setIsOpen(false); }}>
-                        <div className="cf-result-info">
-                          <h4 className="cf-result-name">{program.name}</h4>
-                          <p className="cf-result-university"><IconBuilding /> {uniName}</p>
-                          <div className="cf-result-meta">
-                            {program.duration && <span className="cf-result-badge"><IconClock /> {program.duration}</span>}
-                            <span className="cf-result-badge"><IconMonitor /> {program.mode || program.type || program.level || 'Program'}</span>
-                          </div>
-                        </div>
-                        {!isOpenSchool && (
-                          <div className="cf-result-price">
-                            <span className="cf-price-label">Fee</span>
-                            <span className="cf-price-value">₹{Number(program.fee).toLocaleString('en-IN')}</span>
-                          </div>
-                        )}
-                      </Link>
-                    );
-                  })}
-
-                  {/* University results */}
+                  {/* University results — shown first */}
                   {matchedUniversities.length > 0 && (
                     <div className="cf-universities-section">
                       <p className="cf-section-heading">{results.length > 0 ? 'Matched Universities' : 'Related Universities'}</p>
@@ -785,6 +679,30 @@ export default function CourseFinder() {
                       ))}
                     </div>
                   )}
+
+                  {/* Course results */}
+                  {(results.length > 0 ? results : (matchedUniversities.length === 0 ? fallbackResults : [])).map(program => {
+                    const uniName = program.university?.name || program.university || program.universityId?.name || 'University';
+                    const courseHref = program.slug ? `/courses/${program.slug}` : '/courses';
+                    return (
+                      <Link key={program._id} href={courseHref} className="cf-result-card" onClick={() => { trackCourseClick(program); setIsOpen(false); }}>
+                        <div className="cf-result-info">
+                          <h4 className="cf-result-name">{program.name}</h4>
+                          <p className="cf-result-university"><IconBuilding /> {uniName}</p>
+                          <div className="cf-result-meta">
+                            {program.duration && <span className="cf-result-badge"><IconClock /> {program.duration}</span>}
+                            <span className="cf-result-badge"><IconMonitor /> {program.mode || program.type || program.level || 'Program'}</span>
+                          </div>
+                        </div>
+                        {(
+                          <div className="cf-result-price">
+                            <span className="cf-price-label">Fee</span>
+                            <span className="cf-price-value">₹{Number(program.fee).toLocaleString('en-IN')}</span>
+                          </div>
+                        )}
+                      </Link>
+                    );
+                  })}
 
                   {/* No results at all */}
                   {results.length === 0 && fallbackResults.length === 0 && matchedUniversities.length === 0 && (

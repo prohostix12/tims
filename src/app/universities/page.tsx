@@ -59,11 +59,14 @@ export default function UniversitiesPage() {
   }, [loading]);
 
   useEffect(() => {
-    setVisible(false);
     setVisibleCount(6);
+  }, [activeFilter, searchTerm]);
+
+  useEffect(() => {
+    setVisible(false);
     const t = setTimeout(() => setVisible(true), 50);
     return () => clearTimeout(t);
-  }, [activeFilter, searchTerm]);
+  }, [activeFilter]);
 
   return (
     <main className={styles.container}>
