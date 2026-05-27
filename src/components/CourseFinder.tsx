@@ -314,7 +314,27 @@ function EnquiryGate({ onSuccess }: { onSuccess: (data: { name: string, email: s
 // ── Fallback questions (10 steps) — used when DB has no questions ──────────────
 export const FALLBACK_QUESTIONS = [
   {
-    _id: 'fq1', field: 'education', order: 1, isActive: true,
+    _id: 'fq1', field: 'what_course_are_you_interested', order: 1, isActive: true,
+    question: 'What course are you interested in pursuing?',
+    options: [
+      { value: 'mba', label: 'MBA' },
+      { value: 'mca', label: 'MCA' },
+      { value: 'm_com', label: 'M.COM' },
+      { value: 'ma', label: 'MA' },
+      { value: 'msc', label: 'MSC' },
+      { value: 'msw', label: 'MSW' },
+      { value: 'bba', label: 'BBA' },
+      { value: 'bca', label: 'BCA' },
+      { value: 'b_com', label: 'B.COM' },
+      { value: 'ba', label: 'BA' },
+      { value: 'bsc', label: 'BSC' },
+      { value: 'b_com_mba', label: 'B.COM+MBA' },
+      { value: 'bba_mba', label: 'BBA+MBA' },
+      { value: 'bca_mca', label: 'BCA+MCA' },
+    ],
+  },
+  {
+    _id: 'fq2', field: 'education', order: 2, isActive: true,
     question: 'What is your highest qualification?',
     options: [
       { value: 'below_12',     label: 'Below 12th' },
@@ -324,23 +344,13 @@ export const FALLBACK_QUESTIONS = [
     ],
   },
   {
-    _id: 'fq2', field: 'current_status', order: 2, isActive: true,
+    _id: 'fq3', field: 'current_status', order: 3, isActive: true,
     question: 'What are you currently doing?',
     options: [
       { value: 'student', label: 'Studying / Student' },
       { value: 'working', label: 'Working Professional' },
       { value: 'fresher', label: 'Fresher / Job Seeking' },
       { value: 'other',   label: 'Homemaker / Other' },
-    ],
-  },
-  {
-    _id: 'fq3', field: 'mode', order: 3, isActive: true,
-    question: 'How do you prefer to study?',
-    options: [
-      { value: 'online',   label: 'Online' },
-      { value: 'distance', label: 'Distance Learning' },
-      { value: 'hybrid',   label: 'Hybrid (Online + Campus)' },
-      { value: 'campus',   label: 'On-Campus' },
     ],
   },
   {
@@ -378,7 +388,16 @@ export const FALLBACK_QUESTIONS = [
     ],
   },
   {
-    _id: 'fq7', field: 'university_type', order: 7, isActive: true,
+    _id: 'fq7', field: 'pref_university_location', order: 7, isActive: true,
+    question: 'Do you prefer Indian or International Universities?',
+    options: [
+      { value: 'indian', label: 'Indian University' },
+      { value: 'international', label: 'International University' },
+      { value: 'both', label: 'Open to Both' },
+    ],
+  },
+  {
+    _id: 'fq8', field: 'university_type', order: 8, isActive: true,
     question: 'What type of university do you prefer?',
     options: [
       { value: 'private', label: 'Private University' },
@@ -388,23 +407,13 @@ export const FALLBACK_QUESTIONS = [
     ],
   },
   {
-    _id: 'fq8', field: 'experience', order: 8, isActive: true,
+    _id: 'fq9', field: 'experience', order: 9, isActive: true,
     question: 'How much work experience do you have?',
     options: [
       { value: 'no_experience', label: 'No Experience (Fresher)' },
       { value: 'less_2',        label: 'Less than 2 Years' },
       { value: 'two_five',      label: '2 – 5 Years' },
       { value: 'five_plus',     label: '5+ Years' },
-    ],
-  },
-  {
-    _id: 'fq9', field: 'duration', order: 9, isActive: true,
-    question: 'What is your preferred course duration?',
-    options: [
-      { value: 'less_1_year',    label: 'Less than 1 Year' },
-      { value: 'one_two_years',  label: '1 – 2 Years' },
-      { value: 'two_three_years',label: '2 – 3 Years' },
-      { value: 'flexible',       label: 'Flexible / Any' },
     ],
   },
   {
@@ -420,7 +429,18 @@ export const FALLBACK_QUESTIONS = [
 ];
 
 // ── Step label map ─────────────────────────────────────────────────────────────
-const STEP_LABELS = ['Qualification', 'Current Status', 'Study Mode', 'Field', 'Specialization', 'Career Goal', 'University', 'Experience', 'Duration', 'Budget'];
+const STEP_LABELS = [
+  'Course Interest',
+  'Qualification',
+  'Current Status',
+  'Field',
+  'Specialization',
+  'Career Goal',
+  'University Location',
+  'University Type',
+  'Experience',
+  'Budget'
+];
 
 export default function CourseFinder() {
   const [isOpen, setIsOpen] = useState(false);
