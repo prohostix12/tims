@@ -434,6 +434,7 @@ export default function CourseFinder() {
   const [gateCleared, setGateCleared] = useState(false);
   const [userData, setUserData] = useState({ name: '', email: '', phone: '' });
   const [questions, setQuestions] = useState<any[]>([]);
+  const [questionsReady, setQuestionsReady] = useState(false);
   const [step, setStep] = useState(1);
   const [answers, setAnswers] = useState<Record<string, string>>({});
   const [results, setResults] = useState<any[]>([]);
@@ -442,7 +443,34 @@ export default function CourseFinder() {
   const [loading, setLoading] = useState(false);
   const [showResults, setShowResults] = useState(false);
   const [animate, setAnimate] = useState(true);
-  const [questionsLoading, setQuestionsLoading] = useState(false);
+
+  // Prefetch questions on mount so they're ready before the modal opens
+  useEffect(() => {
+    if (questionsReady) return;
+    const REMOVED_OPTION_VALUES = new Set(['affordable_fees', 'easy_admission', 'fast_degree', 'university_brand', 'placement_support']);
+    const filterQuestions = (arr: any[]) => arr.filter((q: any) => {
+      if (q.field === 'field') return false;
+      if (q.question?.toLowerCase().includes('prefer in a university')) return false;
+      if (Array.isArray(q.options) && q.options.some((o: any) => REMOVED_OPTION_VALUES.has(o.value?.toLowerCase()))) return false;
+      const labels = (q.options || []).map((o: any) => o.label?.toLowerCase() || '');
+      if (labels.some((l: string) => l.includes('affordable fees') || l.includes('easy admission') || l.includes('fast degree') || l.includes('placement support') || l.includes('university brand'))) return false;
+      return true;
+    });
+
+    fetch('/api/public/course-finder-questions')
+      .then(r => {
+        if (!r.ok) throw new Error('Not found');
+        const ct = r.headers.get('content-type');
+        if (!ct || !ct.includes('application/json')) throw new Error('Not JSON');
+        return r.json();
+      })
+      .then(data => {
+        const dbArr = Array.isArray(data) ? data : [];
+        setQuestions(dbArr.length > 0 ? filterQuestions(dbArr) : FALLBACK_QUESTIONS);
+        setQuestionsReady(true);
+      })
+      .catch(() => { setQuestions(FALLBACK_QUESTIONS); setQuestionsReady(true); });
+  }, [questionsReady]);
 
   useEffect(() => {
     const handleOpen = () => setIsOpen(true);
@@ -461,50 +489,18 @@ export default function CourseFinder() {
     return () => document.removeEventListener('keydown', fn);
   }, [isOpen]);
 
-  useEffect(() => {
-    if (!isOpen || questions.length) return;
-    setQuestionsLoading(true);
-    fetch('/api/public/course-finder-questions')
-      .then(r => {
-        if (!r.ok) throw new Error('Not found');
-        const ct = r.headers.get('content-type');
-        if (!ct || !ct.includes('application/json')) throw new Error('Not JSON');
-        return r.json();
-      })
-      .then(data => {
-        const dbArr = Array.isArray(data) ? data : [];
-        if (dbArr.length > 0) {
-          const REMOVED_OPTION_VALUES = new Set(['affordable_fees', 'easy_admission', 'fast_degree', 'university_brand', 'placement_support']);
-          setQuestions(dbArr.filter((q: any) => {
-            if (q.field === 'field') return false;
-            if (q.question?.toLowerCase().includes('prefer in a university')) return false;
-            // Also catch by options — if any option matches the known removed set
-            if (Array.isArray(q.options) && q.options.some((o: any) => REMOVED_OPTION_VALUES.has(o.value?.toLowerCase()))) return false;
-            // Catch by option labels
-            const labels = (q.options || []).map((o: any) => o.label?.toLowerCase() || '');
-            if (labels.some((l: string) => l.includes('affordable fees') || l.includes('easy admission') || l.includes('fast degree') || l.includes('placement support') || l.includes('university brand'))) return false;
-            return true;
-          }));
-        } else {
-          setQuestions(FALLBACK_QUESTIONS);
-        }
-      })
-      .catch(() => setQuestions(FALLBACK_QUESTIONS))
-      .finally(() => setQuestionsLoading(false));
-  }, [isOpen, questions.length]);
-
   const closeModal = () => { setIsOpen(false); reset(); };
   const reset = () => {
     setGateCleared(false); setUserData({ name: '', email: '', phone: '' }); setStep(1);
     setAnswers({}); setResults([]); setFallbackResults([]); setMatchedUniversities([]); setShowResults(false); setAnimate(true);
-    setQuestions([]);
+    // Keep questions cached — don't clear them
   };
 
   const handleOption = (field: string, value: string) => {
     setAnswers(prev => ({ ...prev, [field]: value }));
     if (step < questions.length) {
       setAnimate(false);
-      setTimeout(() => { setStep(s => s + 1); setAnimate(true); }, 250);
+      setTimeout(() => { setStep(s => s + 1); setAnimate(true); }, 150);
     }
   };
 
@@ -577,15 +573,15 @@ export default function CourseFinder() {
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
             </button>
 
-            {questionsLoading && (
+            {!questionsReady && (
               <div className="cf-loading-screen"><p>Loading questions…</p></div>
             )}
 
-            {!questionsLoading && step === 4 && !gateCleared && (
+            {questionsReady && step === 4 && !gateCleared && (
               <EnquiryGate onSuccess={(data) => { setUserData(data); setGateCleared(true); }} />
             )}
 
-            {!questionsLoading && !(step === 4 && !gateCleared) && !showResults && questions.length > 0 && currentQ && (
+            {questionsReady && !(step === 4 && !gateCleared) && !showResults && questions.length > 0 && currentQ && (
               <>
                 {/* Header */}
                 <div className="cf-header">
@@ -650,7 +646,7 @@ export default function CourseFinder() {
               </>
             )}
 
-            {!questionsLoading && !showResults && questions.length === 0 && (
+            {questionsReady && !showResults && questions.length === 0 && (
               <div className="cf-loading-screen">
                 <p>No questions configured yet. Please ask an admin to set up the course finder.</p>
               </div>
