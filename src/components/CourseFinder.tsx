@@ -465,28 +465,12 @@ export default function CourseFinder() {
         return r.json();
       })
       .then(data => {
-        // Always use FALLBACK_QUESTIONS as the base (all 10 steps).
-        // DB entries override individual questions that match by field name.
         const dbArr = Array.isArray(data) ? data : [];
-        const dbMap = new Map(dbArr.map((q: any) => [q.field, q]));
-
-        // Start from fallback; replace any field that exists in DB
-        const merged: any[] = FALLBACK_QUESTIONS.map(fq =>
-          dbMap.has(fq.field) ? { ...fq, ...dbMap.get(fq.field) } : fq
-        );
-
-        // Append any DB-only questions whose field isn't in FALLBACK
-        dbArr.forEach((q: any) => {
-          if (!merged.find((m: any) => m.field === q.field)) merged.push(q);
-        });
-
-        // Final dedup by field
-        const unique: any[] = [];
-        const seen = new Set<string>();
-        for (const q of merged) {
-          if (!seen.has(q.field)) { seen.add(q.field); unique.push(q); }
+        if (dbArr.length > 0) {
+          setQuestions(dbArr);
+        } else {
+          setQuestions(FALLBACK_QUESTIONS);
         }
-        setQuestions(unique);
       })
       .catch(() => setQuestions(FALLBACK_QUESTIONS))
       .finally(() => setQuestionsLoading(false));

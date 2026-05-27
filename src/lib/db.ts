@@ -8,6 +8,31 @@ if (process.env.NODE_ENV === 'development') {
   dns.setDefaultResultOrder('ipv4first');
 }
 
+// Pre-register all schemas to prevent Mongoose populates from throwing "Schema hasn't been registered" errors
+import '@/models/University';
+import '@/models/Program';
+import '@/models/Batch';
+import '@/models/Enrollment';
+import '@/models/Blog';
+import '@/models/Director';
+import '@/models/Faq';
+import '@/models/HowItWorksStep';
+import '@/models/Lead';
+import '@/models/MarqueeItem';
+import '@/models/Message';
+import '@/models/News';
+import '@/models/Result';
+import '@/models/SeoSettings';
+import '@/models/Service';
+import '@/models/Session';
+import '@/models/Stat';
+import '@/models/StudyMaterial';
+import '@/models/Syllabus';
+import '@/models/Testimonial';
+import '@/models/Timetable';
+import '@/models/UniversityLogo';
+import '@/models/CourseFinderQuestion';
+
 
 declare global {
   var mongoose: {
