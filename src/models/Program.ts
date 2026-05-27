@@ -13,10 +13,14 @@ export interface IProgram extends Document {
   courseType?: string;
   image?: string;
   brochure?: string;
-  description?: string;
-  highlights: string[];
-  curriculum: string[];
-  fee?: number;
+  heroTitle?: string;
+  intro?: string;
+  specializations?: {
+    id: string;
+    title: string;
+    description: string;
+    jobs: string[];
+  }[];
   createdAt: Date;
   updatedAt: Date;
 }
@@ -35,8 +39,24 @@ const ProgramSchema: Schema = new Schema({
   brochure: { type: String },
   description: { type: String },
   highlights: { type: [String], default: [] },
-  curriculum: { type: [String], default: [] },
+  heroTitle: { type: String },
+  intro: { type: String },
+  specializations: {
+    type: [
+      new mongoose.Schema(
+        {
+          id: { type: String },
+          title: { type: String },
+          description: { type: String },
+          jobs: { type: [String], default: [] }
+        },
+        { _id: false }
+      )
+    ],
+    default: []
+  },
   fee: { type: Number, default: 0 },
+
 }, { timestamps: true });
 
 export default mongoose.models.Program || mongoose.model<IProgram>('Program', ProgramSchema);

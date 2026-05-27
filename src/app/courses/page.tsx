@@ -7,14 +7,24 @@ import { Search, GraduationCap, Clock, BookOpen, ArrowRight, Loader2, ShieldChec
 import EnquiryModal from '@/components/EnquiryModal';
 
 const CourseCard = ({ course, i, onEnquire }: { course: any, i: number, onEnquire: (interest: string) => void }) => {
+  const initials = course.universityName
+    ? course.universityName.split(' ').map((w: string) => w[0]).slice(0, 2).join('')
+    : 'U';
+
   return (
-    <div 
+    <div
       className={styles.courseCard}
       style={{ animationDelay: `${i * 0.1}s` }}
     >
       <div className={styles.cardImage}>
-        <img src={course.image || 'https://images.unsplash.com/photo-1523240795612-9a054b0db644?q=80&w=600&auto=format&fit=crop'} alt={course.title} />
-        <span className={styles.levelBadge}>{course.level}</span>
+        {course.level && <span className={styles.levelBadge}>{course.level}</span>}
+        <span className={styles.cardCourseName}>{course.title}</span>
+        <div className={styles.uniLogoCorner}>
+          {course.universityLogo
+            ? <img src={course.universityLogo} alt={course.universityName} className={styles.uniLogoImg} />
+            : <span className={styles.uniLogoInitials}>{initials}</span>
+          }
+        </div>
       </div>
       
       <div className={styles.cardContent}>
@@ -32,7 +42,7 @@ const CourseCard = ({ course, i, onEnquire }: { course: any, i: number, onEnquir
           >
             ENQUIRE
           </button>
-          <Link href={course.path || `/courses/${course._id || course.title.toLowerCase().replace(/ /g, '-')}`} className={styles.detailsBtn}>
+          <Link href={`/courses/${course.slug || course._id}`} className={styles.detailsBtn}>
             DETAILS
           </Link>
         </div>
@@ -45,9 +55,10 @@ export default function CoursesPage() {
   const [activeCategory, setActiveCategory] = useState('All');
   const [searchQuery, setSearchQuery] = useState('');
   const [visibleCount, setVisibleCount] = useState(6);
+  const [selectedUniversity, setSelectedUniversity] = useState('All');
   const [courses, setCourses] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
-  
+
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedInterest, setSelectedInterest] = useState('');
 
@@ -60,13 +71,16 @@ export default function CoursesPage() {
         if (Array.isArray(data)) {
           setCourses(data.map(c => ({
             _id: c._id,
+            slug: c.slug || '',
             title: c.name,
             level: c.level || '',
             category: c.category || '',
             description: c.description || '',
             duration: c.duration || '',
             eligibility: c.eligibility || '',
-            image: c.image
+            image: c.image,
+            universityName: c.university?.name || '',
+            universityLogo: c.university?.logo || '',
           })));
         }
       })
@@ -79,11 +93,17 @@ export default function CoursesPage() {
     setIsModalOpen(true);
   };
 
+  const universities = ['All', ...Array.from(new Set(courses.map(c => c.universityName).filter(Boolean))).sort()];
+
   const filteredCourses = courses.filter(course => {
     const matchesCategory = activeCategory === 'All' || course.category === activeCategory;
     const matchesSearch = course.title.toLowerCase().includes(searchQuery.toLowerCase());
-    return matchesCategory && matchesSearch;
+    const matchesUniversity = selectedUniversity === 'All' || course.universityName === selectedUniversity;
+    return matchesCategory && matchesSearch && matchesUniversity;
   });
+
+  const showAll = activeCategory === 'All' && !searchQuery && selectedUniversity === 'All';
+  const visibleCourses = showAll ? filteredCourses : filteredCourses.slice(0, visibleCount);
 
   return (
     <>
@@ -161,15 +181,25 @@ export default function CoursesPage() {
                   
                   <div className={styles.categoryGroup}>
                     {categories.map(cat => (
-                      <button 
-                        key={cat} 
+                      <button
+                        key={cat}
                         className={`${styles.categoryBtn} ${activeCategory === cat ? styles.active : ''}`}
-                        onClick={() => setActiveCategory(cat)}
+                        onClick={() => { setActiveCategory(cat); setVisibleCount(6); }}
                       >
                         {cat}
                       </button>
                     ))}
                   </div>
+
+                  <select
+                    className={styles.universitySelect}
+                    value={selectedUniversity}
+                    onChange={e => { setSelectedUniversity(e.target.value); setVisibleCount(6); }}
+                  >
+                    {universities.map(u => (
+                      <option key={u} value={u}>{u === 'All' ? 'All Universities' : u}</option>
+                    ))}
+                  </select>
                 </div>
               </div>
             </div>
@@ -185,14 +215,14 @@ export default function CoursesPage() {
             ) : (
               <>
                 <div className={styles.coursesGrid}>
-                  {filteredCourses.slice(0, visibleCount).map((course, i) => (
+                  {visibleCourses.map((course, i) => (
                     <CourseCard key={course._id || i} course={course} i={i} onEnquire={handleEnquire} />
                   ))}
                 </div>
 
-                {filteredCourses.length > visibleCount && (
+                {!showAll && filteredCourses.length > visibleCount && (
                   <div style={{ textAlign: 'center', marginTop: '6rem' }}>
-                    <button 
+                    <button
                       onClick={() => setVisibleCount(prev => prev + 6)}
                       className={styles.viewBtn}
                       style={{ width: 'auto', padding: '1.25rem 4rem', fontSize: '1rem' }}

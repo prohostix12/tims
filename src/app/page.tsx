@@ -55,11 +55,25 @@ const DEFAULT_TESTIMONIALS = [
   { name: 'Vineeth Kumar', role: 'Diploma in Data Science', avatar: 'V', rating: 5, text: 'The Data Science diploma from TIMS gave me practical skills that I applied immediately at my workplace. The curriculum is modern, relevant and delivered by industry experts.' },
 ];
 
-const IMPACT_CARDS = [
+const DEFAULT_IMPACT_CARDS = [
   { num: '50K', label: 'Learners' },
   { num: '20K', label: 'Alumnees' },
   { num: '50', label: 'Universities' },
   { num: '100', label: 'Mentors' },
+];
+
+const DEFAULT_STATS_BAR = [
+  { num: '20,000+', label: 'Happy Alumni' },
+  { num: '100+', label: 'Expert Mentors' },
+  { num: '90+', label: 'Partner Universities' },
+  { num: '18+', label: 'Years Experience' },
+];
+
+const DEFAULT_PROCESS_STEPS = [
+  { step: '01', title: 'Understand Your Goals', desc: 'We start by understanding your background, budget, and career aspirations through a free consultation.' },
+  { step: '02', title: 'Suggest the Right Program', desc: 'Our mentors match you with the best UGC-approved university and program that fits your profile.' },
+  { step: '03', title: 'Hassle-Free Admission', desc: 'We guide you through the entire admission process — forms, documents, and fee payments.' },
+  { step: '04', title: 'Ongoing Support', desc: 'After joining, we provide study materials, exam guidance, and career counselling throughout your course.' },
 ];
 
 const TYPING_WORDS = ['University', 'Online University', 'Programmes', 'Courses', 'Credit Transfer'];
@@ -72,6 +86,9 @@ export default function Home() {
   const [blogs, setBlogs] = useState<any[]>([]);
   const [testimonials, setTestimonials] = useState<{name:string;role:string;avatar:string;rating:number;text:string}[]>(DEFAULT_TESTIMONIALS);
   const [marqueeItems, setMarqueeItems] = useState<string[]>(DEFAULT_MARQUEE);
+  const [impactCards, setImpactCards] = useState<{num:string;label:string}[]>(DEFAULT_IMPACT_CARDS);
+  const [statsBar, setStatsBar] = useState<{num:string;label:string}[]>(DEFAULT_STATS_BAR);
+  const [processSteps, setProcessSteps] = useState<{step:string;title:string;desc:string}[]>(DEFAULT_PROCESS_STEPS);
   const [loading, setLoading] = useState(true);
   const [activeImpactIdx, setActiveImpactIdx] = useState(0);
   const [mustKnowIdx, setMustKnowIdx] = useState(0);
@@ -92,10 +109,10 @@ export default function Home() {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setActiveImpactIdx((prev) => (prev + 1) % IMPACT_CARDS.length);
+      setActiveImpactIdx((prev) => (prev + 1) % impactCards.length);
     }, 3000);
     return () => clearInterval(interval);
-  }, []);
+  }, [impactCards.length]);
 
   // Typewriter cycle: type → pause → backspace → next word
   useEffect(() => {
@@ -157,12 +174,14 @@ export default function Home() {
           }
         };
 
-        const [uniData, newsData, blogData, marqueeData, testimonialData] = await Promise.all([
+        const [uniData, newsData, blogData, marqueeData, testimonialData, siteStatsData, howItWorksData] = await Promise.all([
           safeFetch('/api/admin/universities'),
           safeFetch('/api/admin/news'),
           safeFetch('/api/admin/blogs'),
           safeFetch('/api/public/marquee'),
           safeFetch('/api/public/testimonials'),
+          safeFetch('/api/admin/site-stats'),
+          safeFetch('/api/admin/how-it-works'),
         ]);
 
         if (Array.isArray(uniData)) {
@@ -179,6 +198,23 @@ export default function Home() {
         }
         if (Array.isArray(testimonialData) && testimonialData.length > 0) {
           setTestimonials(testimonialData);
+        }
+        if (Array.isArray(siteStatsData) && siteStatsData.length > 0) {
+          const active = siteStatsData.filter((s: any) => s.status === 'active');
+          if (active.length > 0) {
+            setImpactCards(active.map((s: any) => ({ num: s.number, label: s.label })));
+            setStatsBar(active.map((s: any) => ({ num: s.number, label: s.label })));
+          }
+        }
+        if (Array.isArray(howItWorksData) && howItWorksData.length > 0) {
+          const active = howItWorksData.filter((s: any) => s.status === 'active');
+          if (active.length > 0) {
+            setProcessSteps(active.map((s: any, i: number) => ({
+              step: String(s.stepNumber).padStart(2, '0'),
+              title: s.title,
+              desc: s.description,
+            })));
+          }
         }
       } catch (error) {
         console.error('Fatal error in fetchData:', error);
@@ -276,7 +312,7 @@ export default function Home() {
             <div className={styles.impactTopRow}>
               <div className={styles.impactBadge}>Our Impact</div>
               <div className={styles.impactDots}>
-                 {IMPACT_CARDS.map((_, i) => (
+                 {impactCards.map((_, i) => (
                    <span key={i} className={i === activeImpactIdx ? styles.dotWhite : styles.dotGrey}></span>
                  ))}
               </div>
@@ -286,10 +322,10 @@ export default function Home() {
             <div key={activeImpactIdx} className={styles.impactCardContent}>
               <div className={styles.impactMiddleRow}>
                 <div className={styles.impactStatBlock}>
-                  <p className={styles.impactNum}>{IMPACT_CARDS[activeImpactIdx].num}</p>
+                  <p className={styles.impactNum}>{impactCards[activeImpactIdx]?.num}</p>
                   <div className={styles.impactTextStack}>
                     <span className={styles.impactPlus}>+</span>
-                    <p className={styles.impactLabel}>{IMPACT_CARDS[activeImpactIdx].label}</p>
+                    <p className={styles.impactLabel}>{impactCards[activeImpactIdx]?.label}</p>
                   </div>
                 </div>
               </div>
@@ -335,12 +371,7 @@ export default function Home() {
 
       {/* ===== STATS BAR ===== */}
       <section className={styles.statsBar}>
-        {[
-          { num: '20,000+', label: 'Happy Alumni' },
-          { num: '100+', label: 'Expert Mentors' },
-          { num: '90+', label: 'Partner Universities' },
-          { num: '18+', label: 'Years Experience' },
-        ].map((s, i) => (
+        {statsBar.map((s, i) => (
           <div key={i} className={styles.statsItem}>
             <span className={styles.statsNum}>{s.num}</span>
             <span className={styles.statsLabel}>{s.label}</span>
@@ -412,12 +443,7 @@ export default function Home() {
           </p>
         </div>
         <div className={styles.processGrid}>
-          {[
-            { step: '01', title: 'Understand Your Goals', desc: 'We start by understanding your background, budget, and career aspirations through a free consultation.' },
-            { step: '02', title: 'Suggest the Right Program', desc: 'Our mentors match you with the best UGC-approved university and program that fits your profile.' },
-            { step: '03', title: 'Hassle-Free Admission', desc: 'We guide you through the entire admission process — forms, documents, and fee payments.' },
-            { step: '04', title: 'Ongoing Support', desc: 'After joining, we provide study materials, exam guidance, and career counselling throughout your course.' },
-          ].map((item, i) => (
+          {processSteps.map((item, i) => (
             <div key={i} className={styles.processCard}>
               <div className={styles.processStep}>{item.step}</div>
               <h3 className={styles.processTitle}>{item.title}</h3>

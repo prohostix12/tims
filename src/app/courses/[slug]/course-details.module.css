@@ -56,6 +56,50 @@
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
 }
 
+/* ===== Quick Info Bar ===== */
+.infoBar {
+  background: #fff;
+  border-bottom: 1px solid rgba(28, 13, 7, 0.08);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0;
+}
+
+.infoItem {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 1.2rem 2.5rem;
+  border-right: 1px solid rgba(28, 13, 7, 0.08);
+}
+
+.infoItem:last-child {
+  border-right: none;
+}
+
+.infoIcon {
+  color: #E8502A;
+  flex-shrink: 0;
+}
+
+.infoLabel {
+  display: block;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: #94a3b8;
+  margin-bottom: 2px;
+}
+
+.infoValue {
+  display: block;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #1C0D07;
+}
+
 /* ===== Tab Nav ===== */
 .tabNav {
   background: #241008;
@@ -253,6 +297,18 @@
 
 /* ===== Responsive ===== */
 @media (max-width: 768px) {
+  .infoBar {
+    justify-content: flex-start;
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    scrollbar-width: none;
+  }
+  .infoBar::-webkit-scrollbar { display: none; }
+  .infoItem {
+    padding: 1rem 1.5rem;
+    flex-shrink: 0;
+  }
+
   .heroSection {
     padding: 90px 5% 50px;
   }

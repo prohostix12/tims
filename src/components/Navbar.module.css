@@ -96,6 +96,18 @@
   color: #c93c1a;
 }
 
+/* Override to white on course detail pages */
+.navLinkWhite,
+.navItem:first-child .navLinkWhite {
+  color: #ffffff !important;
+  font-weight: 700;
+}
+
+.navLinkWhite:hover,
+.navItem:first-child .navLinkWhite:hover {
+  color: rgba(255, 255, 255, 0.75) !important;
+}
+
 /* ---- Right side — hamburger + login ---- */
 .actions {
   display: flex;

@@ -3,7 +3,7 @@
 
 import styles from './about.module.css';
 import Link from 'next/link';
-import Image from 'next/image';
+import { useState, useEffect } from 'react';
 import {
   GraduationCap,
   Globe,
@@ -19,7 +19,50 @@ import {
   BookOpen
 } from 'lucide-react';
 
+const DEFAULT_DIRECTORS = [
+  {
+    name: "Adv. ShoukathAli Pootheri",
+    role: "Founder & Director",
+    image: "/images/Adv-ShoukathAli-pootheri.jpg",
+    bio: "A visionary legal professional and educator, Adv. ShoukathAli Pootheri founded TIMS Education in 2009 with a bold mission to make higher education accessible to all."
+  },
+  {
+    name: "Nabeel CM",
+    role: "Managing Director",
+    image: "/images/Nabeel-cm.jpg",
+    bio: "Driving the strategic growth of TIMS Education, Nabeel CM brings exceptional leadership in institutional management and student success initiatives."
+  },
+  {
+    name: "Mohamed Shameem",
+    role: "CEO & Director",
+    image: "/images/Mohamed-shameem.jpg",
+    bio: "As CEO, Mohamed Shameem leads TIMS Education's expansion efforts, forging partnerships with renowned global universities."
+  },
+];
+
+const DEFAULT_FAQS = [
+  { question: "What is TIMS Education?", answer: "TIMS Education is a distance and online education centre in Kerala focused on providing flexible, accessible academic programs." },
+  { question: "Are degrees recognized?", answer: "Yes, we partner with UGC-recognized universities to ensure your degrees are valid for employment and higher studies." },
+  { question: "Do you offer scholarships?", answer: "Yes, we offer scholarships for financially disadvantaged and high-achieving students." },
+];
+
 export default function About() {
+  const [directors, setDirectors] = useState(DEFAULT_DIRECTORS);
+  const [faqs, setFaqs] = useState(DEFAULT_FAQS);
+  const [openFaq, setOpenFaq] = useState<number | null>(null);
+
+  useEffect(() => {
+    fetch('/api/public/directors')
+      .then(r => r.json())
+      .then(data => { if (Array.isArray(data) && data.length > 0) setDirectors(data); })
+      .catch(() => {});
+
+    fetch('/api/public/faqs')
+      .then(r => r.json())
+      .then(data => { if (Array.isArray(data) && data.length > 0) setFaqs(data); })
+      .catch(() => {});
+  }, []);
+
   return (
     <main className={styles.container}>
 
@@ -56,50 +99,6 @@ export default function About() {
         ))}
       </section>
 
-      {/* ===== Get To Know Us Section ===== */}
-      <section className={styles.getKnowSection}>
-        <div className={styles.getKnowGrid}>
-          <div className={styles.getKnowImageCol}>
-            <Image
-              src="/images/tims poster.jpg"
-              alt="Honored with Excellence"
-              width={600}
-              height={500}
-              className={styles.getKnowImage}
-            />
-          </div>
-          <div className={styles.getKnowContentCol}>
-            <span className={styles.getKnowSub}>GET TO KNOW US</span>
-            <h2 className={styles.getKnowTitle}>Learning Anytime,<br />Anywhere for Success</h2>
-            <p className={styles.getKnowText}>
-              Providing accessible, high-quality education and guidance, Tirur Institute of Management Studies fosters academic excellence, professional growth, and societal impact for every learner.
-            </p>
-            <ul className={styles.getKnowList}>
-              <li>
-                <span className={styles.checkIcon}>
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
-                </span>
-                <span className={styles.listItemText}>Accredited Attestation and Certification Services</span>
-              </li>
-              <li>
-                <span className={styles.checkIcon}>
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
-                </span>
-                <span className={styles.listItemText}>Flexible Online and Credit Transfer Options</span>
-              </li>
-              <li>
-                <span className={styles.checkIcon}>
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
-                </span>
-                <span className={styles.listItemText}>Comprehensive Course and Degree Programs</span>
-              </li>
-            </ul>
-            <Link href="/contact" className={styles.getKnowBtn}>
-              Discover More
-            </Link>
-          </div>
-        </div>
-      </section>
       {/* ===== Why This? Section ===== */}
       <section className={styles.aboutSection}>
         <div className={styles.aboutGrid}>
@@ -109,10 +108,10 @@ export default function About() {
               Your Ultimate Guide to <span style={{ color: '#E8502A' }}>Academic Success</span>
             </h2>
             <p className={styles.sectionDesc}>
-              This platform is designed to simplify the overwhelming process of choosing the right education path. We help students discover the best universities and courses tailored to their career goals.
+              Choosing a university is one of the most important decisions of your life — yet most students make it with incomplete information. Find Your University was built to change that. We aggregate verified data on 90+ UGC-approved universities and match you to the right programme in minutes.
             </p>
             <p className={styles.sectionDesc}>
-              By providing comprehensive information and personalized guidance, we ensure that every student can identify which course is truly suitable for them, empowering them to make informed decisions for a brighter future.
+              No sales pressure. No hidden fees. Just honest, personalised guidance so every student — whether in a metro city or a remote village — can make a confident, informed decision about their future.
             </p>
           </div>
         </div>
@@ -125,14 +124,14 @@ export default function About() {
             <div className={styles.cardIcon}><Target size={32} /></div>
             <h3 className={styles.cardTitle}>Our Mission</h3>
             <p className={styles.cardText}>
-              To provide affordable, flexible, and high-quality education to learners across all backgrounds. We aim to bridge the gap between aspiration and achievement by offering personalized academic guidance and robust university partnerships.
+              To simplify the university discovery process for every student in India. We connect learners with the right UGC-approved programme — based on their goals, eligibility, and budget — through intelligent matching, honest guidance, and zero cost to the student.
             </p>
           </div>
           <div className={styles.visionCard}>
             <div className={styles.cardIcon}><Eye size={32} /></div>
             <h3 className={styles.cardTitle}>Our Vision</h3>
             <p className={styles.cardText}>
-              To become the most trusted and accessible distance education centre in India, empowering every learner to unlock their full academic and professional potential. We envision a future where quality education knows no boundaries.
+              To become India's most trusted platform for higher education decisions — where every student, regardless of background or location, can find the perfect university and course with confidence, clarity, and complete transparency.
             </p>
           </div>
         </div>
@@ -145,29 +144,10 @@ export default function About() {
           <h2 className={styles.sectionTitle}>The Visionary <span style={{ color: '#ef233c' }}>Directors</span></h2>
         </div>
         <div className={styles.directorsGrid}>
-          {[
-            {
-              name: "Adv. ShoukathAli Pootheri",
-              role: "Founder & Director",
-              img: "/images/Adv-ShoukathAli-pootheri.jpg",
-              bio: "A visionary legal professional and educator, Adv. ShoukathAli Pootheri founded TIMS Education in 2009 with a bold mission to make higher education accessible to all."
-            },
-            {
-              name: "Nabeel CM",
-              role: "Managing Director",
-              img: "/images/Nabeel-cm.jpg",
-              bio: "Driving the strategic growth of TIMS Education, Nabeel CM brings exceptional leadership in institutional management and student success initiatives."
-            },
-            {
-              name: "Mohamed Shameem",
-              role: "CEO & Director",
-              img: "/images/Mohamed-shameem.jpg",
-              bio: "As CEO, Mohamed Shameem leads TIMS Education&apos;s expansion efforts, forging partnerships with renowned global universities."
-            },
-          ].map((director, idx) => (
+          {directors.map((director: any, idx: number) => (
             <div key={idx} className={styles.directorCard}>
               <div className={styles.directorAvatar}>
-                <img src={director.img} alt={director.name} className={styles.directorImage} />
+                <img src={director.image || director.img} alt={director.name} className={styles.directorImage} />
               </div>
               <h3 className={styles.directorName}>{director.name}</h3>
               <span className={styles.directorRole}>{director.role}</span>
@@ -177,20 +157,6 @@ export default function About() {
         </div>
       </section>
 
-      {/* ===== Success Section ===== */}
-      <section className={styles.successSection}>
-        <div className={styles.successContent}>
-          <div className={styles.successTextCol}>
-            <h2 className={styles.sectionTitle}>Your Trusted Partner for Management Studies</h2>
-            <p className={styles.sectionDesc}>
-              TIMS Education was started with a simple idea — learning should not stop because of work, family, or time limits. We provide the support that actually helps, working closely with recognised universities so anyone can move forward with confidence.
-            </p>
-            <Link href="/contact" className={styles.ctaPrimary} style={{ width: 'fit-content' }}>
-              Speak with an Advisor
-            </Link>
-          </div>
-        </div>
-      </section>
 
       {/* ===== Testimonials Section ===== */}
       <section className={styles.testimonialsSection}>
@@ -229,14 +195,10 @@ export default function About() {
           </div>
           <div className={styles.faqAccordion}>
              <h2 className={styles.sectionTitle}>Frequently Asked Questions</h2>
-            {[
-              { q: "What is TIMS Education?", a: "TIMS Education is a distance and online education centre in Kerala focused on providing flexible, accessible academic programs." },
-              { q: "Are degrees recognized?", a: "Yes, we partner with UGC-recognized universities to ensure your degrees are valid for employment and higher studies." },
-              { q: "Do you offer scholarships?", a: "Yes, we offer scholarships for financially disadvantaged and high-achieving students." }
-            ].map((faq, i) => (
-              <details key={i} className={styles.faqItem}>
-                <summary className={styles.faqQuestion}>{faq.q}</summary>
-                <div className={styles.faqAnswer}>{faq.a}</div>
+            {faqs.map((faq: any, i: number) => (
+              <details key={faq._id || i} className={styles.faqItem}>
+                <summary className={styles.faqQuestion}>{faq.question || faq.q}</summary>
+                <div className={styles.faqAnswer}>{faq.answer || faq.a}</div>
               </details>
             ))}
           </div>

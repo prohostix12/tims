@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import Program from '@/models/Program';
+import University from '@/models/University';
 import connectDB from '@/lib/db';
 
 const FIELD_TO_COURSE_TYPE: Record<string, string> = {
@@ -13,6 +14,29 @@ const FIELD_TO_COURSE_TYPE: Record<string, string> = {
   law: 'Others',
 };
 
+const UG_NAME_PREFIXES = ['B\\.Com', 'BBA', 'BCA', 'B\\.A', 'B\\.Sc', 'BSc', 'B\\.Tech', 'BTech', 'BMS', 'BJMC', 'BHM', 'LLB', 'B\\.Pharm', 'B\\.Ed', 'BE '];
+const PG_NAME_PREFIXES = ['MBA', 'MCA', 'M\\.Com', 'M\\.Sc', 'MSc', 'M\\.Tech', 'MTech', 'PGDM', 'MMS', 'LLM', 'M\\.Ed', 'M\\.Pharm', 'Ph\\.D', 'PhD', 'M\\.A\\.', 'M\\.A ', 'ME '];
+
+function buildEduFilter(eduAnswer: string): Record<string, any> | null {
+  if (eduAnswer === '12th') {
+    return {
+      $or: [
+        { level: /^(UG|Under\s*Grad|Undergraduate|Bachelor|Diploma)/i },
+        { name: { $in: UG_NAME_PREFIXES.map(p => new RegExp(`^${p}`, 'i')) } },
+      ],
+    };
+  }
+  if (eduAnswer === 'graduate') {
+    return {
+      $or: [
+        { level: /^(PG|Post\s*Grad|Postgraduate|Master)/i },
+        { name: { $in: PG_NAME_PREFIXES.map(p => new RegExp(`^${p}`, 'i')) } },
+      ],
+    };
+  }
+  return null;
+}
+
 export async function POST(req: Request) {
   try {
     await connectDB();
@@ -21,7 +45,15 @@ export async function POST(req: Request) {
 
     const query: Record<string, any> = {};
 
-    // 1. Field → courseType filter (primary)
+    // 1. Education level → UG/PG filter
+    const eduQuestion = questions.find((q: any) => q.field === 'education');
+    const eduAnswer = eduQuestion ? answers[eduQuestion.field] : answers['education'];
+    const eduFilter = buildEduFilter(eduAnswer || '');
+    if (eduFilter) {
+      Object.assign(query, eduFilter);
+    }
+
+    // 2. Field → courseType filter
     const fieldQuestion = questions.find((q: any) => q.field === 'field');
     const fieldAnswer = fieldQuestion ? answers[fieldQuestion.field] : answers['field'];
 
@@ -30,18 +62,26 @@ export async function POST(req: Request) {
       const fieldOption = fieldQuestion?.options?.find((o: any) => o.value === fieldAnswer);
       const categories: string[] = fieldOption?.categories || [];
 
-      const orConditions: any[] = [];
-      if (courseType) orConditions.push({ courseType });
+      const fieldConditions: any[] = [];
+      if (courseType) fieldConditions.push({ courseType });
       if (categories.length > 0) {
-        orConditions.push({
+        fieldConditions.push({
           category: { $in: categories.map((c: string) => new RegExp(c, 'i')) },
         });
       }
-      if (orConditions.length === 1) Object.assign(query, orConditions[0]);
-      else if (orConditions.length > 1) query.$or = orConditions;
+
+      if (fieldConditions.length > 0) {
+        if (eduFilter) {
+          query.$and = [eduFilter, fieldConditions.length === 1 ? fieldConditions[0] : { $or: fieldConditions }];
+          if (query.$or) delete query.$or;
+        } else {
+          if (fieldConditions.length === 1) Object.assign(query, fieldConditions[0]);
+          else query.$or = fieldConditions;
+        }
+      }
     }
 
-    // 2. Budget → fee range filter
+    // 3. Budget → fee range filter
     const budgetQuestion = questions.find((q: any) => q.field === 'budget');
     const budgetAnswer = budgetQuestion ? answers[budgetQuestion.field] : answers['budget'];
 
@@ -55,36 +95,89 @@ export async function POST(req: Request) {
       }
     }
 
-    // Fetch with courseType/category filter + fee filter
+    // Fetch programs
     let programs = await Program.find(query)
-      .populate('university', 'name')
+      .populate({ path: 'university', model: University, select: 'name _id slug type location logo' })
       .lean()
       .limit(20);
 
-    // If fee filter eliminated all results, relax it
+    // Relax fee filter if no results
     if (programs.length === 0 && query.fee) {
       const relaxed = { ...query };
       delete relaxed.fee;
       programs = await Program.find(relaxed)
-        .populate('university', 'name')
+        .populate({ path: 'university', model: University, select: 'name _id slug type location logo' })
         .lean()
         .limit(20);
     }
 
-    // If still nothing, return all programs as fallback
+    // Relax education filter if still nothing
+    if (programs.length === 0 && eduFilter) {
+      const noEdu = { ...query };
+      if (noEdu.$and) {
+        noEdu.$and = noEdu.$and.filter((c: any) => c !== eduFilter);
+        if (noEdu.$and.length === 0) delete noEdu.$and;
+      }
+      if (noEdu.$or && JSON.stringify(noEdu.$or) === JSON.stringify(eduFilter.$or)) delete noEdu.$or;
+      programs = await Program.find(noEdu)
+        .populate({ path: 'university', model: University, select: 'name _id slug type location logo' })
+        .lean()
+        .limit(20);
+    }
+
+    // Final fallback: return all programs
     if (programs.length === 0) {
       programs = await Program.find({})
-        .populate('university', 'name')
+        .populate({ path: 'university', model: University, select: 'name _id slug type location logo' })
         .lean()
         .limit(12);
     }
 
-    // Featured programs first
-    programs.sort((a: any, b: any) => (b.featured ? 1 : 0) - (a.featured ? 1 : 0));
+    // 4. University type post-filter
+    const uniTypeAnswer = answers['university_type'];
+    if (uniTypeAnswer && uniTypeAnswer !== 'any') {
+      const typeFiltered = programs.filter((p: any) => {
+        const uType = (p.university?.type || '').toLowerCase();
+        return uType.includes(uniTypeAnswer.toLowerCase());
+      });
+      if (typeFiltered.length > 0) programs = typeFiltered;
+    }
 
-    return NextResponse.json({ programs: programs.slice(0, 8) });
+    // Featured first
+    programs.sort((a: any, b: any) => (b.featured ? 1 : 0) - (a.featured ? 1 : 0));
+    const finalPrograms = programs.slice(0, 8);
+
+    // Extract unique universities from matched programs
+    const uniMap = new Map<string, any>();
+    finalPrograms.forEach((p: any) => {
+      const u = p.university;
+      if (u && u._id) uniMap.set(String(u._id), u);
+    });
+    let universities: any[] = Array.from(uniMap.values());
+
+    // If fewer than 3 universities from programs, fetch extras based on type preference
+    if (universities.length < 3) {
+      const uniQuery: any = {};
+      if (uniTypeAnswer && uniTypeAnswer !== 'any') {
+        uniQuery.type = new RegExp(uniTypeAnswer, 'i');
+      }
+      const extraUnis = await University.find(uniQuery)
+        .select('name _id slug type location logo')
+        .lean()
+        .limit(6);
+
+      const existingIds = new Set(universities.map((u: any) => String(u._id)));
+      extraUnis.forEach((u: any) => {
+        if (!existingIds.has(String(u._id))) universities.push(u);
+      });
+    }
+
+    return NextResponse.json({
+      programs: finalPrograms,
+      universities: universities.slice(0, 6),
+    });
   } catch (err) {
     console.error('course-finder-results error:', err);
-    return NextResponse.json({ programs: [] }, { status: 500 });
+    return NextResponse.json({ programs: [], universities: [] }, { status: 500 });
   }
 }

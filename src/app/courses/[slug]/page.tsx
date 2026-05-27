@@ -1,34 +1,79 @@
 'use client';
-
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import styles from './course-details.module.css';
-import { ArrowLeft, CheckCircle2 } from 'lucide-react';
+import { ArrowLeft, CheckCircle2, GraduationCap, Clock, IndianRupee, BookOpen } from 'lucide-react';
 import EnquiryModal from '@/components/EnquiryModal';
 import { getCourseData } from './courseData';
 
+// Merge DB program with static fallback so the page always has content to render
+function buildCourseView(dbProgram: any, slug: string) {
+  const staticData = getCourseData(slug) || getCourseData(slug.replace(/-/g, '_'));
+  return {
+    heroTitle: dbProgram?.heroTitle || staticData?.heroTitle || dbProgram?.name || '',
+    intro: dbProgram?.intro || staticData?.intro || dbProgram?.description || '',
+    specializations: (dbProgram?.specializations?.length ? dbProgram.specializations : staticData?.specializations) || [],
+    universityName: dbProgram?.university?.name || '',
+    universitySlug: dbProgram?.university?.slug || '',
+    name: dbProgram?.name || '',
+    fee: dbProgram?.fee,
+    duration: dbProgram?.duration,
+    eligibility: dbProgram?.eligibility || '',
+    mode: dbProgram?.mode || dbProgram?.type || '',
+  };
+}
+
 export default function CourseDetailsPage() {
   const params = useParams();
-  const slug = params.slug as string;
-  const courseData = getCourseData(slug);
-  const [isModalOpen, setIsModalOpen] = React.useState(false);
-  const [activeTab, setActiveTab] = React.useState('');
+  const slug = Array.isArray(params?.slug) ? params.slug[0] : params?.slug ?? '';
+  const [courseData, setCourseData] = useState<any>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [activeTab, setActiveTab] = useState('');
+  const [error, setError] = useState<string | null>(null);
 
-  React.useEffect(() => {
-    if (courseData && courseData.specializations.length > 0) {
-      setActiveTab(courseData.specializations[0].id);
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const res = await fetch(`/api/courses/${encodeURIComponent(slug)}`);
+        if (!res.ok) {
+          // API returned error — try static data only
+          const staticOnly = getCourseData(slug) || getCourseData(slug.replace(/-/g, '_'));
+          if (staticOnly) {
+            setCourseData({ heroTitle: staticOnly.heroTitle, intro: staticOnly.intro, specializations: staticOnly.specializations });
+            if (staticOnly.specializations.length) setActiveTab(staticOnly.specializations[0].id);
+            return;
+          }
+          throw new Error('Course not found');
+        }
+        const data = await res.json();
+        const view = buildCourseView(data, slug);
+        setCourseData(view);
+        if (view.specializations.length) setActiveTab(view.specializations[0].id);
+      } catch (e: any) {
+        setError(e.message || 'Failed to load course');
+      }
     }
+    if (slug) fetchData();
   }, [slug]);
 
-  if (!courseData) {
+
+  if (error) {
     return (
       <div className={styles.errorContainer}>
-        <h2>Course Profile Not Found</h2>
-        <p>The program you are looking for might have been moved or renamed.</p>
+        <h2>Failed to load course</h2>
+        <p>{error}</p>
         <Link href="/courses" className={styles.backBtn}>
           <ArrowLeft size={18} /> Back to Courses
         </Link>
+      </div>
+    );
+  }
+
+  if (!courseData) {
+    return (
+      <div className={styles.loadingContainer}>
+        <p>Loading course data…</p>
       </div>
     );
   }
@@ -56,10 +101,52 @@ export default function CourseDetailsPage() {
         </div>
       </section>
 
+      {/* ===== Quick Info Bar ===== */}
+      {(courseData.universityName || courseData.fee || courseData.duration || courseData.eligibility) && (
+        <div className={styles.infoBar}>
+          {courseData.universityName && (
+            <div className={styles.infoItem}>
+              <GraduationCap size={18} className={styles.infoIcon} />
+              <div>
+                <span className={styles.infoLabel}>University</span>
+                <span className={styles.infoValue}>{courseData.universityName}</span>
+              </div>
+            </div>
+          )}
+          {courseData.duration && (
+            <div className={styles.infoItem}>
+              <Clock size={18} className={styles.infoIcon} />
+              <div>
+                <span className={styles.infoLabel}>Duration</span>
+                <span className={styles.infoValue}>{courseData.duration}</span>
+              </div>
+            </div>
+          )}
+          {courseData.fee && (
+            <div className={styles.infoItem}>
+              <IndianRupee size={18} className={styles.infoIcon} />
+              <div>
+                <span className={styles.infoLabel}>Annual Fee</span>
+                <span className={styles.infoValue}>₹{Number(courseData.fee).toLocaleString('en-IN')}</span>
+              </div>
+            </div>
+          )}
+          {courseData.eligibility && (
+            <div className={styles.infoItem}>
+              <BookOpen size={18} className={styles.infoIcon} />
+              <div>
+                <span className={styles.infoLabel}>Eligibility</span>
+                <span className={styles.infoValue}>{courseData.eligibility}</span>
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+
       {/* ===== Tab Nav ===== */}
       <nav className={styles.tabNav}>
         <div className={styles.tabInner}>
-          {courseData.specializations.map((s) => (
+          {courseData.specializations.map((s: any) => (
             <button
               key={s.id}
               className={`${styles.tabBtn} ${activeTab === s.id ? styles.tabBtnActive : ''}`}
@@ -73,12 +160,12 @@ export default function CourseDetailsPage() {
 
       {/* ===== Content ===== */}
       <div className={styles.contentWrapper}>
-        {courseData.specializations.map((s) => (
+        {courseData.specializations.map((s: any) => (
           <section key={s.id} id={s.id} className={styles.specSection}>
             <h2 className={styles.specTitle}>{s.title}</h2>
             <p className={styles.specDesc}>{s.description}</p>
             <ul className={styles.jobList}>
-              {s.jobs.map((job, i) => (
+              {s.jobs.map((job: string, i: number) => (
                 <li key={i} className={styles.jobItem}>
                   <CheckCircle2 size={18} className={styles.checkIcon} />
                   <span>{job}</span>

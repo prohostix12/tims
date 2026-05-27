@@ -27,10 +27,26 @@ export default function EditProgram() {
     image: '',
     brochure: '',
     description: '',
+    heroTitle: '',
+    intro: '',
     highlights: '',
     curriculum: '',
     fee: ''
   });
+
+  const [specializations, setSpecializations] = useState<{id: string; title: string; description: string; jobs: string}[]>([]);
+
+  const addSpecialization = () => {
+    setSpecializations(prev => [...prev, { id: '', title: '', description: '', jobs: '' }]);
+  };
+
+  const removeSpecialization = (idx: number) => {
+    setSpecializations(prev => prev.filter((_, i) => i !== idx));
+  };
+
+  const updateSpecialization = (idx: number, field: string, value: string) => {
+    setSpecializations(prev => prev.map((s, i) => i === idx ? { ...s, [field]: value } : s));
+  };
 
   useEffect(() => {
     const fetchUniversities = async () => {
@@ -64,10 +80,20 @@ export default function EditProgram() {
               image: data.image || '',
               brochure: data.brochure || '',
               description: data.description || '',
+              heroTitle: data.heroTitle || '',
+              intro: data.intro || '',
               highlights: Array.isArray(data.highlights) ? data.highlights.join(', ') : '',
               curriculum: Array.isArray(data.curriculum) ? data.curriculum.join(', ') : '',
               fee: data.fee || ''
             });
+            if (Array.isArray(data.specializations)) {
+              setSpecializations(data.specializations.map((s: any) => ({
+                id: s.id || '',
+                title: s.title || '',
+                description: s.description || '',
+                jobs: Array.isArray(s.jobs) ? s.jobs.join(', ') : '',
+              })));
+            }
           }
         })
         .catch(err => console.error('Failed to load program data', err));
@@ -108,7 +134,13 @@ export default function EditProgram() {
         body: JSON.stringify({
           ...formData,
           highlights: formData.highlights.split(',').map(s => s.trim()).filter(s => s !== ''),
-          curriculum: formData.curriculum.split(',').map(s => s.trim()).filter(s => s !== '')
+          curriculum: formData.curriculum.split(',').map(s => s.trim()).filter(s => s !== ''),
+          specializations: specializations.map(s => ({
+            id: s.id || s.title.toLowerCase().replace(/\s+/g, '-'),
+            title: s.title,
+            description: s.description,
+            jobs: s.jobs.split(',').map(j => j.trim()).filter(j => j !== ''),
+          })).filter(s => s.title),
         }),
       });
 
@@ -192,11 +224,35 @@ export default function EditProgram() {
             </div>
 
             <div>
+              <label className={styles.label}>Hero Title</label>
+              <input
+                name="heroTitle"
+                type="text"
+                placeholder="e.g. Master the Art of Business Leadership"
+                className={styles.input}
+                value={formData.heroTitle}
+                onChange={handleChange}
+              />
+            </div>
+
+            <div>
+              <label className={styles.label}>Program Intro / Overview</label>
+              <textarea
+                name="intro"
+                rows={3}
+                placeholder="A brief compelling overview shown at the top of the course detail page..."
+                className={styles.textarea}
+                value={formData.intro}
+                onChange={handleChange}
+              ></textarea>
+            </div>
+
+            <div>
               <label className={styles.label}>Highlights (comma separated)</label>
-              <textarea 
+              <textarea
                 name="highlights"
-                rows={2} 
-                placeholder="Industry-aligned curriculum, Global networking..." 
+                rows={2}
+                placeholder="Industry-aligned curriculum, Global networking..."
                 className={styles.textarea}
                 value={formData.highlights}
                 onChange={handleChange}
@@ -205,10 +261,10 @@ export default function EditProgram() {
 
             <div>
               <label className={styles.label}>Curriculum Preview (comma separated)</label>
-              <textarea 
+              <textarea
                 name="curriculum"
-                rows={2} 
-                placeholder="Strategic Management, Advanced Analytics..." 
+                rows={2}
+                placeholder="Strategic Management, Advanced Analytics..."
                 className={styles.textarea}
                 value={formData.curriculum}
                 onChange={handleChange}
@@ -217,10 +273,10 @@ export default function EditProgram() {
 
             <div>
               <label className={styles.label}>Description</label>
-              <textarea 
+              <textarea
                 name="description"
-                rows={4} 
-                placeholder="Brief description of the program..." 
+                rows={4}
+                placeholder="Brief description of the program..."
                 className={styles.textarea}
                 value={formData.description}
                 onChange={handleChange}
@@ -339,13 +395,31 @@ export default function EditProgram() {
               </div>
             </div>
 
+            <div>
+              <label className={styles.label}>Specializations / Tracks</label>
+              {specializations.map((spec, idx) => (
+                <div key={idx} style={{ border: '1px solid #e2e8f0', borderRadius: '10px', padding: '1rem', marginBottom: '1rem', background: '#f8fafc' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
+                    <strong style={{ fontSize: '14px', color: '#374151' }}>Specialization {idx + 1}</strong>
+                    <button type="button" onClick={() => removeSpecialization(idx)} style={{ background: 'none', border: 'none', color: '#ef4444', cursor: 'pointer', fontWeight: 700 }}>Remove</button>
+                  </div>
+                  <input type="text" placeholder="Title (e.g. Finance)" className={styles.input} value={spec.title} onChange={e => updateSpecialization(idx, 'title', e.target.value)} style={{ marginBottom: '0.5rem' }} />
+                  <textarea rows={2} placeholder="Description..." className={styles.textarea} value={spec.description} onChange={e => updateSpecialization(idx, 'description', e.target.value)} style={{ marginBottom: '0.5rem' }} />
+                  <input type="text" placeholder="Jobs (comma separated): Financial Analyst, CFO..." className={styles.input} value={spec.jobs} onChange={e => updateSpecialization(idx, 'jobs', e.target.value)} />
+                </div>
+              ))}
+              <button type="button" onClick={addSpecialization} style={{ padding: '0.5rem 1.2rem', background: '#e0f2fe', color: '#0369a1', border: '1px solid #bae6fd', borderRadius: '8px', cursor: 'pointer', fontWeight: 600, fontSize: '14px' }}>
+                + Add Specialization
+              </button>
+            </div>
+
             <div className={styles.formGrid} style={{ padding: 0 }}>
               <div>
                 <label className={styles.label}>Estimated Fee (₹)</label>
-                <input 
+                <input
                   name="fee"
-                  type="number" 
-                  placeholder="e.g. 45000" 
+                  type="number"
+                  placeholder="e.g. 45000"
                   className={styles.input}
                   value={formData.fee}
                   onChange={handleChange}

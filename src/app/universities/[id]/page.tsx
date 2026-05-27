@@ -25,6 +25,7 @@ import UniversityLogoBanner from '@/components/UniversityLogoBanner';
 export default function UniversityDetailPage() {
   const { id } = useParams();
   const [uni, setUni] = useState<any>(null);
+  const [programs, setPrograms] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
@@ -38,6 +39,11 @@ export default function UniversityDetailPage() {
         })
         .catch(() => {})
         .finally(() => setLoading(false));
+
+      fetch(`/api/admin/programs?universityId=${id}`)
+        .then((r) => r.json())
+        .then((data) => { if (Array.isArray(data)) setPrograms(data); })
+        .catch(() => {});
     }
   }, [id]);
 
@@ -236,11 +242,65 @@ export default function UniversityDetailPage() {
 
           </div>
         </div>
+
+        {/* ===== Programs Offered Section ===== */}
+        {programs.length > 0 && (
+          <div style={{ padding: '0 20px 80px' }}>
+            <h2 style={{ fontSize: '2rem', fontWeight: 800, color: '#00122e', marginBottom: '2rem', display: 'flex', alignItems: 'center', gap: '15px' }}>
+              <span style={{ width: '8px', height: '40px', background: '#ef233c', borderRadius: '4px', flexShrink: 0 }} />
+              Programs Offered
+            </h2>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))', gap: '24px' }}>
+              {programs.map((prog: any) => {
+                const uniInitials = uni?.name?.split(' ').map((w: string) => w[0]).slice(0, 2).join('') || 'U';
+                return (
+                  <Link
+                    key={prog._id}
+                    href={`/courses/${prog.slug || prog._id}`}
+                    style={{ textDecoration: 'none', display: 'flex', flexDirection: 'column', borderRadius: '20px', overflow: 'hidden', background: '#fff', boxShadow: '0 4px 20px rgba(0,0,0,0.07)', border: '1px solid #e2e8f0', transition: 'transform 0.2s, box-shadow 0.2s' }}
+                    onMouseEnter={e => { (e.currentTarget as HTMLElement).style.transform = 'translateY(-6px)'; (e.currentTarget as HTMLElement).style.boxShadow = '0 12px 32px rgba(0,0,0,0.12)'; }}
+                    onMouseLeave={e => { (e.currentTarget as HTMLElement).style.transform = ''; (e.currentTarget as HTMLElement).style.boxShadow = '0 4px 20px rgba(0,0,0,0.07)'; }}
+                  >
+                    {/* Orange image panel */}
+                    <div style={{ position: 'relative', height: '160px', background: '#E8502A', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1rem 1rem 1rem 4.5rem', overflow: 'hidden' }}>
+                      {/* decorative circles */}
+                      <div style={{ position: 'absolute', top: '-30px', right: '-30px', width: '130px', height: '130px', borderRadius: '50%', background: 'rgba(255,255,255,0.07)' }} />
+                      <div style={{ position: 'absolute', bottom: '-20px', left: '20px', width: '90px', height: '90px', borderRadius: '50%', background: 'rgba(255,255,255,0.05)' }} />
+                      {/* course name */}
+                      <span style={{ fontSize: '1.4rem', fontWeight: 900, color: '#fff', textAlign: 'center', lineHeight: 1.2, zIndex: 1, textShadow: '0 2px 8px rgba(0,0,0,0.15)' }}>{prog.name}</span>
+                      {/* university logo corner */}
+                      <div style={{ position: 'absolute', bottom: '12px', left: '12px', zIndex: 2, width: '52px', height: '52px', background: '#fff', borderRadius: '12px', boxShadow: '0 4px 16px rgba(0,0,0,0.25)', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden' }}>
+                        {uni?.logo
+                          ? <img src={uni.logo} alt={uni.name} style={{ width: '100%', height: '100%', objectFit: 'contain', padding: '4px' }} />
+                          : <span style={{ fontSize: '0.8rem', fontWeight: 900, color: '#E8502A' }}>{uniInitials}</span>
+                        }
+                      </div>
+                      {/* level badge */}
+                      {prog.level && (
+                        <span style={{ position: 'absolute', top: '10px', right: '10px', background: 'rgba(20,8,3,0.72)', color: '#fff', padding: '4px 10px', borderRadius: '50px', fontSize: '0.6rem', fontWeight: 800, letterSpacing: '0.2px', textTransform: 'uppercase', whiteSpace: 'nowrap', maxWidth: 'calc(100% - 20px)', overflow: 'hidden', textOverflow: 'ellipsis' }}>{prog.level}</span>
+                      )}
+                    </div>
+                    {/* card body */}
+                    <div style={{ padding: '1.1rem 1.25rem 1.25rem', flex: 1, display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                      {prog.duration && <span style={{ fontSize: '0.8rem', color: '#64748b', fontWeight: 600 }}>⏱ {prog.duration}</span>}
+                      {prog.fee && <span style={{ fontSize: '0.8rem', color: '#64748b', fontWeight: 600 }}>₹{Number(prog.fee).toLocaleString('en-IN')} / year</span>}
+                      <div style={{ marginTop: 'auto', paddingTop: '0.75rem' }}>
+                        <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', color: '#E8502A', fontWeight: 800, fontSize: '0.85rem' }}>
+                          View Details <ArrowRight size={14} />
+                        </span>
+                      </div>
+                    </div>
+                  </Link>
+                );
+              })}
+            </div>
+          </div>
+        )}
       </main>
 
-      <EnquiryModal 
-        isOpen={isModalOpen} 
-        onClose={() => setIsModalOpen(false)} 
+      <EnquiryModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
         title={`Enquire about ${uni.name}`}
         interest={uni.name}
         source="University Detail Page"

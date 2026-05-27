@@ -25,10 +25,27 @@ export default function NewProgram() {
     image: '',
     brochure: '',
     description: '',
+    heroTitle: '',
+    intro: '',
     highlights: '',
     curriculum: '',
     fee: ''
   });
+
+  // Specializations state: array of {id, title, description, jobs}
+  const [specializations, setSpecializations] = useState<{id: string; title: string; description: string; jobs: string}[]>([]);
+
+  const addSpecialization = () => {
+    setSpecializations(prev => [...prev, { id: '', title: '', description: '', jobs: '' }]);
+  };
+
+  const removeSpecialization = (idx: number) => {
+    setSpecializations(prev => prev.filter((_, i) => i !== idx));
+  };
+
+  const updateSpecialization = (idx: number, field: string, value: string) => {
+    setSpecializations(prev => prev.map((s, i) => i === idx ? { ...s, [field]: value } : s));
+  };
 
   useEffect(() => {
     const fetchUniversities = async () => {
@@ -82,7 +99,13 @@ export default function NewProgram() {
         body: JSON.stringify({
           ...formData,
           highlights: formData.highlights.split(',').map(s => s.trim()).filter(s => s !== ''),
-          curriculum: formData.curriculum.split(',').map(s => s.trim()).filter(s => s !== '')
+          curriculum: formData.curriculum.split(',').map(s => s.trim()).filter(s => s !== ''),
+          specializations: specializations.map(s => ({
+            id: s.id || s.title.toLowerCase().replace(/\s+/g, '-'),
+            title: s.title,
+            description: s.description,
+            jobs: s.jobs.split(',').map(j => j.trim()).filter(j => j !== ''),
+          })).filter(s => s.title),
         }),
       });
 
@@ -166,11 +189,35 @@ export default function NewProgram() {
             </div>
 
             <div>
+              <label className={styles.label}>Hero Title</label>
+              <input
+                name="heroTitle"
+                type="text"
+                placeholder="e.g. Master the Art of Business Leadership"
+                className={styles.input}
+                value={formData.heroTitle}
+                onChange={handleChange}
+              />
+            </div>
+
+            <div>
+              <label className={styles.label}>Program Intro / Overview</label>
+              <textarea
+                name="intro"
+                rows={3}
+                placeholder="A brief compelling overview shown at the top of the course detail page..."
+                className={styles.textarea}
+                value={formData.intro}
+                onChange={handleChange}
+              ></textarea>
+            </div>
+
+            <div>
               <label className={styles.label}>Highlights (comma separated)</label>
-              <textarea 
+              <textarea
                 name="highlights"
-                rows={2} 
-                placeholder="Industry-aligned curriculum, Global networking..." 
+                rows={2}
+                placeholder="Industry-aligned curriculum, Global networking..."
                 className={styles.textarea}
                 value={formData.highlights}
                 onChange={handleChange}
@@ -311,6 +358,24 @@ export default function NewProgram() {
                 />
                 {formData.brochure && <p style={{fontSize: '12px', color: '#10b981', marginTop: '5px', fontWeight: 600}}>✓ Brochure attached successfully</p>}
               </div>
+            </div>
+
+            <div>
+              <label className={styles.label}>Specializations / Tracks</label>
+              {specializations.map((spec, idx) => (
+                <div key={idx} style={{ border: '1px solid #e2e8f0', borderRadius: '10px', padding: '1rem', marginBottom: '1rem', background: '#f8fafc' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
+                    <strong style={{ fontSize: '14px', color: '#374151' }}>Specialization {idx + 1}</strong>
+                    <button type="button" onClick={() => removeSpecialization(idx)} style={{ background: 'none', border: 'none', color: '#ef4444', cursor: 'pointer', fontWeight: 700 }}>Remove</button>
+                  </div>
+                  <input type="text" placeholder="Title (e.g. Finance)" className={styles.input} value={spec.title} onChange={e => updateSpecialization(idx, 'title', e.target.value)} style={{ marginBottom: '0.5rem' }} />
+                  <textarea rows={2} placeholder="Description..." className={styles.textarea} value={spec.description} onChange={e => updateSpecialization(idx, 'description', e.target.value)} style={{ marginBottom: '0.5rem' }} />
+                  <input type="text" placeholder="Jobs (comma separated): Financial Analyst, CFO..." className={styles.input} value={spec.jobs} onChange={e => updateSpecialization(idx, 'jobs', e.target.value)} />
+                </div>
+              ))}
+              <button type="button" onClick={addSpecialization} style={{ padding: '0.5rem 1.2rem', background: '#e0f2fe', color: '#0369a1', border: '1px solid #bae6fd', borderRadius: '8px', cursor: 'pointer', fontWeight: 600, fontSize: '14px' }}>
+                + Add Specialization
+              </button>
             </div>
 
             <div className={styles.formGrid} style={{ padding: 0 }}>

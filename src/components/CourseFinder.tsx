@@ -213,6 +213,9 @@ const OPTION_ICON_MAP: Record<string, React.ReactNode> = {
   indian: <IconSchool />,
   international: <IconGlobe />,
   both: <IconStar />,
+  private: <IconSchool />,
+  public: <IconBuilding />,
+  state: <IconMap />,
   // Experience
   no_experience: <IconBook />,
   less_2: <IconTarget />,
@@ -376,11 +379,12 @@ export const FALLBACK_QUESTIONS = [
   },
   {
     _id: 'fq7', field: 'university_type', order: 7, isActive: true,
-    question: 'Do you prefer Indian or International Universities?',
+    question: 'What type of university do you prefer?',
     options: [
-      { value: 'indian',        label: 'Indian University' },
-      { value: 'international', label: 'International University' },
-      { value: 'both',          label: 'Open to Both' },
+      { value: 'private', label: 'Private University' },
+      { value: 'public',  label: 'Public / Government' },
+      { value: 'state',   label: 'State University' },
+      { value: 'any',     label: 'No Preference' },
     ],
   },
   {
@@ -427,6 +431,7 @@ export default function CourseFinder() {
   const [answers, setAnswers] = useState<Record<string, string>>({});
   const [results, setResults] = useState<any[]>([]);
   const [fallbackResults, setFallbackResults] = useState<any[]>([]);
+  const [matchedUniversities, setMatchedUniversities] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
   const [showResults, setShowResults] = useState(false);
   const [animate, setAnimate] = useState(true);
@@ -490,7 +495,7 @@ export default function CourseFinder() {
   const closeModal = () => { setIsOpen(false); reset(); };
   const reset = () => {
     setGateCleared(false); setUserData({ name: '', email: '', phone: '' }); setStep(1);
-    setAnswers({}); setResults([]); setShowResults(false); setAnimate(true);
+    setAnswers({}); setResults([]); setFallbackResults([]); setMatchedUniversities([]); setShowResults(false); setAnimate(true);
     setQuestions([]);
   };
 
@@ -536,6 +541,7 @@ export default function CourseFinder() {
         }
         setResults(allPrograms.slice(0, 6));
         setFallbackResults([]);
+        setMatchedUniversities([]);
         setShowResults(true);
         return;
       }
@@ -547,17 +553,20 @@ export default function CourseFinder() {
         body: JSON.stringify({ answers, questions }),
       });
       let programs: any[] = [];
+      let universities: any[] = [];
       if (res.ok) {
         const data = await res.json();
         programs = data.programs || [];
+        universities = data.universities || [];
       }
 
       setResults(programs);
       setFallbackResults([]);
+      setMatchedUniversities(universities);
       setShowResults(true);
 
       const formattedAnswers = questions.map(q => { const opt = q.options.find((o: any) => o.value === answers[q.field]); return opt ? opt.label : ''; }).filter(Boolean).join(' | ');
-      await fetch('/api/leads', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ name: userData.name, email: userData.email, phone: userData.phone || 'N/A', source: 'Course Finder Quiz', course: `Preferences: ${formattedAnswers}` }) }).catch(() => {});
+      await fetch('/api/leads', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ name: userData.name, email: userData.email, phone: userData.phone || 'N/A', source: 'Course Finder Quiz', description: `Preferences: ${formattedAnswers}` }) }).catch(() => {});
     } catch (err) {
       console.error(err);
     } finally {
@@ -567,18 +576,42 @@ export default function CourseFinder() {
 
   const currentQ = questions[step - 1];
 
-  // Determine options: if 'below_12' was chosen in education, show only Skill/Open School on the field step
+  // UG/PG sublabels shown on the field question based on education level
+  const UG_SUBLABELS: Record<string, string> = {
+    commerce: 'B.Com / BBA / BMS',
+    arts: 'BA / BJMC / B.Des',
+    science: 'B.Sc / B.Tech / B.Pharm',
+    technology: 'BCA / B.Tech (CS)',
+    management: 'BBA / BMS / BHM',
+    law: 'BA LLB (5-year Integrated)',
+  };
+  const PG_SUBLABELS: Record<string, string> = {
+    commerce: 'M.Com / MBA (Finance)',
+    arts: 'MA / MJMC / M.Des',
+    science: 'M.Sc / M.Tech',
+    technology: 'MCA / M.Tech (CS)',
+    management: 'MBA / PGDM / MMS',
+    law: 'LLM',
+  };
+
+  const eduAnswer = answers[questions.find(q => q.field === 'education')?.field ?? ''];
+
+  // Determine options based on education selection
   let currentOptions = currentQ?.options || [];
   if (currentQ?.field === 'field') {
-    const eduQ = questions.find(q => q.field === 'education');
-    if (eduQ) {
-      const eduAns = answers[eduQ.field];
-      if (eduAns === 'below_12' || String(eduAns).toLowerCase().includes('below 12')) {
-        currentOptions = [
-          { value: 'skill', label: 'Skill Program' },
-          { value: 'openschool', label: 'Open School' },
-        ];
-      }
+    if (eduAnswer === 'below_12' || String(eduAnswer).toLowerCase().includes('below 12')) {
+      currentOptions = [
+        { value: 'skill', label: 'Skill Program' },
+        { value: 'openschool', label: 'Open School' },
+      ];
+    } else if (eduAnswer === '12th') {
+      currentOptions = currentOptions.map((opt: any) =>
+        UG_SUBLABELS[opt.value] ? { ...opt, sublabel: UG_SUBLABELS[opt.value] } : opt
+      );
+    } else if (eduAnswer === 'graduate') {
+      currentOptions = currentOptions.map((opt: any) =>
+        PG_SUBLABELS[opt.value] ? { ...opt, sublabel: PG_SUBLABELS[opt.value] } : opt
+      );
     }
   }
 
@@ -620,23 +653,17 @@ export default function CourseFinder() {
                   <p className="cf-subtitle">Answer a few questions for personalised recommendations</p>
                 </div>
 
-                {/* Step dots */}
-                <div className="cf-steps-row">
-                  {questions.map((_, i) => {
-                    const num = i + 1;
-                    const state = num < step ? 'done' : num === step ? 'active' : 'idle';
-                    return (
-                      <div key={num} className="cf-step-item">
-                        <div className={`cf-step-dot cf-step-dot--${state}`}>
-                          {state === 'done'
-                            ? <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-                            : num}
-                        </div>
-                        <span className={`cf-step-label cf-step-label--${state}`}>{STEP_LABELS[i] || `Step ${num}`}</span>
-                        {i < questions.length - 1 && <div className={`cf-step-line ${num < step ? 'cf-step-line--done' : ''}`} />}
-                      </div>
-                    );
-                  })}
+                {/* Compact step indicator */}
+                <div className="cf-step-compact">
+                  <div className="cf-step-pips">
+                    {questions.map((_, i) => {
+                      const s = i + 1 < step ? 'done' : i + 1 === step ? 'active' : '';
+                      return <div key={i} className={`cf-step-pip${s ? ' ' + s : ''}`} />;
+                    })}
+                  </div>
+                  <span className="cf-step-current-label">
+                    Step <strong>{step}</strong> of {questions.length} &mdash; <strong>{STEP_LABELS[step - 1] || `Step ${step}`}</strong>
+                  </span>
                 </div>
 
                 {/* Progress bar */}
@@ -659,6 +686,7 @@ export default function CourseFinder() {
                       >
                         <span className="cf-option-icon">{optionIcon(opt.value)}</span>
                         <span>{opt.label}</span>
+                        {opt.sublabel && <span className="cf-option-sublabel">{opt.sublabel}</span>}
                       </button>
                     ))}
                   </div>
@@ -692,39 +720,76 @@ export default function CourseFinder() {
                 <div className="cf-results-header">
                   <div className="cf-results-icon"><IconStar /></div>
                   <h2 className="cf-results-title">
-                    {results.length > 0 ? 'Recommended Courses For You!' : (fallbackResults.length > 0 ? 'Similar Courses you may like' : 'No Matches Found')}
+                    {results.length > 0
+                      ? 'Recommended Courses For You!'
+                      : matchedUniversities.length > 0
+                        ? 'Related Universities For You'
+                        : fallbackResults.length > 0
+                          ? 'Similar Courses you may like'
+                          : 'No Matches Found'}
                   </h2>
                   <p className="cf-results-subtitle">
-                    {results.length > 0 ? `We found ${results.length} courses matching your preferences` : fallbackResults.length > 0 ? 'No exact match — here are similar courses based on your choices' : 'Try adjusting your preferences'}
+                    {results.length > 0
+                      ? `We found ${results.length} courses matching your preferences`
+                      : matchedUniversities.length > 0
+                        ? 'No exact course match — here are universities that may suit you'
+                        : fallbackResults.length > 0
+                          ? 'No exact match — here are similar courses based on your choices'
+                          : 'Try adjusting your preferences'}
                   </p>
                 </div>
                 <div className="cf-results-list">
-                  {(results.length > 0 ? results : fallbackResults).length > 0
-                    ? (results.length > 0 ? results : fallbackResults).map(program => (
-                      <Link key={program._id} href="/courses" className="cf-result-card" onClick={() => { trackCourseClick(program); setIsOpen(false); }}>
+                  {/* Course results */}
+                  {(results.length > 0 ? results : (matchedUniversities.length === 0 ? fallbackResults : [])).map(program => {
+                    const uniName = program.university?.name || program.university || program.universityId?.name || 'University';
+                    const courseHref = program.slug ? `/courses/${program.slug}` : '/courses';
+                    return (
+                      <Link key={program._id} href={courseHref} className="cf-result-card" onClick={() => { trackCourseClick(program); setIsOpen(false); }}>
                         <div className="cf-result-info">
                           <h4 className="cf-result-name">{program.name}</h4>
-                          <p className="cf-result-university"><IconBuilding /> {program.university?.name || program.university || program.universityId?.name || 'University'}</p>
+                          <p className="cf-result-university"><IconBuilding /> {uniName}</p>
                           <div className="cf-result-meta">
-                            <span className="cf-result-badge"><IconClock /> {program.duration}</span>
+                            {program.duration && <span className="cf-result-badge"><IconClock /> {program.duration}</span>}
                             <span className="cf-result-badge"><IconMonitor /> {program.mode || program.type || program.level || 'Program'}</span>
                           </div>
                         </div>
                         {!isOpenSchool && (
                           <div className="cf-result-price">
                             <span className="cf-price-label">Fee</span>
-                            <span className="cf-price-value">Rs.{Number(program.fee).toLocaleString('en-IN')}</span>
+                            <span className="cf-price-value">₹{Number(program.fee).toLocaleString('en-IN')}</span>
                           </div>
                         )}
                       </Link>
-                    ))
-                    : (
-                      <div className="cf-no-results">
-                        <span className="cf-no-results-icon"><IconFrown /></span>
-                        <p>No programs match your criteria.</p>
-                        <Link href="/courses" className="cf-browse-all-btn" onClick={() => setIsOpen(false)}>Browse All Programs</Link>
-                      </div>
-                    )}
+                    );
+                  })}
+
+                  {/* University results */}
+                  {matchedUniversities.length > 0 && (
+                    <div className="cf-universities-section">
+                      <p className="cf-section-heading">{results.length > 0 ? 'Matched Universities' : 'Related Universities'}</p>
+                      {matchedUniversities.map((uni: any) => (
+                        <Link key={uni._id} href={`/universities/${uni.slug || uni._id}`} className="cf-result-card" onClick={() => setIsOpen(false)}>
+                          <div className="cf-result-info">
+                            <h4 className="cf-result-name">{uni.name}</h4>
+                            {uni.location && <p className="cf-result-university"><IconBuilding /> {uni.location}</p>}
+                            <div className="cf-result-meta">
+                              {uni.type && <span className="cf-result-badge">{uni.type}</span>}
+                            </div>
+                          </div>
+                          <div style={{ color: '#E8502A', flexShrink: 0, marginLeft: 10 }}><IconChevronRight /></div>
+                        </Link>
+                      ))}
+                    </div>
+                  )}
+
+                  {/* No results at all */}
+                  {results.length === 0 && fallbackResults.length === 0 && matchedUniversities.length === 0 && (
+                    <div className="cf-no-results">
+                      <span className="cf-no-results-icon"><IconFrown /></span>
+                      <p>No programs match your criteria.</p>
+                      <Link href="/courses" className="cf-browse-all-btn" onClick={() => setIsOpen(false)}>Browse All Programs</Link>
+                    </div>
+                  )}
                 </div>
                 <div className="cf-results-actions">
                   <button className="cf-restart-btn" onClick={reset}><IconRefresh /> Start Over</button>

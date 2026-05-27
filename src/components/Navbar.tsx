@@ -71,6 +71,8 @@ const Navbar = () => {
     pathname === link.path ||
     (link.path !== '/' && pathname.startsWith(link.path));
 
+  const isCourseDetail = /^\/courses\/.+/.test(pathname);
+
   return (
     <>
       <div className={`${styles.navWrapper} ${scrolled ? styles.scrolled : ''}`}>
@@ -87,7 +89,7 @@ const Navbar = () => {
               <li key={link.name} className={styles.navItem} role="none">
                 <Link
                   href={link.path}
-                  className={`${styles.navLink} ${isActive(link) ? styles.activeLink : ''}`}
+                  className={`${styles.navLink} ${isActive(link) ? styles.activeLink : ''} ${isCourseDetail ? styles.navLinkWhite : ''}`}
                   role="menuitem"
                 >
                   {link.name}

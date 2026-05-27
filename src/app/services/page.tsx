@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import styles from './services.module.css';
 import Link from 'next/link';
 import { 
@@ -24,6 +24,20 @@ export default function ServicesPage() {
   const [searchTerm, setSearchTerm] = useState('');
   const [showAll, setShowAll] = useState(false);
   const [isTextExpanded, setIsTextExpanded] = useState(false);
+  const [serviceDescs, setServiceDescs] = useState<Record<string, string>>({});
+
+  useEffect(() => {
+    fetch('/api/public/services')
+      .then(r => r.json())
+      .then(data => {
+        if (Array.isArray(data)) {
+          const map: Record<string, string> = {};
+          data.forEach((s: any) => { if (s.title && s.description) map[s.title] = s.description; });
+          setServiceDescs(map);
+        }
+      })
+      .catch(() => {});
+  }, []);
 
   const allCerts = [
     "10th Attestation", "AMIE Attestation", "Apprentice ship Attestation",
@@ -113,7 +127,7 @@ export default function ServicesPage() {
               </div>
               <h3 className={styles.programCardTitle}>Online UG Programs</h3>
               <p className={styles.programCardDesc}>
-                Earn a recognized undergraduate degree from top UGC-approved universities — entirely online. Our Online UG programs include BA, B.Com, BBA, BCA, and B.Sc, designed for students who want flexibility without compromising on quality. Study at your own pace with digital learning resources, live sessions, and dedicated mentor support.
+                {serviceDescs['Online UG Programs'] || 'Earn a recognized undergraduate degree from top UGC-approved universities — entirely online. Our Online UG programs include BA, B.Com, BBA, BCA, and B.Sc, designed for students who want flexibility without compromising on quality. Study at your own pace with digital learning resources, live sessions, and dedicated mentor support.'}
               </p>
               <ul className={styles.programHighlights}>
                 <li><CheckCircle size={14} /> UGC & NAAC Approved Universities</li>
@@ -133,7 +147,7 @@ export default function ServicesPage() {
               </div>
               <h3 className={styles.programCardTitle}>Online PG Programs</h3>
               <p className={styles.programCardDesc}>
-                Advance your career with a postgraduate degree from India&apos;s leading universities. Our Online PG programs — MBA, MCA, M.Com, MA, and M.Sc — are tailored for working professionals seeking career growth. Gain specialized knowledge in your field with flexible schedules and expert faculty guidance.
+                {serviceDescs['Online PG Programs'] || "Advance your career with a postgraduate degree from India's leading universities. Our Online PG programs — MBA, MCA, M.Com, MA, and M.Sc — are tailored for working professionals seeking career growth. Gain specialized knowledge in your field with flexible schedules and expert faculty guidance."}
               </p>
               <ul className={styles.programHighlights}>
                 <li><CheckCircle size={14} /> Globally Recognized Degrees</li>
@@ -153,7 +167,7 @@ export default function ServicesPage() {
               </div>
               <h3 className={styles.programCardTitle}>Credit Transfer Program</h3>
               <p className={styles.programCardDesc}>
-                Don&apos;t let incomplete degrees hold you back. Our Credit Transfer Program allows you to transfer previously earned academic credits to a new university and complete your degree faster. Whether you dropped out or want to switch institutions, we evaluate your transcripts and map credits to an equivalent program.
+                {serviceDescs['Credit Transfer Program'] || "Don't let incomplete degrees hold you back. Our Credit Transfer Program allows you to transfer previously earned academic credits to a new university and complete your degree faster. Whether you dropped out or want to switch institutions, we evaluate your transcripts and map credits to an equivalent program."}
               </p>
               <ul className={styles.programHighlights}>
                 <li><CheckCircle size={14} /> Recognize Prior Learning Credits</li>
@@ -173,7 +187,7 @@ export default function ServicesPage() {
               </div>
               <h3 className={styles.programCardTitle}>SIDP — Skill Integrated Degree Program</h3>
               <p className={styles.programCardDesc}>
-                The Skill Integrated Degree Program (SIDP) combines a formal degree with hands-on skill training, preparing students for the real-world job market from day one. Offered in collaboration with top universities, SIDP ensures you graduate with both academic credentials and industry-ready skills in areas like Digital Marketing, Data Science, Full-Stack Development, and more.
+                {serviceDescs['SIDP — Skill Integrated Degree Program'] || 'The Skill Integrated Degree Program (SIDP) combines a formal degree with hands-on skill training, preparing students for the real-world job market from day one. Offered in collaboration with top universities, SIDP ensures you graduate with both academic credentials and industry-ready skills in areas like Digital Marketing, Data Science, Full-Stack Development, and more.'}
               </p>
               <ul className={styles.programHighlights}>
                 <li><CheckCircle size={14} /> Degree + Skill Certificate Together</li>
@@ -193,7 +207,7 @@ export default function ServicesPage() {
               </div>
               <h3 className={styles.programCardTitle}>Diploma & Certification Programs</h3>
               <p className={styles.programCardDesc}>
-                Fast-track your career with our professionally designed Diploma programs. Whether you&apos;re looking to upskill or enter a new field entirely, our short-term diploma courses in Data Science, Cyber Security, Hospital Management, Logistics, and more give you the credentials employers value — in as little as 6 to 12 months.
+                {serviceDescs['Diploma & Certification Programs'] || "Fast-track your career with our professionally designed Diploma programs. Whether you're looking to upskill or enter a new field entirely, our short-term diploma courses in Data Science, Cyber Security, Hospital Management, Logistics, and more give you the credentials employers value — in as little as 6 to 12 months."}
               </p>
               <ul className={styles.programHighlights}>
                 <li><CheckCircle size={14} /> 6–12 Month Completion</li>

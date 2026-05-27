@@ -5,26 +5,29 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import styles from './admin.module.css';
-import { 
-  LayoutDashboard, 
-  GraduationCap, 
-  BookOpen, 
-  Search, 
-  ClipboardList, 
-  Mail, 
-  Globe, 
-  ExternalLink, 
+import {
+  LayoutDashboard,
+  GraduationCap,
+  BookOpen,
+  Search,
+  ClipboardList,
+  Mail,
+  Globe,
+  ExternalLink,
   LogOut,
   Newspaper,
   PenTool,
   FileText,
   Book,
-  CalendarDays,
   X,
   Users,
-  Calendar,
   Image as ImageIcon,
-  MessageSquare
+  MessageSquare,
+  HelpCircle,
+  Layers,
+  BarChart2,
+  UserSquare2,
+  ListChecks,
 } from 'lucide-react';
 
 interface SidebarProps {
@@ -43,14 +46,16 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
     { name: 'Blogs', path: '/admin/blogs', icon: <PenTool size={20} /> },
     { name: 'Syllabus', path: '/admin/syllabus', icon: <FileText size={20} /> },
     { name: 'Study Materials', path: '/admin/study-materials', icon: <Book size={20} /> },
-    { name: 'Time Table', path: '/admin/timetable', icon: <CalendarDays size={20} /> },
-    { name: 'Results', path: '/admin/results', icon: <ClipboardList size={20} /> },
     { name: 'Course Finder', path: '/admin/course-finder', icon: <Search size={20} /> },
     { name: 'Leads', path: '/admin/leads', icon: <ClipboardList size={20} /> },
     { name: 'Enrollments', path: '/admin/enrollments', icon: <Users size={20} /> },
-    { name: 'Batches', path: '/admin/batches', icon: <Calendar size={20} /> },
     { name: 'University Logos', path: '/admin/university-logos', icon: <ImageIcon size={20} /> },
     { name: 'Success Stories', path: '/admin/testimonials', icon: <MessageSquare size={20} /> },
+    { name: 'FAQs', path: '/admin/faqs', icon: <HelpCircle size={20} /> },
+    { name: 'Services', path: '/admin/services', icon: <Layers size={20} /> },
+    { name: 'How It Works', path: '/admin/how-it-works', icon: <ListChecks size={20} /> },
+    { name: 'Site Stats', path: '/admin/site-stats', icon: <BarChart2 size={20} /> },
+    { name: 'Directors', path: '/admin/directors', icon: <UserSquare2 size={20} /> },
     { name: 'Messages', path: '/admin/messages', icon: <Mail size={20} /> },
     { name: 'SEO Settings', path: '/admin/seo', icon: <Globe size={20} /> },
   ];

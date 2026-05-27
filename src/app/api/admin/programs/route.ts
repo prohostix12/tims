@@ -18,7 +18,7 @@ export async function GET(request: Request) {
     }
 
     const programs = await Program.find(query)
-      .populate('university', 'name')
+      .populate({ path: 'university', model: University, select: 'name logo slug' })
       .sort({ createdAt: -1 });
       
     return NextResponse.json(programs);
