@@ -78,7 +78,9 @@ const Navbar = () => {
 
           {/* Logo */}
           <Link href="/" className={styles.logo} aria-label="Go to homepage">
-            <Image src="/images/Untitled-46777.png" alt="PSH Solutions" width={160} height={52} style={{ objectFit: 'contain' }} priority />
+            <div style={{ background: '#fff', borderRadius: '10px', padding: '6px 12px', display: 'flex', alignItems: 'center' }}>
+              <Image src="/images/Untitled-46777.png" alt="PSH Solutions" width={150} height={46} style={{ objectFit: 'contain', display: 'block' }} priority />
+            </div>
           </Link>
 
           {/* Desktop Links — Only Home + Course Finder */}
@@ -135,7 +137,9 @@ const Navbar = () => {
         {/* Drawer header */}
         <div className={styles.drawerHeader}>
           <Link href="/" className={styles.logo} onClick={() => setMobileOpen(false)}>
-            <Image src="/images/Untitled-46777.png" alt="PSH Solutions" width={140} height={46} style={{ objectFit: 'contain' }} />
+            <div style={{ background: '#fff', borderRadius: '10px', padding: '6px 12px', display: 'flex', alignItems: 'center' }}>
+              <Image src="/images/Untitled-46777.png" alt="PSH Solutions" width={130} height={42} style={{ objectFit: 'contain', display: 'block' }} />
+            </div>
           </Link>
           <button
             className={styles.drawerClose}
