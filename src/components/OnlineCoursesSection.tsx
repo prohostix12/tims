@@ -8,49 +8,68 @@ import {
 } from 'lucide-react';
 import styles from './OnlineCoursesSection.module.css';
 
-const courseData: Record<string, { name: string; icon: React.ReactNode }[]> = {
-  'Online PG': [
-    { name: 'MBA',    icon: <GraduationCap size={32} /> },
-    { name: 'MCA',    icon: <Monitor size={32} /> },
-    { name: 'M.Com',  icon: <BarChart2 size={32} /> },
-    { name: 'M.Sc',   icon: <FlaskConical size={32} /> },
-    { name: 'MA',     icon: <BookOpen size={32} /> },
-  ],
-  'Online UG': [
-    { name: 'BBA',   icon: <Briefcase size={32} /> },
-    { name: 'BCA',   icon: <Database size={32} /> },
-    { name: 'B.Com', icon: <Landmark size={32} /> },
-    { name: 'B.Sc',  icon: <FlaskConical size={32} /> },
-    { name: 'BA',    icon: <Globe size={32} /> },
-  ],
-  'Credit Transfer Programme': [
-    { name: 'B.Tech Credit Transfer', icon: <ArrowRightLeft size={32} /> },
-    { name: 'UG Credit Transfer', icon: <ArrowRightLeft size={32} /> },
-    { name: 'PG Credit Transfer', icon: <ArrowRightLeft size={32} /> },
-    { name: 'Diploma Credit Transfer', icon: <GraduationCap size={32} /> },
-  ],
-  'SIDP (Skill Integrated Diploma Programs)': [
-    { name: 'BBA + HR MANAGEMENT', icon: <Briefcase size={32} /> },
-    { name: 'BBA + HOSPITAL ADMINISTRATION', icon: <HeartPulse size={32} /> },
-    { name: 'BBA + DIGITAL MARKETING', icon: <Globe size={32} /> },
-    { name: 'BBA + LOGISTICS', icon: <Package size={32} /> },
-    { name: 'BBA + BUSINESS MANAGEMENT', icon: <BarChart2 size={32} /> },
-    { name: 'BA + MTTC', icon: <Globe size={32} /> },
-    { name: 'BCOM + ACCA', icon: <Landmark size={32} /> },
-    { name: 'BCOM + ADVANCED ACCOUNTANTS', icon: <Database size={32} /> },
-  ],
-  'Diploma': [
-    { name: 'Data Science',   icon: <BarChart2 size={32} /> },
-    { name: 'Cyber Security', icon: <Cpu size={32} /> },
-    { name: 'Fashion Design', icon: <PenTool size={32} /> },
-    { name: 'Supply Chain',   icon: <Package size={32} /> },
-    { name: 'Nutrition',      icon: <Stethoscope size={32} /> },
-    { name: 'Music',          icon: <Music size={32} /> },
-    { name: 'IT',             icon: <Layers size={32} /> },
-  ],
+// ── Icon map (string key → Lucide component) ──────────────────────────────────
+const ICON_MAP: Record<string, React.ReactNode> = {
+  GraduationCap:  <GraduationCap size={32} />,
+  Monitor:        <Monitor size={32} />,
+  BarChart2:      <BarChart2 size={32} />,
+  FlaskConical:   <FlaskConical size={32} />,
+  BookOpen:       <BookOpen size={32} />,
+  Cpu:            <Cpu size={32} />,
+  Briefcase:      <Briefcase size={32} />,
+  Database:       <Database size={32} />,
+  Landmark:       <Landmark size={32} />,
+  Globe:          <Globe size={32} />,
+  Music:          <Music size={32} />,
+  Layers:         <Layers size={32} />,
+  PenTool:        <PenTool size={32} />,
+  Package:        <Package size={32} />,
+  Stethoscope:    <Stethoscope size={32} />,
+  ArrowRightLeft: <ArrowRightLeft size={32} />,
+  HeartPulse:     <HeartPulse size={32} />,
 };
 
-const tabs = Object.keys(courseData);
+const FALLBACK_COURSE_DATA: Record<string, { name: string; icon: React.ReactNode }[]> = {
+  'Online PG': [
+    { name: 'MBA',    icon: ICON_MAP.GraduationCap },
+    { name: 'MCA',    icon: ICON_MAP.Monitor },
+    { name: 'M.Com',  icon: ICON_MAP.BarChart2 },
+    { name: 'M.Sc',   icon: ICON_MAP.FlaskConical },
+    { name: 'MA',     icon: ICON_MAP.BookOpen },
+  ],
+  'Online UG': [
+    { name: 'BBA',   icon: ICON_MAP.Briefcase },
+    { name: 'BCA',   icon: ICON_MAP.Database },
+    { name: 'B.Com', icon: ICON_MAP.Landmark },
+    { name: 'B.Sc',  icon: ICON_MAP.FlaskConical },
+    { name: 'BA',    icon: ICON_MAP.Globe },
+  ],
+  'Credit Transfer Programme': [
+    { name: 'B.Tech Credit Transfer',   icon: ICON_MAP.ArrowRightLeft },
+    { name: 'UG Credit Transfer',       icon: ICON_MAP.ArrowRightLeft },
+    { name: 'PG Credit Transfer',       icon: ICON_MAP.ArrowRightLeft },
+    { name: 'Diploma Credit Transfer',  icon: ICON_MAP.GraduationCap },
+  ],
+  'SIDP (Skill Integrated Diploma Programs)': [
+    { name: 'BBA + HR MANAGEMENT',           icon: ICON_MAP.Briefcase },
+    { name: 'BBA + HOSPITAL ADMINISTRATION', icon: ICON_MAP.HeartPulse },
+    { name: 'BBA + DIGITAL MARKETING',       icon: ICON_MAP.Globe },
+    { name: 'BBA + LOGISTICS',               icon: ICON_MAP.Package },
+    { name: 'BBA + BUSINESS MANAGEMENT',     icon: ICON_MAP.BarChart2 },
+    { name: 'BA + MTTC',                     icon: ICON_MAP.Globe },
+    { name: 'BCOM + ACCA',                   icon: ICON_MAP.Landmark },
+    { name: 'BCOM + ADVANCED ACCOUNTANTS',   icon: ICON_MAP.Database },
+  ],
+  'Diploma': [
+    { name: 'Data Science',   icon: ICON_MAP.BarChart2 },
+    { name: 'Cyber Security', icon: ICON_MAP.Cpu },
+    { name: 'Fashion Design', icon: ICON_MAP.PenTool },
+    { name: 'Supply Chain',   icon: ICON_MAP.Package },
+    { name: 'Nutrition',      icon: ICON_MAP.Stethoscope },
+    { name: 'Music',          icon: ICON_MAP.Music },
+    { name: 'IT',             icon: ICON_MAP.Layers },
+  ],
+};
 
 interface FormState { name: string; email: string; phone: string; }
 
@@ -70,6 +89,8 @@ const DEFAULT_UNI_LOGOS = [
 ];
 
 export default function OnlineCoursesSection() {
+  const [courseData, setCourseData] = useState<Record<string, { name: string; icon: React.ReactNode }[]>>(FALLBACK_COURSE_DATA);
+  const [tabs, setTabs] = useState(Object.keys(FALLBACK_COURSE_DATA));
   const [activeTab, setActiveTab] = useState('Online PG');
   const [selectedCourse, setSelectedCourse] = useState<string | null>(null);
   const [form, setForm] = useState<FormState>({ name: '', email: '', phone: '' });
@@ -77,6 +98,24 @@ export default function OnlineCoursesSection() {
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState('');
   const [logos, setLogos] = useState<UniversityLogo[]>([]);
+
+  useEffect(() => {
+    fetch('/api/public/online-courses')
+      .then(r => r.ok ? r.json() : [])
+      .then((data: { tab: string; name: string; icon: string }[]) => {
+        if (!Array.isArray(data) || data.length === 0) return;
+        const grouped: Record<string, { name: string; icon: React.ReactNode }[]> = {};
+        data.forEach(c => {
+          if (!grouped[c.tab]) grouped[c.tab] = [];
+          grouped[c.tab].push({ name: c.name, icon: ICON_MAP[c.icon] || ICON_MAP.GraduationCap });
+        });
+        const orderedTabs = Object.keys(grouped);
+        setCourseData(grouped);
+        setTabs(orderedTabs);
+        if (!orderedTabs.includes(activeTab)) setActiveTab(orderedTabs[0]);
+      })
+      .catch(() => {});
+  }, []);
 
   useEffect(() => {
     fetch('/api/public/university-logos')

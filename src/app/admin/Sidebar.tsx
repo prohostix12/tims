@@ -24,6 +24,7 @@ import {
   HelpCircle,
   Layers,
   UserSquare2,
+  Layout,
 } from 'lucide-react';
 
 interface SidebarProps {
@@ -46,6 +47,7 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
     { name: 'University Logos', path: '/admin/university-logos', icon: <ImageIcon size={20} /> },
     { name: 'Success Stories', path: '/admin/testimonials', icon: <MessageSquare size={20} /> },
     { name: 'FAQs', path: '/admin/faqs', icon: <HelpCircle size={20} /> },
+    { name: 'Online Courses', path: '/admin/online-courses', icon: <Layout size={20} /> },
     { name: 'Services', path: '/admin/services', icon: <Layers size={20} /> },
 
     { name: 'Directors', path: '/admin/directors', icon: <UserSquare2 size={20} /> },

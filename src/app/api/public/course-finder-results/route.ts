@@ -81,7 +81,13 @@ export async function POST(req: Request) {
       }
     }
 
-    // 3. Budget → fee range filter
+    // 3. Duration filter
+    const durationAnswer = answers['duration'];
+    if (durationAnswer === 'asap') {
+      query.duration = { $regex: /^[1-6]\s*month/i };
+    }
+
+    // 4. Budget → fee range filter
     const budgetQuestion = questions.find((q: any) => q.field === 'budget');
     const budgetAnswer = budgetQuestion ? answers[budgetQuestion.field] : answers['budget'];
 
