@@ -1,71 +1,122 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import styles from './scholarship.module.css';
 import {
-  Award, CheckCircle, Trophy, Tag, Clock, BookOpen,
-  Building2, ChevronRight, Copy, Check, ArrowRight, Star
+  Award, CheckCircle, Trophy, Tag, Clock, ArrowRight,
+  Star, X, User, Phone, Mail, GraduationCap, Building2,
+  Download, ChevronRight, Copy, Check
 } from 'lucide-react';
 
-interface Option { text: string; isCorrect: boolean }
-interface Question { _id: string; question: string; options: Option[]; order: number }
-interface ScoreTier { minScore: number; amount: number; label: string }
-interface PartnerCompany { name: string; description: string }
-interface Voucher { code: string; amount: number; label: string; validUntil: string; validityDays: number }
+interface Option { text: string }
+interface Question { _id: string; question: string; options: Option[] }
+interface Voucher {
+  code: string; amount: number; label: string;
+  validUntil: string; validityDays: number;
+}
 interface SubmitResult {
   score: number; total: number; scorePercent: number; passed: boolean;
-  voucher: Voucher | null;
+  voucher: Voucher | null; applicantName: string; course: string; university: string;
 }
-interface Program { _id: string; name: string; category: string; courseType?: string; fee?: number; duration?: string; university?: { name: string } }
+interface Program { _id: string; name: string; university?: { name: string } }
+interface University { _id: string; name: string }
 
-type Phase = 'landing' | 'exam' | 'result';
+type Phase = 'landing' | 'form' | 'exam' | 'result';
 
 export default function ScholarshipPage() {
-  const [content, setContent] = useState<any>(null);
-  const [questions, setQuestions] = useState<Question[]>([]);
-  const [config, setConfig] = useState<any>(null);
   const [programs, setPrograms] = useState<Program[]>([]);
+  const [universities, setUniversities] = useState<University[]>([]);
   const [phase, setPhase] = useState<Phase>('landing');
+  const [token, setToken] = useState('');
+
+  /* Form state */
+  const [form, setForm] = useState({ name: '', phone: '', email: '', course: '', university: '' });
+  const [formError, setFormError] = useState('');
+  const [formLoading, setFormLoading] = useState(false);
+
+  /* Exam state */
+  const [questions, setQuestions] = useState<Question[]>([]);
+  const [applicantName, setApplicantName] = useState('');
   const [currentQ, setCurrentQ] = useState(0);
   const [answers, setAnswers] = useState<Record<string, string>>({});
   const [selected, setSelected] = useState<string | null>(null);
   const [answered, setAnswered] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+  const [examLoading, setExamLoading] = useState(false);
+
+  /* Result state */
   const [result, setResult] = useState<SubmitResult | null>(null);
   const [copied, setCopied] = useState(false);
-  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    Promise.all([
-      fetch('/api/public/scholarship/content').then(r => r.json()),
-      fetch('/api/public/scholarship/questions').then(r => r.json()),
-      fetch('/api/public/scholarship/config').then(r => r.json()),
-      fetch('/api/public/scholarship/programs').then(r => r.json()),
-    ]).then(([c, q, cfg, progs]) => {
-      setContent(c);
-      setQuestions(Array.isArray(q) ? q : []);
-      setConfig(cfg);
-      setPrograms(Array.isArray(progs) ? progs : []);
-    }).finally(() => setLoading(false));
+    fetch('/api/public/scholarship/programs').then(r => r.json()).then(d => {
+      setPrograms(Array.isArray(d) ? d : []);
+    });
+    fetch('/api/public/universities').then(r => r.json()).then(d => {
+      setUniversities(Array.isArray(d) ? d : []);
+    });
   }, []);
 
-  const startExam = () => {
-    if (questions.length === 0) {
-      alert('Exam questions are being prepared. Please check back soon.');
+  /* ── Form submit ──────────────────────────────────────────── */
+  const submitForm = async () => {
+    const { name, phone, email, course, university } = form;
+    if (!name.trim() || !phone.trim() || !email.trim() || !course || !university) {
+      setFormError('Please fill in all fields.');
       return;
     }
-    setPhase('exam');
-    setCurrentQ(0);
-    setAnswers({});
-    setSelected(null);
-    setAnswered(false);
-    setResult(null);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    if (!/^\d{10}$/.test(phone.trim())) {
+      setFormError('Enter a valid 10-digit phone number.');
+      return;
+    }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) {
+      setFormError('Enter a valid email address.');
+      return;
+    }
+    setFormLoading(true);
+    setFormError('');
+    try {
+      const res = await fetch('/api/public/scholarship/apply', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(form),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        setFormError(data.error || 'Something went wrong.');
+        return;
+      }
+      setToken(data.token);
+      await loadExam(data.token);
+    } finally {
+      setFormLoading(false);
+    }
   };
 
+  const loadExam = async (tok: string) => {
+    setExamLoading(true);
+    try {
+      const res = await fetch(`/api/public/scholarship/exam?token=${tok}`);
+      const data = await res.json();
+      if (!res.ok) { setFormError(data.error || 'Failed to load exam.'); return; }
+      setQuestions(data.questions || []);
+      setApplicantName(data.applicantName || form.name);
+      setCurrentQ(0);
+      setAnswers({});
+      setSelected(null);
+      setAnswered(false);
+      setPhase('exam');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } finally {
+      setExamLoading(false);
+    }
+  };
+
+  /* ── Exam navigation ──────────────────────────────────────── */
+  const q = questions[currentQ];
+  const progress = questions.length ? ((currentQ + 1) / questions.length) * 100 : 0;
+
   const handleSelect = (opt: Option) => {
-    if (answered) return;
-    const q = questions[currentQ];
+    if (answered || !q) return;
     setSelected(opt.text);
     setAnswered(true);
     setAnswers(prev => ({ ...prev, [q._id]: opt.text }));
@@ -87,7 +138,7 @@ export default function ScholarshipPage() {
       const res = await fetch('/api/public/scholarship/submit', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ answers }),
+        body: JSON.stringify({ token, answers }),
       });
       const data = await res.json();
       setResult(data);
@@ -96,6 +147,73 @@ export default function ScholarshipPage() {
     } finally {
       setSubmitting(false);
     }
+  };
+
+  /* ── Voucher download ─────────────────────────────────────── */
+  const downloadVoucher = () => {
+    if (!result?.voucher) return;
+    const { voucher, applicantName: aName, course, university, score, total } = result;
+    const validDate = new Date(voucher.validUntil).toLocaleDateString('en-IN', {
+      day: 'numeric', month: 'long', year: 'numeric',
+    });
+    const html = `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<title>Scholarship Voucher – ${aName}</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Segoe UI',Arial,sans-serif;background:#f3f4f6;display:flex;align-items:center;justify-content:center;min-height:100vh;padding:24px}
+  .wrap{background:#fff;border:3px solid #E8502A;border-radius:20px;padding:40px 44px;max-width:560px;width:100%;box-shadow:0 12px 40px rgba(232,80,42,.18)}
+  .org{font-size:.82rem;font-weight:700;letter-spacing:.1em;color:#94a3b8;text-transform:uppercase;margin-bottom:6px}
+  .title{font-size:1.55rem;font-weight:900;color:#002060;margin-bottom:4px}
+  .sub{font-size:.88rem;color:#64748b;margin-bottom:28px}
+  .divider{height:1px;background:#e2e8f0;margin:22px 0}
+  .amount-wrap{text-align:center;margin:24px 0 10px}
+  .amount{font-size:4.2rem;font-weight:900;color:#E8502A;line-height:1}
+  .amount-label{font-size:.95rem;color:#64748b;margin-top:4px}
+  .code-wrap{background:#fff5f0;border:2px dashed #E8502A;border-radius:12px;padding:14px 20px;text-align:center;margin:20px 0}
+  .code-label{font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:#94a3b8;font-weight:700;margin-bottom:4px}
+  .code{font-family:'Courier New',monospace;font-size:1.45rem;letter-spacing:.14em;color:#002060;font-weight:700}
+  .details{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:18px 0}
+  .det{background:#f8fafc;border-radius:10px;padding:12px 14px}
+  .det-l{font-size:.72rem;color:#94a3b8;font-weight:700;text-transform:uppercase;letter-spacing:.06em;margin-bottom:3px}
+  .det-v{font-size:.92rem;color:#002060;font-weight:700}
+  .valid{text-align:center;color:#94a3b8;font-size:.8rem;margin-top:20px}
+  .badge{display:inline-block;background:#fff5f0;border:1.5px solid rgba(232,80,42,.3);color:#E8502A;font-size:.78rem;font-weight:700;padding:3px 12px;border-radius:999px;margin-bottom:18px}
+  @media print{body{background:#fff;padding:0} .wrap{box-shadow:none;border-color:#E8502A}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="org">Find Your University</div>
+  <div class="title">Scholarship Voucher</div>
+  <div class="sub">Congratulations on qualifying for our scholarship program!</div>
+  <div class="badge">${voucher.label}</div>
+  <div class="amount-wrap">
+    <div class="amount">₹${voucher.amount.toLocaleString('en-IN')}</div>
+    <div class="amount-label">Scholarship Discount</div>
+  </div>
+  <div class="code-wrap">
+    <div class="code-label">Voucher Code</div>
+    <div class="code">${voucher.code}</div>
+  </div>
+  <div class="details">
+    <div class="det"><div class="det-l">Student Name</div><div class="det-v">${aName}</div></div>
+    <div class="det"><div class="det-l">Score</div><div class="det-v">${score} / ${total} correct</div></div>
+    <div class="det"><div class="det-l">Course Applied</div><div class="det-v">${course}</div></div>
+    <div class="det"><div class="det-l">University</div><div class="det-v">${university}</div></div>
+  </div>
+  <div class="divider"></div>
+  <div class="valid">Valid until: <strong>${validDate}</strong> &nbsp;·&nbsp; ${voucher.validityDays} days from issue &nbsp;·&nbsp; Present at the time of admission</div>
+</div>
+<script>window.onload=()=>{window.print()}</script>
+</body>
+</html>`;
+    const blob = new Blob([html], { type: 'text/html' });
+    const url = URL.createObjectURL(blob);
+    const win = window.open(url, '_blank');
+    setTimeout(() => URL.revokeObjectURL(url), 10000);
   };
 
   const copyCode = () => {
@@ -109,249 +227,264 @@ export default function ScholarshipPage() {
   const formatDate = (iso: string) =>
     new Date(iso).toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' });
 
-  const q = questions[currentQ];
-  const progress = questions.length ? ((currentQ + 1) / questions.length) * 100 : 0;
+  /* ══════════════════════════ RENDER ══════════════════════════ */
 
-  if (loading) {
-    return (
-      <div className={styles.loadingScreen}>
-        <div className={styles.spinner} />
-        <p>Loading Scholarship Program…</p>
-      </div>
-    );
-  }
-
-  return (
+  /* ── LANDING ───────────────────────────────────────────────── */
+  if (phase === 'landing') return (
     <main className={styles.page}>
+      <section className={styles.hero}>
+        <div className={styles.heroBg} />
+        <div className={styles.heroInner}>
+          <span className={styles.badge}>
+            <Award size={16} /> Scholarship Program
+          </span>
 
-      {/* ── LANDING PHASE ─────────────────────────────────────────────── */}
-      {phase === 'landing' && (
-        <>
-          <section className={styles.hero}>
-            <div className={styles.heroBg} />
-            <div className={styles.heroInner}>
-              <span className={styles.badge}>
-                <Award size={16} /> {content?.badge || 'Scholarship Program'}
-              </span>
-              <h1 className={styles.heroTitle}>{content?.heading || 'Earn a Scholarship & Study Smarter'}</h1>
-              <p className={styles.heroSub}>{content?.subheading || 'Test your knowledge and unlock exclusive fee discounts'}</p>
-              <p className={styles.heroDesc}>{content?.description}</p>
-
-              {config?.tiers?.length > 0 && (
-                <div className={styles.tiersPreview}>
-                  {[...config.tiers].sort((a: ScoreTier, b: ScoreTier) => a.minScore - b.minScore).map((t: ScoreTier, i: number) => (
-                    <div key={i} className={styles.tierCard}>
-                      <Star size={18} className={styles.tierStar} />
-                      <span className={styles.tierLabel}>{t.label || `Level ${i + 1}`}</span>
-                      <span className={styles.tierScore}>Score ≥ {t.minScore}%</span>
-                      <span className={styles.tierAmount}>₹{t.amount.toLocaleString('en-IN')} voucher</span>
-                    </div>
-                  ))}
-                </div>
-              )}
-
-              <button className={styles.startBtn} onClick={startExam}>
-                {content?.buttonText || 'Get Started – Take the Scholarship Exam'}
-                <ArrowRight size={18} />
-              </button>
-            </div>
-          </section>
-
-          {programs.length > 0 && (
-            <section className={styles.section}>
-              <div className={styles.sectionInner}>
-                <div className={styles.sectionHead}>
-                  <BookOpen size={22} className={styles.sectionIcon} />
-                  <h2>Courses Eligible for Scholarship Discount</h2>
-                </div>
-                <p className={styles.partnerSub}>
-                  Earn your scholarship voucher and get fee discounts on any of these courses at the time of admission.
-                </p>
-                <div className={styles.programGrid}>
-                  {programs.map((p, i) => (
-                    <div key={i} className={styles.programCard}>
-                      <span className={styles.programName}>{p.name}</span>
-                      <span className={styles.programMeta}>{p.category}{p.duration ? ` · ${p.duration}` : ''}</span>
-                      {p.fee ? (
-                        <span className={styles.programFee}>₹{p.fee.toLocaleString('en-IN')}</span>
-                      ) : null}
-                      {p.university?.name && (
-                        <span className={styles.programUniv}>{p.university.name}</span>
-                      )}
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </section>
-          )}
-
-          {config?.partnerCompanies?.length > 0 && (
-            <section className={styles.section + ' ' + styles.sectionAlt}>
-              <div className={styles.sectionInner}>
-                <div className={styles.sectionHead}>
-                  <Building2 size={22} className={styles.sectionIcon} />
-                  <h2>Our Admission Partner Organisations</h2>
-                </div>
-                <p className={styles.partnerSub}>
-                  These are our trusted education partners providing admissions with this scholarship discount.
-                </p>
-                <div className={styles.companyGrid}>
-                  {config.partnerCompanies.map((co: PartnerCompany, i: number) => (
-                    <div key={i} className={styles.companyCard}>
-                      <h3>{co.name}</h3>
-                      {co.description && <p>{co.description}</p>}
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </section>
-          )}
-        </>
-      )}
-
-      {/* ── EXAM PHASE ─────────────────────────────────────────────────── */}
-      {phase === 'exam' && q && (
-        <section className={styles.examSection}>
-          <div className={styles.examCard}>
-            <div className={styles.progressWrap}>
-              <div className={styles.progressBar} style={{ width: `${progress}%` }} />
-            </div>
-            <div className={styles.examMeta}>
-              <span className={styles.qCounter}>Question {currentQ + 1} of {questions.length}</span>
-              <span className={styles.qAnswered}>{Object.keys(answers).length} answered</span>
-            </div>
-
-            <h2 className={styles.questionText}>{q.question}</h2>
-
-            <div className={styles.optionsList}>
-              {q.options.map((opt, i) => {
-                let cls = styles.optionBtn;
-                if (answered && selected === opt.text) {
-                  cls += ' ' + (opt.isCorrect ? styles.optionCorrect : styles.optionWrong);
-                } else if (answered && opt.isCorrect) {
-                  cls += ' ' + styles.optionCorrect;
-                } else if (!answered) {
-                  cls += ' ' + styles.optionIdle;
-                } else {
-                  cls += ' ' + styles.optionDim;
-                }
-                return (
-                  <button
-                    key={i}
-                    className={cls}
-                    onClick={() => handleSelect(opt)}
-                    disabled={answered}
-                  >
-                    <span className={styles.optionLetter}>{String.fromCharCode(65 + i)}</span>
-                    <span>{opt.text}</span>
-                  </button>
-                );
-              })}
-            </div>
-
-            {answered && (
-              <button className={styles.nextBtn} onClick={handleNext} disabled={submitting}>
-                {submitting ? 'Submitting…' : currentQ < questions.length - 1
-                  ? <><span>Next Question</span><ChevronRight size={18} /></>
-                  : <><span>Submit & See Results</span><Trophy size={18} /></>}
-              </button>
-            )}
+          {/* MAX SCHOLARSHIP HIGHLIGHT */}
+          <div className={styles.maxScholarship}>
+            <span className={styles.maxAmount}>₹20,000</span>
+            <span className={styles.maxLabel}>Maximum Scholarship Available</span>
           </div>
-        </section>
-      )}
 
-      {/* ── RESULT PHASE ───────────────────────────────────────────────── */}
-      {phase === 'result' && result && (
-        <section className={styles.resultSection}>
-          <div className={styles.resultCard}>
+          <h1 className={styles.heroTitle}>
+            Earn a Scholarship &<br /><span>Study Smarter</span>
+          </h1>
+          <p className={styles.heroSub}>
+            Take a short exam and unlock exclusive fee discounts on your chosen program.
+          </p>
 
-            {/* Score circle */}
-            <div className={result.passed ? styles.scoreCirclePass : styles.scoreCircleFail}>
-              <span className={styles.scoreNum}>{result.scorePercent}%</span>
-              <span className={styles.scoreLabel}>Your Score</span>
+          <div className={styles.tiersPreview}>
+            <div className={styles.tierCard}>
+              <Star size={18} className={styles.tierStar} />
+              <span className={styles.tierLabel}>Perfect Score</span>
+              <span className={styles.tierScore}>All answers correct</span>
+              <span className={styles.tierAmount}>₹2,000 voucher</span>
             </div>
-
-            <h2 className={styles.resultTitle}>
-              {result.passed ? '🎉 Congratulations! You Qualify for a Scholarship!' : 'Keep Practising — Almost There!'}
-            </h2>
-            <p className={styles.resultSub}>
-              You answered <strong>{result.score}</strong> out of <strong>{result.total}</strong> questions correctly.
-            </p>
-
-            {/* Voucher */}
-            {result.voucher && (
-              <div className={styles.voucherBox}>
-                <div className={styles.voucherTop}>
-                  <Tag size={20} /> <span>Your Scholarship Voucher</span>
-                </div>
-                <div className={styles.voucherLabel}>{result.voucher.label}</div>
-                <div className={styles.voucherAmount}>₹{result.voucher.amount.toLocaleString('en-IN')} Discount</div>
-                <div className={styles.voucherCodeWrap}>
-                  <code className={styles.voucherCode}>{result.voucher.code}</code>
-                  <button className={styles.copyBtn} onClick={copyCode}>
-                    {copied ? <Check size={16} /> : <Copy size={16} />}
-                    {copied ? 'Copied!' : 'Copy'}
-                  </button>
-                </div>
-                <div className={styles.voucherValidity}>
-                  <Clock size={14} />
-                  Valid until: <strong>{formatDate(result.voucher.validUntil)}</strong>
-                  &nbsp;({result.voucher.validityDays} days)
-                </div>
-              </div>
-            )}
-
-            {/* Real programs from DB */}
-            {programs.length > 0 && (
-              <div className={styles.eligibleBox}>
-                <h3><BookOpen size={18} /> Courses Available with Scholarship Fee Discount</h3>
-                <p className={styles.eligibleNote}>
-                  The following courses are eligible for your scholarship discount at the time of admission.
-                </p>
-                <div className={styles.programGrid}>
-                  {programs.map((p, i) => (
-                    <div key={i} className={styles.programCard}>
-                      <span className={styles.programName}>{p.name}</span>
-                      <span className={styles.programMeta}>{p.category}{p.duration ? ` · ${p.duration}` : ''}</span>
-                      {p.fee ? (
-                        <span className={styles.programFee}>
-                          ₹{p.fee.toLocaleString('en-IN')}
-                          <span className={styles.feeAfter}> after discount</span>
-                        </span>
-                      ) : null}
-                      {p.university?.name && (
-                        <span className={styles.programUniv}>{p.university.name}</span>
-                      )}
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {/* Partner companies from footer — always shown */}
-            {config?.partnerCompanies?.length > 0 && (
-              <div className={styles.partnerBoxResult}>
-                <h3><Building2 size={18} /> We Provide Admissions with This Discount Through</h3>
-                <p className={styles.eligibleNote}>
-                  These are our trusted admission partner organisations. Present your voucher code at the time of admission.
-                </p>
-                <div className={styles.companyGrid}>
-                  {config.partnerCompanies.map((co: PartnerCompany, i: number) => (
-                    <div key={i} className={styles.companyCard}>
-                      <h3>{co.name}</h3>
-                      {co.description && <p>{co.description}</p>}
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            <button className={styles.retryBtn} onClick={() => setPhase('landing')}>
-              Back to Scholarship Page
-            </button>
+            <div className={styles.tierCard}>
+              <Star size={18} className={styles.tierStar} />
+              <span className={styles.tierLabel}>Merit Score</span>
+              <span className={styles.tierScore}>3 or 4 correct</span>
+              <span className={styles.tierAmount}>₹1,000 voucher</span>
+            </div>
           </div>
-        </section>
-      )}
+
+          <button className={styles.startBtn} onClick={() => setPhase('form')}>
+            Apply Now <ArrowRight size={18} />
+          </button>
+
+          <p className={styles.heroNote}>Free exam · Instant result · Downloadable voucher</p>
+        </div>
+      </section>
     </main>
   );
+
+  /* ── FORM PHASE ─────────────────────────────────────────────── */
+  if (phase === 'form') return (
+    <main className={styles.page}>
+      <section className={styles.formSection}>
+        <div className={styles.formCard}>
+          <button className={styles.formBack} onClick={() => setPhase('landing')}>
+            <X size={18} />
+          </button>
+
+          <div className={styles.formHeader}>
+            <Award size={28} className={styles.formIcon} />
+            <h2>Apply for Scholarship</h2>
+            <p>Fill in your details to access the scholarship exam.</p>
+          </div>
+
+          <div className={styles.formFields}>
+            <div className={styles.fieldWrap}>
+              <label><User size={14} /> Full Name</label>
+              <input
+                type="text"
+                placeholder="Enter your full name"
+                value={form.name}
+                onChange={e => setForm(f => ({ ...f, name: e.target.value }))}
+                className={styles.fieldInput}
+              />
+            </div>
+
+            <div className={styles.fieldWrap}>
+              <label><Phone size={14} /> Phone Number</label>
+              <input
+                type="tel"
+                placeholder="10-digit mobile number"
+                value={form.phone}
+                onChange={e => setForm(f => ({ ...f, phone: e.target.value }))}
+                className={styles.fieldInput}
+                maxLength={10}
+              />
+            </div>
+
+            <div className={styles.fieldWrap}>
+              <label><Mail size={14} /> Email Address</label>
+              <input
+                type="email"
+                placeholder="your@email.com"
+                value={form.email}
+                onChange={e => setForm(f => ({ ...f, email: e.target.value }))}
+                className={styles.fieldInput}
+              />
+            </div>
+
+            <div className={styles.fieldWrap}>
+              <label><GraduationCap size={14} /> Which Course</label>
+              <select
+                value={form.course}
+                onChange={e => setForm(f => ({ ...f, course: e.target.value }))}
+                className={styles.fieldInput}
+              >
+                <option value="">Select a course…</option>
+                {programs.map(p => (
+                  <option key={p._id} value={p.name}>{p.name}</option>
+                ))}
+              </select>
+            </div>
+
+            <div className={styles.fieldWrap}>
+              <label><Building2 size={14} /> Which University</label>
+              <select
+                value={form.university}
+                onChange={e => setForm(f => ({ ...f, university: e.target.value }))}
+                className={styles.fieldInput}
+              >
+                <option value="">Select a university…</option>
+                {universities.map(u => (
+                  <option key={u._id} value={u.name}>{u.name}</option>
+                ))}
+              </select>
+            </div>
+          </div>
+
+          {formError && (
+            <div className={styles.formError}>
+              {formError}
+            </div>
+          )}
+
+          <button
+            className={styles.applyBtn}
+            onClick={submitForm}
+            disabled={formLoading || examLoading}
+          >
+            {formLoading || examLoading ? 'Please wait…' : <>Apply <ArrowRight size={16} /></>}
+          </button>
+        </div>
+      </section>
+    </main>
+  );
+
+  /* ── EXAM PHASE ─────────────────────────────────────────────── */
+  if (phase === 'exam' && q) return (
+    <main className={styles.page}>
+      <section className={styles.examSection}>
+        <div className={styles.examCard}>
+          <div className={styles.examTopBar}>
+            <span className={styles.examStudentName}>Hi, {applicantName}</span>
+            <span className={styles.qCounter}>Q {currentQ + 1} / {questions.length}</span>
+          </div>
+          <div className={styles.progressWrap}>
+            <div className={styles.progressBar} style={{ width: `${progress}%` }} />
+          </div>
+
+          <h2 className={styles.questionText}>{q.question}</h2>
+
+          <div className={styles.optionsList}>
+            {q.options.map((opt, i) => {
+              let cls = styles.optionBtn;
+              if (answered && selected === opt.text) {
+                cls += ' ' + styles.optionSelected;
+              } else if (!answered) {
+                cls += ' ' + styles.optionIdle;
+              } else {
+                cls += ' ' + styles.optionDim;
+              }
+              return (
+                <button key={i} className={cls} onClick={() => handleSelect(opt)} disabled={answered}>
+                  <span className={styles.optionLetter}>{String.fromCharCode(65 + i)}</span>
+                  <span>{opt.text}</span>
+                </button>
+              );
+            })}
+          </div>
+
+          {answered && (
+            <button className={styles.nextBtn} onClick={handleNext} disabled={submitting}>
+              {submitting ? 'Submitting…' : currentQ < questions.length - 1
+                ? <><span>Next Question</span><ChevronRight size={18} /></>
+                : <><span>Submit Exam</span><Trophy size={18} /></>}
+            </button>
+          )}
+        </div>
+      </section>
+    </main>
+  );
+
+  /* ── RESULT PHASE ────────────────────────────────────────────── */
+  if (phase === 'result' && result) return (
+    <main className={styles.page}>
+      <section className={styles.resultSection}>
+        <div className={styles.resultCard}>
+
+          <div className={result.passed ? styles.scoreCirclePass : styles.scoreCircleFail}>
+            <span className={styles.scoreNum}>{result.score}/{result.total}</span>
+            <span className={styles.scoreLabel}>Your Score</span>
+          </div>
+
+          <h2 className={styles.resultTitle}>
+            {result.passed
+              ? '🎉 Congratulations! You\'ve Earned a Scholarship!'
+              : 'Keep Practising — Almost There!'}
+          </h2>
+          <p className={styles.resultSub}>
+            {result.applicantName}, you answered <strong>{result.score}</strong> out of <strong>{result.total}</strong> questions correctly.
+          </p>
+
+          {result.voucher ? (
+            <div className={styles.voucherBox}>
+              <div className={styles.voucherTop}>
+                <Tag size={20} /> <span>Your Scholarship Voucher</span>
+              </div>
+              <div className={styles.voucherLabel}>{result.voucher.label}</div>
+              <div className={styles.voucherAmount}>₹{result.voucher.amount.toLocaleString('en-IN')}</div>
+              <div className={styles.voucherSubLabel}>Scholarship Discount</div>
+
+              <div className={styles.voucherCodeWrap}>
+                <code className={styles.voucherCode}>{result.voucher.code}</code>
+                <button className={styles.copyBtn} onClick={copyCode}>
+                  {copied ? <Check size={16} /> : <Copy size={16} />}
+                  {copied ? 'Copied!' : 'Copy'}
+                </button>
+              </div>
+
+              <div className={styles.voucherValidity}>
+                <Clock size={14} />
+                Valid until: <strong>{formatDate(result.voucher.validUntil)}</strong>
+                &nbsp;({result.voucher.validityDays} days)
+              </div>
+
+              <button className={styles.downloadBtn} onClick={downloadVoucher}>
+                <Download size={16} /> Download Voucher
+              </button>
+
+              <p className={styles.voucherInstruction}>
+                Present this voucher code at the time of admission to avail your scholarship discount.
+              </p>
+            </div>
+          ) : (
+            <div className={styles.noVoucherBox}>
+              <p>You scored {result.score} out of {result.total}.</p>
+              <p>Score <strong>3 or more</strong> to earn a scholarship voucher. Better luck next time!</p>
+            </div>
+          )}
+
+          <button className={styles.retryBtn} onClick={() => setPhase('landing')}>
+            Back to Scholarship Page
+          </button>
+        </div>
+      </section>
+    </main>
+  );
+
+  return null;
 }

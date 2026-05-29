@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import styles from '../admin.module.css';
 import {
   Award, Plus, Trash2, Edit2, Save, X, CheckCircle,
-  ChevronUp, ChevronDown, Loader2, AlertTriangle
+  ChevronUp, ChevronDown, Loader2, AlertTriangle, Users, Download
 } from 'lucide-react';
 
 /* ── Types ──────────────────────────────────────────────────── */
@@ -28,7 +28,7 @@ interface ConfigForm {
   passingScore: number;
 }
 
-type Tab = 'content' | 'questions' | 'config';
+type Tab = 'content' | 'questions' | 'config' | 'applications';
 
 const BLANK_Q: QuestionForm = {
   question: '', order: 1, isActive: true,
@@ -69,7 +69,20 @@ export default function AdminScholarshipPage() {
   const [configMsg, setConfigMsg] = useState('');
   const [newCourse, setNewCourse] = useState('');
 
+  /* Applications */
+  const [applications, setApplications] = useState<any[]>([]);
+  const [appsLoading, setAppsLoading] = useState(false);
+
   /* ── Load ─────────────────────────────────────────────────── */
+  useEffect(() => {
+    if (tab === 'applications') {
+      setAppsLoading(true);
+      fetch('/api/admin/scholarship/applications').then(r => r.json())
+        .then(d => setApplications(Array.isArray(d) ? d : []))
+        .finally(() => setAppsLoading(false));
+    }
+  }, [tab]);
+
   useEffect(() => {
     fetch('/api/admin/scholarship/content').then(r => r.json()).then(d => setContent({
       badge: d.badge || '', heading: d.heading || '', subheading: d.subheading || '',
@@ -239,7 +252,7 @@ export default function AdminScholarshipPage() {
 
       {/* Tabs */}
       <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '1.5rem', borderBottom: '2px solid #e2e8f0', paddingBottom: '0' }}>
-        {(['content', 'questions', 'config'] as Tab[]).map(t => (
+        {(['content', 'questions', 'config', 'applications'] as Tab[]).map(t => (
           <button
             key={t}
             onClick={() => setTab(t)}
@@ -250,7 +263,7 @@ export default function AdminScholarshipPage() {
               transition: 'color 0.15s',
             }}
           >
-            {t === 'content' ? 'Page Content' : t === 'questions' ? 'Exam Questions' : 'Config & Rewards'}
+            {t === 'content' ? 'Page Content' : t === 'questions' ? 'Exam Questions' : t === 'config' ? 'Config & Rewards' : 'Applications'}
           </button>
         ))}
       </div>
@@ -567,6 +580,70 @@ export default function AdminScholarshipPage() {
             </button>
             {configMsg && <span style={{ color: configMsg.includes('Error') ? '#ef4444' : '#22c55e', fontWeight: 600 }}>{configMsg}</span>}
           </div>
+        </div>
+      )}
+
+      {/* ── APPLICATIONS TAB ────────────────────────────────── */}
+      {tab === 'applications' && (
+        <div>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+            <h2 style={{ margin: 0, fontSize: '1.1rem', fontWeight: 700, color: '#1e293b' }}>
+              <Users size={18} style={{ verticalAlign: 'middle', marginRight: '0.4rem', color: '#E8502A' }} />
+              Applicants ({applications.length})
+            </h2>
+          </div>
+          {appsLoading && (
+            <div style={{ textAlign: 'center', padding: '3rem' }}>
+              <Loader2 size={28} style={{ animation: 'spin 1s linear infinite', color: '#E8502A' }} />
+            </div>
+          )}
+          {!appsLoading && applications.length === 0 && (
+            <div style={{ textAlign: 'center', padding: '3rem', color: '#94a3b8', background: '#f8fafc', borderRadius: '12px', border: '1px dashed #e2e8f0' }}>
+              No applications yet.
+            </div>
+          )}
+          {!appsLoading && applications.length > 0 && (
+            <div style={{ overflowX: 'auto' }}>
+              <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.88rem' }}>
+                <thead>
+                  <tr style={{ background: '#f8fafc', borderBottom: '2px solid #e2e8f0' }}>
+                    {['Name', 'Phone', 'Email', 'Course', 'University', 'Status', 'Score', 'Voucher', 'Date'].map(h => (
+                      <th key={h} style={{ padding: '0.65rem 0.9rem', textAlign: 'left', fontWeight: 700, color: '#64748b', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>{h}</th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {applications.map((a: any, i: number) => (
+                    <tr key={a._id} style={{ borderBottom: '1px solid #f1f5f9', background: i % 2 === 0 ? '#fff' : '#fafafa' }}>
+                      <td style={{ padding: '0.65rem 0.9rem', fontWeight: 600, color: '#002060' }}>{a.name}</td>
+                      <td style={{ padding: '0.65rem 0.9rem', color: '#475569' }}>{a.phone}</td>
+                      <td style={{ padding: '0.65rem 0.9rem', color: '#475569' }}>{a.email}</td>
+                      <td style={{ padding: '0.65rem 0.9rem', color: '#475569' }}>{a.course}</td>
+                      <td style={{ padding: '0.65rem 0.9rem', color: '#475569' }}>{a.university}</td>
+                      <td style={{ padding: '0.65rem 0.9rem' }}>
+                        <span style={{ display: 'inline-block', padding: '0.2rem 0.6rem', borderRadius: '999px', fontSize: '0.75rem', fontWeight: 700, background: a.examCompleted ? '#dcfce7' : '#fef9c3', color: a.examCompleted ? '#16a34a' : '#854d0e' }}>
+                          {a.examCompleted ? 'Completed' : 'Pending'}
+                        </span>
+                      </td>
+                      <td style={{ padding: '0.65rem 0.9rem', fontWeight: 700, color: '#002060' }}>
+                        {a.examCompleted ? `${a.score} / ${a.totalQuestions}` : '—'}
+                      </td>
+                      <td style={{ padding: '0.65rem 0.9rem' }}>
+                        {a.voucherCode ? (
+                          <span style={{ fontFamily: 'monospace', fontSize: '0.78rem', background: '#fff5f0', border: '1px solid rgba(232,80,42,.3)', padding: '0.15rem 0.5rem', borderRadius: '6px', color: '#E8502A', fontWeight: 700 }}>
+                            ₹{a.voucherAmount?.toLocaleString('en-IN')}
+                          </span>
+                        ) : '—'}
+                      </td>
+                      <td style={{ padding: '0.65rem 0.9rem', color: '#94a3b8', fontSize: '0.78rem' }}>
+                        {new Date(a.createdAt).toLocaleDateString('en-IN')}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
         </div>
       )}
     </div>
