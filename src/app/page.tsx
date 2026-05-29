@@ -248,24 +248,6 @@ export default function Home() {
             <div className={styles.heroIconCircle}>
               <BookOpen size={26} />
             </div>
-            <div style={{
-              background: '#fff',
-              borderRadius: '12px',
-              padding: '8px 14px',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              boxShadow: '0 2px 12px rgba(0,0,0,0.15)',
-            }}>
-              <Image
-                src="/images/Untitled-46777.png"
-                alt="Logo"
-                width={140}
-                height={44}
-                style={{ objectFit: 'contain', display: 'block' }}
-                priority
-              />
-            </div>
             <div className={styles.heroStack}>
               <span style={{ fontSize: '0.85rem' }}>India&apos;s No.1</span>
               <span style={{ fontSize: '0.85rem' }}>Course finding</span>
