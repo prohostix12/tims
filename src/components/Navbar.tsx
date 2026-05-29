@@ -3,6 +3,7 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import styles from './Navbar.module.css';
 import { ChevronDown, Menu, X, ArrowRight } from 'lucide-react';
@@ -77,7 +78,7 @@ const Navbar = () => {
 
           {/* Logo */}
           <Link href="/" className={styles.logo} aria-label="Go to homepage">
-            <span className={styles.logoText}>Find Your University</span>
+            <Image src="/images/pschSolutions-33.png" alt="PSH Solutions" width={160} height={52} style={{ objectFit: 'contain' }} priority />
           </Link>
 
           {/* Desktop Links — Only Home + Course Finder */}
@@ -134,7 +135,7 @@ const Navbar = () => {
         {/* Drawer header */}
         <div className={styles.drawerHeader}>
           <Link href="/" className={styles.logo} onClick={() => setMobileOpen(false)}>
-            <span className={styles.logoText}>Find Your University</span>
+            <Image src="/images/pschSolutions-33.png" alt="PSH Solutions" width={140} height={46} style={{ objectFit: 'contain' }} />
           </Link>
           <button
             className={styles.drawerClose}
