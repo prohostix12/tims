@@ -14,7 +14,7 @@ const Footer = () => {
         <div className={styles.footerCol}>
           <div style={{ marginBottom: '1rem' }}>
             <Image
-              src="/images/pschSolutions-1.png"
+              src="/images/pschSolutions-33.png"
               alt="PSH Solutions"
               width={180}
               height={180}

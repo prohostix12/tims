@@ -15,7 +15,7 @@ const FooterSecondary = () => {
           <div className={styles.brandSection}>
             <div className={styles.brandLogo}>
               <Image
-                src="/images/pschSolutions-1.png"
+                src="/images/pschSolutions-33.png"
                 alt="PSH Solutions"
                 width={140}
                 height={140}
