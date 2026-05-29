@@ -38,6 +38,7 @@
   flex-shrink: 0;
   text-decoration: none;
   width: auto;
+  padding-left: 1.5rem;
 }
 
 .logoText {
