@@ -256,6 +256,22 @@ export default function Home() {
             <Link href="#how-it-works" className={styles.heroStoryLink}>
               Explore Now <ArrowRight size={14} />
             </Link>
+            <Link href="/scholarship-program" style={{
+              display: 'inline-flex', alignItems: 'center', gap: '0.4rem',
+              marginTop: '0.6rem',
+              background: '#fff',
+              color: '#E8502A',
+              border: 'none',
+              padding: '0.5rem 1.1rem',
+              borderRadius: '999px',
+              fontWeight: 700,
+              fontSize: '0.82rem',
+              textDecoration: 'none',
+              boxShadow: '0 2px 12px rgba(0,0,0,0.15)',
+              whiteSpace: 'nowrap',
+            }}>
+              🎓 Scholarship Program <ArrowRight size={13} />
+            </Link>
             <div className={styles.heroLeftOrangeBar} />
           </div>
 

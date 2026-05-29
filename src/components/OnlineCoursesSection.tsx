@@ -3,12 +3,13 @@
 import { useState, useEffect } from 'react';
 import {
   GraduationCap, Monitor, BarChart2, FlaskConical, BookOpen, Cpu,
-  Briefcase, Database, Landmark, Globe, Music, Layers, PenTool, Package, Stethoscope,
-  ArrowRightLeft, HeartPulse,
+  Briefcase, Database, Landmark, Globe, Music, Layers, PenTool, Package,
+  Stethoscope, ArrowRightLeft, HeartPulse, Award, Star, Code,
+  FileText, Calculator, Microscope, Palette, Camera,
 } from 'lucide-react';
 import styles from './OnlineCoursesSection.module.css';
 
-// ── Icon map (string key → Lucide component) ──────────────────────────────────
+/* ── Icon map ───────────────────────────────────────────── */
 const ICON_MAP: Record<string, React.ReactNode> = {
   GraduationCap:  <GraduationCap size={32} />,
   Monitor:        <Monitor size={32} />,
@@ -27,47 +28,58 @@ const ICON_MAP: Record<string, React.ReactNode> = {
   Stethoscope:    <Stethoscope size={32} />,
   ArrowRightLeft: <ArrowRightLeft size={32} />,
   HeartPulse:     <HeartPulse size={32} />,
+  Award:          <Award size={32} />,
+  Star:           <Star size={32} />,
+  Code:           <Code size={32} />,
+  FileText:       <FileText size={32} />,
+  Calculator:     <Calculator size={32} />,
+  Microscope:     <Microscope size={32} />,
+  Palette:        <Palette size={32} />,
+  Camera:         <Camera size={32} />,
 };
 
-const FALLBACK_COURSE_DATA: Record<string, { name: string; icon: React.ReactNode }[]> = {
+function getIcon(name: string) { return ICON_MAP[name] ?? <GraduationCap size={32} />; }
+
+/* ── Fallback (used when DB is empty) ───────────────────── */
+const FALLBACK: Record<string, { name: string; iconName: string }[]> = {
   'Online PG': [
-    { name: 'MBA',    icon: ICON_MAP.GraduationCap },
-    { name: 'MCA',    icon: ICON_MAP.Monitor },
-    { name: 'M.Com',  icon: ICON_MAP.BarChart2 },
-    { name: 'M.Sc',   icon: ICON_MAP.FlaskConical },
-    { name: 'MA',     icon: ICON_MAP.BookOpen },
+    { name: 'MBA',   iconName: 'GraduationCap' },
+    { name: 'MCA',   iconName: 'Monitor' },
+    { name: 'M.Com', iconName: 'BarChart2' },
+    { name: 'M.Sc',  iconName: 'FlaskConical' },
+    { name: 'MA',    iconName: 'BookOpen' },
   ],
   'Online UG': [
-    { name: 'BBA',   icon: ICON_MAP.Briefcase },
-    { name: 'BCA',   icon: ICON_MAP.Database },
-    { name: 'B.Com', icon: ICON_MAP.Landmark },
-    { name: 'B.Sc',  icon: ICON_MAP.FlaskConical },
-    { name: 'BA',    icon: ICON_MAP.Globe },
+    { name: 'BBA',   iconName: 'Briefcase' },
+    { name: 'BCA',   iconName: 'Database' },
+    { name: 'B.Com', iconName: 'Landmark' },
+    { name: 'B.Sc',  iconName: 'FlaskConical' },
+    { name: 'BA',    iconName: 'Globe' },
   ],
   'Credit Transfer Programme': [
-    { name: 'B.Tech Credit Transfer',   icon: ICON_MAP.ArrowRightLeft },
-    { name: 'UG Credit Transfer',       icon: ICON_MAP.ArrowRightLeft },
-    { name: 'PG Credit Transfer',       icon: ICON_MAP.ArrowRightLeft },
-    { name: 'Diploma Credit Transfer',  icon: ICON_MAP.GraduationCap },
+    { name: 'B.Tech Credit Transfer',   iconName: 'ArrowRightLeft' },
+    { name: 'UG Credit Transfer',       iconName: 'ArrowRightLeft' },
+    { name: 'PG Credit Transfer',       iconName: 'ArrowRightLeft' },
+    { name: 'Diploma Credit Transfer',  iconName: 'GraduationCap' },
   ],
   'SIDP (Skill Integrated Diploma Programs)': [
-    { name: 'BBA + HR MANAGEMENT',           icon: ICON_MAP.Briefcase },
-    { name: 'BBA + HOSPITAL ADMINISTRATION', icon: ICON_MAP.HeartPulse },
-    { name: 'BBA + DIGITAL MARKETING',       icon: ICON_MAP.Globe },
-    { name: 'BBA + LOGISTICS',               icon: ICON_MAP.Package },
-    { name: 'BBA + BUSINESS MANAGEMENT',     icon: ICON_MAP.BarChart2 },
-    { name: 'BA + MTTC',                     icon: ICON_MAP.Globe },
-    { name: 'BCOM + ACCA',                   icon: ICON_MAP.Landmark },
-    { name: 'BCOM + ADVANCED ACCOUNTANTS',   icon: ICON_MAP.Database },
+    { name: 'BBA + HR MANAGEMENT',            iconName: 'Briefcase' },
+    { name: 'BBA + HOSPITAL ADMINISTRATION',  iconName: 'HeartPulse' },
+    { name: 'BBA + DIGITAL MARKETING',        iconName: 'Globe' },
+    { name: 'BBA + LOGISTICS',                iconName: 'Package' },
+    { name: 'BBA + BUSINESS MANAGEMENT',      iconName: 'BarChart2' },
+    { name: 'BA + MTTC',                      iconName: 'Globe' },
+    { name: 'BCOM + ACCA',                    iconName: 'Landmark' },
+    { name: 'BCOM + ADVANCED ACCOUNTANTS',    iconName: 'Database' },
   ],
   'Diploma': [
-    { name: 'Data Science',   icon: ICON_MAP.BarChart2 },
-    { name: 'Cyber Security', icon: ICON_MAP.Cpu },
-    { name: 'Fashion Design', icon: ICON_MAP.PenTool },
-    { name: 'Supply Chain',   icon: ICON_MAP.Package },
-    { name: 'Nutrition',      icon: ICON_MAP.Stethoscope },
-    { name: 'Music',          icon: ICON_MAP.Music },
-    { name: 'IT',             icon: ICON_MAP.Layers },
+    { name: 'Data Science',   iconName: 'BarChart2' },
+    { name: 'Cyber Security', iconName: 'Cpu' },
+    { name: 'Fashion Design', iconName: 'PenTool' },
+    { name: 'Supply Chain',   iconName: 'Package' },
+    { name: 'Nutrition',      iconName: 'Stethoscope' },
+    { name: 'Music',          iconName: 'Music' },
+    { name: 'IT',             iconName: 'Layers' },
   ],
 };
 
@@ -89,8 +101,8 @@ const DEFAULT_UNI_LOGOS = [
 ];
 
 export default function OnlineCoursesSection() {
-  const [courseData, setCourseData] = useState<Record<string, { name: string; icon: React.ReactNode }[]>>(FALLBACK_COURSE_DATA);
-  const [tabs, setTabs] = useState(Object.keys(FALLBACK_COURSE_DATA));
+  const [courseData, setCourseData] = useState<Record<string, { name: string; iconName: string }[]>>(FALLBACK);
+  const [tabs, setTabs] = useState<string[]>(Object.keys(FALLBACK));
   const [activeTab, setActiveTab] = useState('Online PG');
   const [selectedCourse, setSelectedCourse] = useState<string | null>(null);
   const [form, setForm] = useState<FormState>({ name: '', email: '', phone: '' });
@@ -100,24 +112,20 @@ export default function OnlineCoursesSection() {
   const [logos, setLogos] = useState<UniversityLogo[]>([]);
 
   useEffect(() => {
-    fetch('/api/public/online-courses')
+    fetch('/api/public/program-sections')
       .then(r => r.ok ? r.json() : [])
-      .then((data: { tab: string; name: string; icon: string }[]) => {
-        if (!Array.isArray(data) || data.length === 0) return;
-        const grouped: Record<string, { name: string; icon: React.ReactNode }[]> = {};
-        data.forEach(c => {
-          if (!grouped[c.tab]) grouped[c.tab] = [];
-          grouped[c.tab].push({ name: c.name, icon: ICON_MAP[c.icon] || ICON_MAP.GraduationCap });
-        });
-        const orderedTabs = Object.keys(grouped);
-        setCourseData(grouped);
-        setTabs(orderedTabs);
-        if (!orderedTabs.includes(activeTab)) setActiveTab(orderedTabs[0]);
+      .then((data: any[]) => {
+        if (Array.isArray(data) && data.length > 0) {
+          const map: Record<string, { name: string; iconName: string }[]> = {};
+          data.forEach(sec => { map[sec.categoryName] = sec.courses || []; });
+          setCourseData(map);
+          const tabNames = data.map(s => s.categoryName);
+          setTabs(tabNames);
+          setActiveTab(tabNames[0]);
+        }
       })
       .catch(() => {});
-  }, []);
 
-  useEffect(() => {
     fetch('/api/public/university-logos')
       .then(r => r.ok ? r.json() : [])
       .then(data => { if (Array.isArray(data) && data.length > 0) setLogos(data); })
@@ -176,10 +184,10 @@ export default function OnlineCoursesSection() {
         </div>
 
         <div className={styles.grid}>
-          {courseData[activeTab].map((course) => (
+          {(courseData[activeTab] || []).map((course) => (
             <div key={course.name} className={styles.card} onClick={() => openModal(course.name)}>
               <div className={styles.cardTop}>
-                <div className={styles.cardIcon}>{course.icon}</div>
+                <div className={styles.cardIcon}>{getIcon(course.iconName)}</div>
                 <p className={styles.cardName}>{course.name}</p>
               </div>
               <div className={styles.cardBottom}>

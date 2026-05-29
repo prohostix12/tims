@@ -29,6 +29,7 @@ const navLinks: NavLink[] = [
     name: 'About',
     path: '/about',
   },
+  { name: 'Scholarship', path: '/scholarship-program' },
   { name: 'Latest News', path: '/news' },
   { name: 'Academic Blog', path: '/blogs' },
   { name: 'Contact', path: '/contact' },

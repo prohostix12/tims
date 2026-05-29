@@ -25,6 +25,7 @@ import {
   Layers,
   UserSquare2,
   Layout,
+  Award,
 } from 'lucide-react';
 
 interface SidebarProps {
@@ -39,9 +40,11 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
     { name: 'Dashboard', path: '/admin', icon: <LayoutDashboard size={20} /> },
     { name: 'Universities', path: '/admin/universities', icon: <GraduationCap size={20} /> },
     { name: 'Programs', path: '/admin/programs', icon: <BookOpen size={20} /> },
+    { name: 'Programme Sections', path: '/admin/program-sections', icon: <Layers size={20} /> },
     { name: 'News', path: '/admin/news', icon: <Newspaper size={20} /> },
     { name: 'Blogs', path: '/admin/blogs', icon: <PenTool size={20} /> },
     { name: 'Course Finder', path: '/admin/course-finder', icon: <Search size={20} /> },
+    { name: 'Scholarship', path: '/admin/scholarship', icon: <Award size={20} /> },
     { name: 'Leads', path: '/admin/leads', icon: <ClipboardList size={20} /> },
     { name: 'Enrollments', path: '/admin/enrollments', icon: <Users size={20} /> },
     { name: 'University Logos', path: '/admin/university-logos', icon: <ImageIcon size={20} /> },
