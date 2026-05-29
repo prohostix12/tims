@@ -29,7 +29,7 @@ export async function GET(req: Request) {
       .map((q: any) => ({
         _id: q._id,
         question: q.question,
-        options: q.options.map((o: any) => ({ text: o.text })),
+        options: q.options.map((o: any) => ({ text: o.text, isCorrect: o.isCorrect })),
       }));
 
     return NextResponse.json({ questions, applicantName: application.name });

@@ -1,14 +1,14 @@
 'use client';
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import styles from './scholarship.module.css';
 import {
-  Award, CheckCircle, Trophy, Tag, Clock, ArrowRight,
-  Star, X, User, Phone, Mail, GraduationCap, Building2,
-  Download, ChevronRight, Copy, Check
+  Award, Trophy, Tag, Clock,
+  ArrowRight, X, User, Phone, Mail, GraduationCap, Building2,
+  Download, ChevronRight, Copy, Check, CheckCircle, XCircle
 } from 'lucide-react';
 
-interface Option { text: string }
+interface Option { text: string; isCorrect: boolean }
 interface Question { _id: string; question: string; options: Option[] }
 interface Voucher {
   code: string; amount: number; label: string;
@@ -33,6 +33,7 @@ export default function ScholarshipPage() {
   const [form, setForm] = useState({ name: '', phone: '', email: '', course: '', university: '' });
   const [formError, setFormError] = useState('');
   const [formLoading, setFormLoading] = useState(false);
+  const [examLoading, setExamLoading] = useState(false);
 
   /* Exam state */
   const [questions, setQuestions] = useState<Question[]>([]);
@@ -42,7 +43,6 @@ export default function ScholarshipPage() {
   const [selected, setSelected] = useState<string | null>(null);
   const [answered, setAnswered] = useState(false);
   const [submitting, setSubmitting] = useState(false);
-  const [examLoading, setExamLoading] = useState(false);
 
   /* Result state */
   const [result, setResult] = useState<SubmitResult | null>(null);
@@ -56,6 +56,16 @@ export default function ScholarshipPage() {
       setUniversities(Array.isArray(d) ? d : []);
     });
   }, []);
+
+  /* Courses filtered by selected university */
+  const filteredCourses = form.university
+    ? programs.filter(p => p.university?.name === form.university)
+    : [];
+
+  /* Reset course when university changes */
+  const handleUniversityChange = (val: string) => {
+    setForm(f => ({ ...f, university: val, course: '' }));
+  };
 
   /* ── Form submit ──────────────────────────────────────────── */
   const submitForm = async () => {
@@ -81,10 +91,7 @@ export default function ScholarshipPage() {
         body: JSON.stringify(form),
       });
       const data = await res.json();
-      if (!res.ok) {
-        setFormError(data.error || 'Something went wrong.');
-        return;
-      }
+      if (!res.ok) { setFormError(data.error || 'Something went wrong.'); return; }
       setToken(data.token);
       await loadExam(data.token);
     } finally {
@@ -181,7 +188,7 @@ export default function ScholarshipPage() {
   .det-v{font-size:.92rem;color:#002060;font-weight:700}
   .valid{text-align:center;color:#94a3b8;font-size:.8rem;margin-top:20px}
   .badge{display:inline-block;background:#fff5f0;border:1.5px solid rgba(232,80,42,.3);color:#E8502A;font-size:.78rem;font-weight:700;padding:3px 12px;border-radius:999px;margin-bottom:18px}
-  @media print{body{background:#fff;padding:0} .wrap{box-shadow:none;border-color:#E8502A}}
+  @media print{body{background:#fff;padding:0} .wrap{box-shadow:none}}
 </style>
 </head>
 <body>
@@ -212,7 +219,7 @@ export default function ScholarshipPage() {
 </html>`;
     const blob = new Blob([html], { type: 'text/html' });
     const url = URL.createObjectURL(blob);
-    const win = window.open(url, '_blank');
+    window.open(url, '_blank');
     setTimeout(() => URL.revokeObjectURL(url), 10000);
   };
 
@@ -239,7 +246,6 @@ export default function ScholarshipPage() {
             <Award size={16} /> Scholarship Program
           </span>
 
-          {/* MAX SCHOLARSHIP HIGHLIGHT */}
           <div className={styles.maxScholarship}>
             <span className={styles.maxAmount}>₹20,000</span>
             <span className={styles.maxLabel}>Maximum Scholarship Available</span>
@@ -251,21 +257,6 @@ export default function ScholarshipPage() {
           <p className={styles.heroSub}>
             Take a short exam and unlock exclusive fee discounts on your chosen program.
           </p>
-
-          <div className={styles.tiersPreview}>
-            <div className={styles.tierCard}>
-              <Star size={18} className={styles.tierStar} />
-              <span className={styles.tierLabel}>Perfect Score</span>
-              <span className={styles.tierScore}>All answers correct</span>
-              <span className={styles.tierAmount}>₹2,000 voucher</span>
-            </div>
-            <div className={styles.tierCard}>
-              <Star size={18} className={styles.tierStar} />
-              <span className={styles.tierLabel}>Merit Score</span>
-              <span className={styles.tierScore}>3 or 4 correct</span>
-              <span className={styles.tierAmount}>₹1,000 voucher</span>
-            </div>
-          </div>
 
           <button className={styles.startBtn} onClick={() => setPhase('form')}>
             Apply Now <ArrowRight size={18} />
@@ -287,37 +278,38 @@ export default function ScholarshipPage() {
           </button>
 
           <div className={styles.formHeader}>
-            <Award size={28} className={styles.formIcon} />
+            <Award size={24} className={styles.formIcon} />
             <h2>Apply for Scholarship</h2>
-            <p>Fill in your details to access the scholarship exam.</p>
+            <p>Fill in your details to access the exam.</p>
           </div>
 
           <div className={styles.formFields}>
-            <div className={styles.fieldWrap}>
-              <label><User size={14} /> Full Name</label>
-              <input
-                type="text"
-                placeholder="Enter your full name"
-                value={form.name}
-                onChange={e => setForm(f => ({ ...f, name: e.target.value }))}
-                className={styles.fieldInput}
-              />
+            <div className={styles.formRow}>
+              <div className={styles.fieldWrap}>
+                <label><User size={12} /> Full Name</label>
+                <input
+                  type="text"
+                  placeholder="Your full name"
+                  value={form.name}
+                  onChange={e => setForm(f => ({ ...f, name: e.target.value }))}
+                  className={styles.fieldInput}
+                />
+              </div>
+              <div className={styles.fieldWrap}>
+                <label><Phone size={12} /> Phone</label>
+                <input
+                  type="tel"
+                  placeholder="10-digit number"
+                  value={form.phone}
+                  onChange={e => setForm(f => ({ ...f, phone: e.target.value }))}
+                  className={styles.fieldInput}
+                  maxLength={10}
+                />
+              </div>
             </div>
 
             <div className={styles.fieldWrap}>
-              <label><Phone size={14} /> Phone Number</label>
-              <input
-                type="tel"
-                placeholder="10-digit mobile number"
-                value={form.phone}
-                onChange={e => setForm(f => ({ ...f, phone: e.target.value }))}
-                className={styles.fieldInput}
-                maxLength={10}
-              />
-            </div>
-
-            <div className={styles.fieldWrap}>
-              <label><Mail size={14} /> Email Address</label>
+              <label><Mail size={12} /> Email Address</label>
               <input
                 type="email"
                 placeholder="your@email.com"
@@ -328,39 +320,38 @@ export default function ScholarshipPage() {
             </div>
 
             <div className={styles.fieldWrap}>
-              <label><GraduationCap size={14} /> Which Course</label>
-              <select
-                value={form.course}
-                onChange={e => setForm(f => ({ ...f, course: e.target.value }))}
-                className={styles.fieldInput}
-              >
-                <option value="">Select a course…</option>
-                {programs.map(p => (
-                  <option key={p._id} value={p.name}>{p.name}</option>
-                ))}
-              </select>
-            </div>
-
-            <div className={styles.fieldWrap}>
-              <label><Building2 size={14} /> Which University</label>
+              <label><Building2 size={12} /> University</label>
               <select
                 value={form.university}
-                onChange={e => setForm(f => ({ ...f, university: e.target.value }))}
+                onChange={e => handleUniversityChange(e.target.value)}
                 className={styles.fieldInput}
               >
-                <option value="">Select a university…</option>
+                <option value="">Select university…</option>
                 {universities.map(u => (
                   <option key={u._id} value={u.name}>{u.name}</option>
                 ))}
               </select>
             </div>
+
+            <div className={styles.fieldWrap}>
+              <label><GraduationCap size={12} /> Course</label>
+              <select
+                value={form.course}
+                onChange={e => setForm(f => ({ ...f, course: e.target.value }))}
+                className={styles.fieldInput}
+                disabled={!form.university}
+              >
+                <option value="">
+                  {form.university ? 'Select course…' : 'Select university first'}
+                </option>
+                {filteredCourses.map(p => (
+                  <option key={p._id} value={p.name}>{p.name}</option>
+                ))}
+              </select>
+            </div>
           </div>
 
-          {formError && (
-            <div className={styles.formError}>
-              {formError}
-            </div>
-          )}
+          {formError && <div className={styles.formError}>{formError}</div>}
 
           <button
             className={styles.applyBtn}
@@ -392,17 +383,23 @@ export default function ScholarshipPage() {
           <div className={styles.optionsList}>
             {q.options.map((opt, i) => {
               let cls = styles.optionBtn;
-              if (answered && selected === opt.text) {
-                cls += ' ' + styles.optionSelected;
-              } else if (!answered) {
-                cls += ' ' + styles.optionIdle;
+              if (answered) {
+                if (opt.isCorrect) {
+                  cls += ' ' + styles.optionCorrect;
+                } else if (selected === opt.text && !opt.isCorrect) {
+                  cls += ' ' + styles.optionWrong;
+                } else {
+                  cls += ' ' + styles.optionDim;
+                }
               } else {
-                cls += ' ' + styles.optionDim;
+                cls += ' ' + styles.optionIdle;
               }
               return (
                 <button key={i} className={cls} onClick={() => handleSelect(opt)} disabled={answered}>
                   <span className={styles.optionLetter}>{String.fromCharCode(65 + i)}</span>
-                  <span>{opt.text}</span>
+                  <span style={{ flex: 1 }}>{opt.text}</span>
+                  {answered && opt.isCorrect && <CheckCircle size={18} className={styles.answerIcon} />}
+                  {answered && selected === opt.text && !opt.isCorrect && <XCircle size={18} className={styles.answerIconWrong} />}
                 </button>
               );
             })}
@@ -474,7 +471,7 @@ export default function ScholarshipPage() {
           ) : (
             <div className={styles.noVoucherBox}>
               <p>You scored {result.score} out of {result.total}.</p>
-              <p>Score <strong>3 or more</strong> to earn a scholarship voucher. Better luck next time!</p>
+              <p>Score <strong>1 or more</strong> to earn a scholarship voucher. Better luck next time!</p>
             </div>
           )}
 

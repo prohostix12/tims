@@ -253,12 +253,8 @@ export default function Home() {
               <span style={{ fontSize: '0.85rem' }}>Course finding</span>
               <span style={{ fontSize: '0.85rem' }}>platform</span>
             </div>
-            <Link href="#how-it-works" className={styles.heroStoryLink}>
-              Explore Now <ArrowRight size={14} />
-            </Link>
             <Link href="/scholarship-program" style={{
               display: 'inline-flex', alignItems: 'center', gap: '0.4rem',
-              marginTop: '0.6rem',
               background: '#fff',
               color: '#E8502A',
               border: 'none',
@@ -271,6 +267,9 @@ export default function Home() {
               whiteSpace: 'nowrap',
             }}>
               🎓 Scholarship Program <ArrowRight size={13} />
+            </Link>
+            <Link href="#how-it-works" className={styles.heroStoryLink}>
+              Explore Now <ArrowRight size={14} />
             </Link>
             <div className={styles.heroLeftOrangeBar} />
           </div>

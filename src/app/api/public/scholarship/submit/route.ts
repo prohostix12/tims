@@ -63,6 +63,9 @@ export async function POST(req: Request) {
     } else if (correct === 3 || correct === 4) {
       voucherAmount = 1000;
       voucherLabel = 'Merit Scholarship';
+    } else if (correct === 1 || correct === 2) {
+      voucherAmount = 500;
+      voucherLabel = 'Participation Scholarship';
     }
 
     let voucher = null;
