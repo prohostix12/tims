@@ -17,9 +17,9 @@ const FooterSecondary = () => {
               <Image
                 src="/images/Untitled-46777.png"
                 alt="PSH Solutions"
-                width={140}
-                height={140}
-                style={{ objectFit: 'contain' }}
+                width={160}
+                height={52}
+                style={{ objectFit: 'contain', objectPosition: 'left top' }}
               />
             </div>
           </div>
