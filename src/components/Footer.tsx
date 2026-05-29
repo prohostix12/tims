@@ -12,7 +12,7 @@ const Footer = () => {
     <footer className={styles.footer}>
       <div className={styles.footerGrid}>
         <div className={styles.footerCol}>
-          <div style={{ marginBottom: '1rem' }}>
+          <div style={{ marginBottom: '1rem', marginTop: '-1.5rem' }}>
             <Image
               src="/images/Untitled-46777.png"
               alt="PSH Solutions"
