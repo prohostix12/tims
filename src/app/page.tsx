@@ -268,9 +268,6 @@ export default function Home() {
             }}>
               🎓 Scholarship Program <ArrowRight size={13} />
             </Link>
-            <Link href="#how-it-works" className={styles.heroStoryLink}>
-              Explore Now <ArrowRight size={14} />
-            </Link>
             <div className={styles.heroLeftOrangeBar} />
           </div>
 
