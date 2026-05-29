@@ -15,8 +15,8 @@ const FooterSecondary = () => {
           <div className={styles.brandSection}>
             <div className={styles.brandLogo}>
               <Image
-                src="/images/footer-logo-v2.png.png"
-                alt="Find Ur University"
+                src="/images/pschSolutions-1.png"
+                alt="PSH Solutions"
                 width={140}
                 height={140}
                 style={{ objectFit: 'contain' }}

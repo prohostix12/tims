@@ -61,7 +61,7 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
       <div className={styles.sidebarHeader}>
         <div className={styles.logo}>
           <Image 
-            src="/images/demo logo5.png" 
+            src="/images/pschSolutions-1.png"
             alt="Logo" 
             width={240} 
             height={80} 
