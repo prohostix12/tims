@@ -515,20 +515,34 @@ export default function CourseFinder() {
       const controller = new AbortController();
       const timeout = setTimeout(() => controller.abort(), 8000);
 
-      const res = await fetch('/api/public/course-finder-results', {
+      // Try primary API endpoint
+      let res = await fetch('/api/public/course-finder-results', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ answers, questions }),
         signal: controller.signal,
-      });
+      }).catch(() => null);
+
+      // If primary fails, fallback to legacy endpoint
+      if (!res || !res.ok) {
+        console.warn('Primary results endpoint failed, trying fallback');
+        res = await fetch('/api/course-finder-results', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ answers, questions }),
+          signal: controller.signal,
+        }).catch(() => null);
+      }
       clearTimeout(timeout);
 
       let programs: any[] = [];
       let universities: any[] = [];
-      if (res.ok) {
+      if (res && res.ok) {
         const data = await res.json();
         programs = data.programs || [];
         universities = data.universities || [];
+      } else {
+        console.error('Failed to fetch course suggestions');
       }
 
       setResults(programs);

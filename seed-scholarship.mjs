@@ -92,6 +92,20 @@ const questions = [
     ],
   },
 ];
+// Shuffle utility
+function shuffle(array) {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+  return array;
+}
+
+// Randomize option order for each question
+const shuffledQuestions = questions.map(q => ({
+  ...q,
+  options: shuffle([...q.options]),
+}));
 
 // ── Main ───────────────────────────────────────────────────────
 async function seed() {
