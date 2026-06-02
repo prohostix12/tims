@@ -117,7 +117,7 @@ async function seed() {
   await ScholarshipQuestion.deleteMany({});
 
   console.log('🌱  Inserting 5 scholarship questions…');
-  const inserted = await ScholarshipQuestion.insertMany(questions);
+  const inserted = await ScholarshipQuestion.insertMany(shuffledQuestions);
   console.log(`✅  Inserted ${inserted.length} questions.`);
 
   await mongoose.disconnect();
