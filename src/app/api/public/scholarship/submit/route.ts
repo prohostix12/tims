@@ -34,6 +34,7 @@ export async function POST(req: Request) {
       .map((id: any) => questionMap.get(String(id)))
       .filter(Boolean);
 
+    // Fetch or create config (with default tiers)
     const config = await ScholarshipConfig.findOne({}) || await ScholarshipConfig.create({});
 
     let correct = 0;
@@ -53,20 +54,41 @@ export async function POST(req: Request) {
     const total = orderedQuestions.length || 1;
     const scorePercent = Math.round((correct / total) * 100);
 
-    // Voucher rules: all correct → ₹2000, score 3 or 4 → ₹1000
+    // ── Dynamic tier matching ──────────────────────────────────
+    // Sort tiers by minScore descending so we match the highest qualifying tier first
+    const tiers: { minScore: number; amount: number; label: string }[] =
+      Array.isArray(config.tiers) && config.tiers.length > 0
+        ? [...config.tiers].sort((a, b) => b.minScore - a.minScore)
+        : [
+            { minScore: 80, amount: 3000, label: 'Platinum Scholar' },
+            { minScore: 60, amount: 2000, label: 'Gold Scholar' },
+            { minScore: 50, amount: 1000, label: 'Silver Scholar' },
+          ];
+
+    // passingScore is a percentage (e.g. 50 means 50%)
+    const passingScorePercent: number = config.passingScore ?? 50;
+
     let voucherAmount: number | null = null;
     let voucherLabel = '';
 
-    if (correct === total) {
-      voucherAmount = 2000;
-      voucherLabel = 'Perfect Score Scholarship';
-    } else if (correct === 3 || correct === 4) {
-      voucherAmount = 1000;
-      voucherLabel = 'Merit Scholarship';
-    } else if (correct === 1 || correct === 2) {
-      voucherAmount = 500;
-      voucherLabel = 'Participation Scholarship';
+    if (scorePercent >= passingScorePercent) {
+      for (const tier of tiers) {
+        if (scorePercent >= tier.minScore) {
+          voucherAmount = tier.amount;
+          voucherLabel = tier.label;
+          break;
+        }
+      }
+      // If no tier matched but student passed, fall back to the lowest tier
+      if (voucherAmount === null && tiers.length > 0) {
+        const lowestTier = tiers[tiers.length - 1];
+        voucherAmount = lowestTier.amount;
+        voucherLabel = lowestTier.label;
+      }
     }
+
+    // Compute the minimum correct answers the student needs to pass
+    const minCorrectToPass = Math.ceil((passingScorePercent / 100) * total);
 
     let voucher = null;
     const updateData: any = {
@@ -104,6 +126,9 @@ export async function POST(req: Request) {
       applicantName: application.name,
       course: application.course,
       university: application.university,
+      // Inform the frontend of the passing threshold
+      minCorrectToPass,
+      passingScorePercent,
     });
   } catch (error: any) {
     return NextResponse.json({ error: error.message }, { status: 500 });

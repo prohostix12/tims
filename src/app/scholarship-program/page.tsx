@@ -17,19 +17,19 @@ interface Voucher {
 interface SubmitResult {
   score: number; total: number; scorePercent: number; passed: boolean;
   voucher: Voucher | null; applicantName: string; course: string; university: string;
+  minCorrectToPass: number; passingScorePercent: number;
 }
-interface Program { _id: string; name: string; university?: { name: string } }
-interface University { _id: string; name: string }
+interface ProgramSection { categoryName: string; courses: { name: string; iconName?: string; order?: number }[] }
 
 type Phase = 'landing' | 'form' | 'exam' | 'result';
 
 export default function ScholarshipPage() {
-  const [programs, setPrograms] = useState<Program[]>([]);
-  const [universities, setUniversities] = useState<University[]>([]);
+  const [programSections, setProgramSections] = useState<Record<string, { name: string; iconName?: string; order?: number }[]>>({});
+  const [programCategories, setProgramCategories] = useState<string[]>([]);
   const [phase, setPhase] = useState<Phase>('landing');
   const [token, setToken] = useState('');
 
-  const [form, setForm] = useState({ name: '', phone: '', email: '', course: '', university: '' });
+  const [form, setForm] = useState({ name: '', phone: '', email: '', course: '', program: '' });
   const [formError, setFormError] = useState('');
   const [formLoading, setFormLoading] = useState(false);
   const [examLoading, setExamLoading] = useState(false);
@@ -46,25 +46,54 @@ export default function ScholarshipPage() {
   const [copied, setCopied] = useState(false);
 
   useEffect(() => {
-    fetch('/api/public/scholarship/programs').then(r => r.json()).then(d => {
-      setPrograms(Array.isArray(d) ? d : []);
+    setProgramSections({
+      'Online PG': [
+        { name: 'MBA' },
+        { name: 'MCA' },
+        { name: 'M.Com' },
+        { name: 'M.Sc' },
+        { name: 'MA' },
+      ],
+      'Online UG': [
+        { name: 'BBA' },
+        { name: 'BCA' },
+        { name: 'B.Com' },
+        { name: 'B.Sc' },
+        { name: 'BA' },
+      ],
+      'Credit Transfer Programme': [
+        { name: 'B.Tech Credit Transfer' },
+        { name: 'UG Credit Transfer' },
+        { name: 'PG Credit Transfer' },
+        { name: 'Diploma Credit Transfer' },
+      ],
     });
-    fetch('/api/public/universities').then(r => r.json()).then(d => {
-      setUniversities(Array.isArray(d) ? d : []);
-    });
+    setProgramCategories(['Online PG', 'Online UG', 'Credit Transfer Programme']);
+
+    fetch('/api/public/program-sections')
+      .then(r => r.ok ? r.json() : [])
+      .then((d: any) => {
+        if (Array.isArray(d) && d.length > 0) {
+          const sections: Record<string, { name: string; iconName?: string; order?: number }[]> = {};
+          d.forEach((sec: any) => { sections[sec.categoryName] = sec.courses || []; });
+          setProgramSections(sections);
+          setProgramCategories(d.map((sec: any) => sec.categoryName));
+        }
+      })
+      .catch(() => {});
   }, []);
 
-  const filteredCourses = form.university
-    ? programs.filter(p => p.university?.name === form.university)
+  const filteredCourses = form.program
+    ? programSections[form.program] ?? []
     : [];
 
-  const handleUniversityChange = (val: string) => {
-    setForm(f => ({ ...f, university: val, course: '' }));
+  const handleProgramChange = (val: string) => {
+    setForm(f => ({ ...f, program: val, course: '' }));
   };
 
   const submitForm = async () => {
-    const { name, phone, email, course, university } = form;
-    if (!name.trim() || !phone.trim() || !email.trim() || !course || !university) {
+    const { name, phone, email, course, program } = form;
+    if (!name.trim() || !phone.trim() || !email.trim() || !course || !program) {
       setFormError('Please fill in all fields.');
       return;
     }
@@ -82,7 +111,13 @@ export default function ScholarshipPage() {
       const res = await fetch('/api/public/scholarship/apply', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(form),
+        body: JSON.stringify({
+          name,
+          phone,
+          email,
+          course,
+          university: program,
+        }),
       });
       const data = await res.json();
       if (!res.ok) { setFormError(data.error || 'Something went wrong.'); return; }
@@ -201,7 +236,7 @@ export default function ScholarshipPage() {
     <div class="det"><div class="det-l">Student Name</div><div class="det-v">${aName}</div></div>
     <div class="det"><div class="det-l">Score</div><div class="det-v">${score} / ${total} correct</div></div>
     <div class="det"><div class="det-l">Course Applied</div><div class="det-v">${course}</div></div>
-    <div class="det"><div class="det-l">University</div><div class="det-v">${university}</div></div>
+    <div class="det"><div class="det-l">Program</div><div class="det-v">${university}</div></div>
   </div>
   <div class="divider"></div>
   <div class="valid">Valid until: <strong>${validDate}</strong> &nbsp;·&nbsp; ${voucher.validityDays} days from issue &nbsp;·&nbsp; Present at the time of admission</div>
@@ -353,15 +388,15 @@ export default function ScholarshipPage() {
             </div>
 
             <div className={styles.fieldWrap}>
-              <label><Building2 size={12} /> University</label>
+              <label><Building2 size={12} /> Program</label>
               <select
-                value={form.university}
-                onChange={e => handleUniversityChange(e.target.value)}
+                value={form.program}
+                onChange={e => handleProgramChange(e.target.value)}
                 className={styles.fieldInput}
               >
-                <option value="">Select university…</option>
-                {universities.map(u => (
-                  <option key={u._id} value={u.name}>{u.name}</option>
+                <option value="">Select program…</option>
+                {programCategories.map(program => (
+                  <option key={program} value={program}>{program}</option>
                 ))}
               </select>
             </div>
@@ -372,13 +407,13 @@ export default function ScholarshipPage() {
                 value={form.course}
                 onChange={e => setForm(f => ({ ...f, course: e.target.value }))}
                 className={styles.fieldInput}
-                disabled={!form.university}
+                disabled={!form.program}
               >
                 <option value="">
-                  {form.university ? 'Select course…' : 'Select university first'}
+                  {form.program ? 'Select course…' : 'Select program first'}
                 </option>
                 {filteredCourses.map(p => (
-                  <option key={p._id} value={p.name}>{p.name}</option>
+                  <option key={p.name} value={p.name}>{p.name}</option>
                 ))}
               </select>
             </div>
@@ -504,7 +539,12 @@ export default function ScholarshipPage() {
           ) : (
             <div className={styles.noVoucherBox}>
               <p>You scored {result.score} out of {result.total}.</p>
-              <p>Score <strong>1 or more</strong> to earn a scholarship voucher. Better luck next time!</p>
+              <p>
+                You need at least{' '}
+                <strong>{result.minCorrectToPass ?? Math.ceil((result.passingScorePercent ?? 50) / 100 * result.total)} correct answer{(result.minCorrectToPass ?? 1) !== 1 ? 's' : ''}</strong>{' '}
+                ({result.passingScorePercent ?? 50}% passing score) to earn a scholarship voucher.
+                Better luck next time!
+              </p>
             </div>
           )}
 
