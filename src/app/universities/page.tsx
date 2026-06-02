@@ -3,7 +3,6 @@
 import { useState, useEffect, useRef } from 'react';
 import styles from './universities.module.css';
 import Link from 'next/link';
-import Image from 'next/image';
 import { MapPin, ArrowRight, GraduationCap, Loader2, Search, Info, Globe, BookOpen, Award, Building } from 'lucide-react';
 import EnquiryModal from '@/components/EnquiryModal';
 
@@ -43,7 +42,7 @@ export default function UniversitiesPage() {
   };
 
   const filtered = universities.filter(u => {
-    const matchesFilter = activeFilter === 'All' || (u.type && u.type.toLowerCase() === activeFilter.toLowerCase());
+    const matchesFilter = activeFilter === 'All' || (u.type && u.type.toLowerCase().includes(activeFilter.toLowerCase()));
     const matchesSearch = (u.name || '').toLowerCase().includes(searchTerm.toLowerCase()) || 
                           (u.location || '').toLowerCase().includes(searchTerm.toLowerCase());
     return matchesFilter && matchesSearch;
@@ -189,16 +188,16 @@ export default function UniversitiesPage() {
                     style={{ '--ci': i } as React.CSSProperties}
                   >
                     <div className={styles.cardImg}>
-                      <Image
+                      <img
                         src={uni.image || 'https://images.unsplash.com/photo-1562774053-701939374585?q=80&w=600&auto=format&fit=crop'}
                         alt={uni.name}
-                        fill
-                        style={{ objectFit: 'cover' }}
+                        style={{ width: '100%', height: '100%', objectFit: 'cover', position: 'absolute', inset: 0 }}
+                        onError={(e) => { e.currentTarget.src = 'https://images.unsplash.com/photo-1562774053-701939374585?q=80&w=600&auto=format&fit=crop'; }}
                       />
                       <span className={styles.cardRegion}>{uni.type || 'Institutional'}</span>
                       {uni.logo && (
-                        <div style={{ position: 'absolute', top: '15px', left: '15px', width: '45px', height: '45px', borderRadius: '8px', overflow: 'hidden', border: '2px solid white', background: 'white', boxShadow: '0 4px 10px rgba(0,0,0,0.15)', zIndex: 10 }}>
-                          <img src={uni.logo} alt={`${uni.name} logo`} style={{ width: '100%', height: '100%', objectFit: 'contain' }} onError={(e) => { e.currentTarget.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(uni.name)}&background=random&size=128`; }} />
+                        <div style={{ position: 'absolute', top: '15px', left: '15px', width: '52px', height: '52px', borderRadius: '10px', overflow: 'hidden', border: '2px solid white', background: 'white', boxShadow: '0 4px 12px rgba(0,0,0,0.2)', zIndex: 10, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                          <img src={uni.logo} alt={`${uni.name} logo`} style={{ width: '100%', height: '100%', objectFit: 'contain', padding: '3px' }} onError={(e) => { e.currentTarget.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(uni.name)}&background=E8502A&color=fff&size=128&bold=true`; }} />
                         </div>
                       )}
                     </div>

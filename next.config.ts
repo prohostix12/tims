@@ -9,47 +9,12 @@ const nextConfig: NextConfig = {
     remotePatterns: [
       {
         protocol: 'https',
-        hostname: 'images.unsplash.com',
+        hostname: '**',
         pathname: '/**',
       },
       {
-        protocol: 'https',
-        hostname: 'www.pngmart.com',
-        pathname: '/**',
-      },
-      {
-        protocol: 'https',
-        hostname: 'www.transparentpng.com',
-        pathname: '/**',
-      },
-      {
-        protocol: 'https',
-        hostname: 'images.rawpixel.com',
-        pathname: '/**',
-      },
-      {
-        protocol: 'https',
-        hostname: 'i.pravatar.cc',
-        pathname: '/**',
-      },
-      {
-        protocol: 'https',
-        hostname: 'webfiles.amrita.edu',
-        pathname: '/**',
-      },
-      {
-        protocol: 'https',
-        hostname: 'images.shiksha.com',
-        pathname: '/**',
-      },
-      {
-        protocol: 'https',
-        hostname: 'timseducation.com',
-        pathname: '/**',
-      },
-      {
-        protocol: 'https',
-        hostname: 'upload.wikimedia.org',
+        protocol: 'http',
+        hostname: '**',
         pathname: '/**',
       },
     ],

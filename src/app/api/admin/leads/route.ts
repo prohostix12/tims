@@ -17,11 +17,26 @@ export async function PUT(request: Request) {
     const { searchParams } = new URL(request.url);
     const id = searchParams.get('id');
     if (!id) return NextResponse.json({ error: 'ID required' }, { status: 400 });
-    
+
     await connectDB();
     const body = await request.json();
     const lead = await Lead.findByIdAndUpdate(id, { status: body.status }, { new: true });
     return NextResponse.json(lead);
+  } catch (error: any) {
+    return NextResponse.json({ error: error.message }, { status: 500 });
+  }
+}
+
+export async function DELETE(request: Request) {
+  try {
+    const { searchParams } = new URL(request.url);
+    const id = searchParams.get('id');
+    if (!id) return NextResponse.json({ error: 'ID required' }, { status: 400 });
+
+    await connectDB();
+    const lead = await Lead.findByIdAndDelete(id);
+    if (!lead) return NextResponse.json({ error: 'Lead not found' }, { status: 404 });
+    return NextResponse.json({ message: 'Lead deleted successfully' });
   } catch (error: any) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }

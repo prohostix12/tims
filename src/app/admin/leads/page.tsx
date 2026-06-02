@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import styles from '@/app/admin/admin.module.css';
-import { Loader2, User, Mail, Phone, Calendar, Search } from 'lucide-react';
+import { Loader2, User, Mail, Phone, Calendar, Search, Trash2 } from 'lucide-react';
 
 export default function LeadsPage() {
   const [leads, setLeads] = useState<any[]>([]);
@@ -39,6 +39,20 @@ export default function LeadsPage() {
       }
     } catch (err) {
       console.error('Failed to update status', err);
+    }
+  };
+
+  const deleteLead = async (id: string, name: string) => {
+    if (!confirm(`Delete lead for "${name}"? This cannot be undone.`)) return;
+    try {
+      const response = await fetch(`/api/admin/leads?id=${id}`, { method: 'DELETE' });
+      if (response.ok) {
+        setLeads(leads.filter(l => l._id !== id));
+      } else {
+        alert('Failed to delete lead.');
+      }
+    } catch (err) {
+      console.error('Failed to delete lead', err);
     }
   };
 
@@ -145,17 +159,34 @@ export default function LeadsPage() {
                     </span>
                   </td>
                   <td>
-                    <select 
-                      value={lead.status} 
-                      onChange={(e) => updateStatus(lead._id, e.target.value)}
-                      style={{ padding: '6px', borderRadius: '6px', border: '1px solid #e2e8f0', fontSize: '0.85rem', cursor: 'pointer' }}
-                    >
-                      <option value="new">New</option>
-                      <option value="contacted">Contacted</option>
-                      <option value="qualified">Qualified</option>
-                      <option value="lost">Lost</option>
-                      <option value="won">Won</option>
-                    </select>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      <select
+                        value={lead.status}
+                        onChange={(e) => updateStatus(lead._id, e.target.value)}
+                        style={{ padding: '6px', borderRadius: '6px', border: '1px solid #e2e8f0', fontSize: '0.85rem', cursor: 'pointer' }}
+                      >
+                        <option value="new">New</option>
+                        <option value="contacted">Contacted</option>
+                        <option value="qualified">Qualified</option>
+                        <option value="lost">Lost</option>
+                        <option value="won">Won</option>
+                      </select>
+                      <button
+                        onClick={() => deleteLead(lead._id, lead.name)}
+                        title="Delete lead"
+                        style={{
+                          display: 'flex', alignItems: 'center', justifyContent: 'center',
+                          padding: '6px', borderRadius: '6px', border: '1px solid #fecaca',
+                          background: '#fef2f2', color: '#dc2626', cursor: 'pointer',
+                          transition: 'background 0.15s',
+                          flexShrink: 0,
+                        }}
+                        onMouseEnter={e => (e.currentTarget.style.background = '#fee2e2')}
+                        onMouseLeave={e => (e.currentTarget.style.background = '#fef2f2')}
+                      >
+                        <Trash2 size={15} />
+                      </button>
+                    </div>
                   </td>
                 </tr>
               )) : (

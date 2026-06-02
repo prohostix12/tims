@@ -72,7 +72,7 @@ export default function CoursesPage() {
           setCourses(data.map(c => ({
             _id: c._id,
             slug: c.slug || '',
-            title: c.name,
+            title: c.name || c.title || '',
             level: c.level || '',
             category: c.category || '',
             description: c.description || '',
@@ -97,7 +97,7 @@ export default function CoursesPage() {
 
   const filteredCourses = courses.filter(course => {
     const matchesCategory = activeCategory === 'All' || course.category === activeCategory;
-    const matchesSearch = course.title.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesSearch = (course.title || '').toLowerCase().includes(searchQuery.toLowerCase());
     const matchesUniversity = selectedUniversity === 'All' || course.universityName === selectedUniversity;
     return matchesCategory && matchesSearch && matchesUniversity;
   });

@@ -73,7 +73,7 @@ const Navbar = () => {
 
   return (
     <>
-      <div className={`${styles.navWrapper} ${scrolled ? styles.scrolled : ''}`}>
+      <div className={`${styles.navWrapper} ${scrolled ? styles.scrolled : ''} ${['/scholarship-program', '/universities'].includes(pathname) && !scrolled ? styles.scholarshipNav : ''}`}>
         <nav className={styles.navbar}>
 
           {/* Logo */}

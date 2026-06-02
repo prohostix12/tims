@@ -32,7 +32,7 @@ const Footer = () => {
             </div>
             <div className={styles.contactItem}>
               <Phone size={16} color="#ffffff" className={styles.iconMargin} />
-              <a href="tel:+9189435555592">+91 89435555592</a>
+              <a href="tel:+918943555592">+91 8943555592</a>
             </div>
             <div className={styles.contactItem} style={{ marginTop: '0.75rem', alignItems: 'flex-start' }}>
               <MapPin size={16} color="#ffffff" className={styles.iconMargin} style={{ flexShrink: 0 }} />
@@ -58,7 +58,7 @@ const Footer = () => {
             </div>
             <div className={styles.contactItem}>
               <Phone size={16} color="#ffffff" className={styles.iconMargin} />
-              <a href="tel:+9189435555592">+91 89435555592</a>
+              <a href="tel:+918943555592">+91 8943555592</a>
             </div>
             <div className={styles.contactItem} style={{ marginTop: '0.75rem', alignItems: 'flex-start' }}>
               <MapPin size={16} color="#ffffff" className={styles.iconMargin} style={{ flexShrink: 0 }} />
@@ -89,7 +89,7 @@ const Footer = () => {
             </div>
             <div className={styles.contactItem}>
               <Phone size={16} color="#ffffff" className={styles.iconMargin} />
-              <a href="tel:+9189435555592">+91 89435555592</a>
+              <a href="tel:+918943555592">+91 8943555592</a>
             </div>
             <div className={styles.contactItem} style={{ marginTop: '0.75rem', alignItems: 'flex-start' }}>
               <MapPin size={16} color="#ffffff" className={styles.iconMargin} style={{ flexShrink: 0 }} />
@@ -114,7 +114,7 @@ const Footer = () => {
             </div>
             <div className={styles.contactItem}>
               <Phone size={16} color="#ffffff" className={styles.iconMargin} />
-              <a href="tel:+9189435555592">+91 89435555592</a>
+              <a href="tel:+918943555592">+91 8943555592</a>
             </div>
             <div className={styles.contactItem} style={{ marginTop: '0.75rem', alignItems: 'flex-start' }}>
               <MapPin size={16} color="#ffffff" className={styles.iconMargin} style={{ flexShrink: 0 }} />

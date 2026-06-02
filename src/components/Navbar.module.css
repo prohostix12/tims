@@ -20,6 +20,34 @@
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
 }
 
+/* ---- Scholarship page — orange navbar before scroll ---- */
+.scholarshipNav {
+  background: #E8502A;
+  border-bottom-color: rgba(255, 255, 255, 0.2);
+  box-shadow: 0 2px 12px rgba(232, 80, 42, 0.3);
+}
+
+.scholarshipNav .navItem:first-child .navLink,
+.scholarshipNav .navLink {
+  color: #fff !important;
+}
+
+.scholarshipNav .navItem:first-child .navLink:hover,
+.scholarshipNav .navLink:hover {
+  color: rgba(255, 255, 255, 0.8) !important;
+}
+
+.scholarshipNav .courseFinderBtn {
+  background: #fff;
+  color: #E8502A;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.scholarshipNav .courseFinderBtn:hover {
+  background: #f5f5f5;
+  transform: translateY(-1px);
+}
+
 /* ---- Inner navbar ---- */
 .navbar {
   width: 100%;

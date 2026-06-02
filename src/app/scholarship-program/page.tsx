@@ -29,13 +29,11 @@ export default function ScholarshipPage() {
   const [phase, setPhase] = useState<Phase>('landing');
   const [token, setToken] = useState('');
 
-  /* Form state */
   const [form, setForm] = useState({ name: '', phone: '', email: '', course: '', university: '' });
   const [formError, setFormError] = useState('');
   const [formLoading, setFormLoading] = useState(false);
   const [examLoading, setExamLoading] = useState(false);
 
-  /* Exam state */
   const [questions, setQuestions] = useState<Question[]>([]);
   const [applicantName, setApplicantName] = useState('');
   const [currentQ, setCurrentQ] = useState(0);
@@ -44,7 +42,6 @@ export default function ScholarshipPage() {
   const [answered, setAnswered] = useState(false);
   const [submitting, setSubmitting] = useState(false);
 
-  /* Result state */
   const [result, setResult] = useState<SubmitResult | null>(null);
   const [copied, setCopied] = useState(false);
 
@@ -57,17 +54,14 @@ export default function ScholarshipPage() {
     });
   }, []);
 
-  /* Courses filtered by selected university */
   const filteredCourses = form.university
     ? programs.filter(p => p.university?.name === form.university)
     : [];
 
-  /* Reset course when university changes */
   const handleUniversityChange = (val: string) => {
     setForm(f => ({ ...f, university: val, course: '' }));
   };
 
-  /* ── Form submit ──────────────────────────────────────────── */
   const submitForm = async () => {
     const { name, phone, email, course, university } = form;
     if (!name.trim() || !phone.trim() || !email.trim() || !course || !university) {
@@ -118,7 +112,6 @@ export default function ScholarshipPage() {
     }
   };
 
-  /* ── Exam navigation ──────────────────────────────────────── */
   const q = questions[currentQ];
   const progress = questions.length ? ((currentQ + 1) / questions.length) * 100 : 0;
 
@@ -156,7 +149,6 @@ export default function ScholarshipPage() {
     }
   };
 
-  /* ── Voucher download ─────────────────────────────────────── */
   const downloadVoucher = () => {
     if (!result?.voucher) return;
     const { voucher, applicantName: aName, course, university, score, total } = result;
@@ -239,32 +231,73 @@ export default function ScholarshipPage() {
   /* ── LANDING ───────────────────────────────────────────────── */
   if (phase === 'landing') return (
     <main className={styles.page}>
-      <section className={styles.hero}>
-        <div className={styles.heroBg} />
-        <div className={styles.heroInner}>
-          <span className={styles.badge}>
-            <Award size={16} /> Scholarship Program
-          </span>
 
-          <div className={styles.maxScholarship}>
-            <span className={styles.maxAmount}>₹20,000</span>
-            <span className={styles.maxLabel}>Maximum Scholarship Available</span>
+      {/* ── TICKER BAR ────────────────────────────────────────── */}
+      <div className={styles.tickerBar}>
+        <span className={styles.tickerLabel}><Trophy size={13} /> Scholarship</span>
+        <div className={styles.tickerDivider} />
+        <div className={styles.ticker}>
+          <div className={styles.tickerTrack}>
+            {Array.from({ length: 2 }).map((_, i) => (
+              <span key={i} className={styles.tickerContent}>
+                ₹20,000 Maximum Scholarship Available &nbsp;&nbsp;•&nbsp;&nbsp; Free Exam &nbsp;&nbsp;•&nbsp;&nbsp; Instant Results &nbsp;&nbsp;•&nbsp;&nbsp; Downloadable Voucher &nbsp;&nbsp;•&nbsp;&nbsp; Score High & Earn More &nbsp;&nbsp;•&nbsp;&nbsp; UGC-DEB Approved Universities &nbsp;&nbsp;•&nbsp;&nbsp;&nbsp;&nbsp;
+              </span>
+            ))}
           </div>
+        </div>
+      </div>
 
+      {/* ── HERO ──────────────────────────────────────────────── */}
+      <section className={styles.hero}>
+        <div className={styles.heroBlob1} />
+        <div className={styles.heroBlob2} />
+
+        <div className={styles.heroInner}>
           <h1 className={styles.heroTitle}>
             Earn a Scholarship &<br /><span>Study Smarter</span>
           </h1>
+
           <p className={styles.heroSub}>
             Take a short exam and unlock exclusive fee discounts on your chosen program.
           </p>
 
+          <div className={styles.featureChips}>
+            {['Free exam', 'Instant result', 'Downloadable voucher'].map(f => (
+              <span key={f} className={styles.featureChip}>
+                <CheckCircle size={13} /> {f}
+              </span>
+            ))}
+          </div>
+
           <button className={styles.startBtn} onClick={() => setPhase('form')}>
             Apply Now <ArrowRight size={18} />
           </button>
-
-          <p className={styles.heroNote}>Free exam · Instant result · Downloadable voucher</p>
         </div>
       </section>
+
+      {/* ── HOW IT WORKS ──────────────────────────────────────── */}
+      <section className={styles.howSection}>
+        <div className={styles.howInner}>
+          <p className={styles.howEyebrow}>Simple 3-Step Process</p>
+          <h2 className={styles.howTitle}>How It Works</h2>
+
+          <div className={styles.steps}>
+            {[
+              { n: '01', icon: <User size={22} />,          title: 'Register',         desc: 'Fill in your details and choose your university & program.' },
+              { n: '02', icon: <GraduationCap size={22} />, title: 'Take the Exam',    desc: 'Answer a short set of multiple-choice questions online.' },
+              { n: '03', icon: <Award size={22} />,         title: 'Get Your Voucher', desc: 'Download your scholarship voucher and present it at admission.' },
+            ].map(s => (
+              <div key={s.n} className={styles.step}>
+                <div className={styles.stepIconWrap}>{s.icon}</div>
+                <span className={styles.stepNum}>{s.n}</span>
+                <h3 className={styles.stepTitle}>{s.title}</h3>
+                <p className={styles.stepDesc}>{s.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
     </main>
   );
 
@@ -358,7 +391,7 @@ export default function ScholarshipPage() {
             onClick={submitForm}
             disabled={formLoading || examLoading}
           >
-            {formLoading || examLoading ? 'Please wait…' : <>Apply <ArrowRight size={16} /></>}
+            {formLoading || examLoading ? 'Please wait…' : <>Start Exam <ArrowRight size={16} /></>}
           </button>
         </div>
       </section>

@@ -478,9 +478,9 @@ export default function Home() {
             <p className={styles.consultText}>Talk to our experts and get personalised guidance — completely free.</p>
           </div>
           <div className={styles.consultBtns}>
-            <a href="tel:+9189435555592" className={styles.consultPhone}>
+            <a href="tel:+918943555592" className={styles.consultPhone}>
               <Phone size={20} />
-              +91 89435555592
+              +91 8943555592
             </a>
             <Link href="/contact" className={styles.consultContact}>
               Get Free Guidance <ArrowRight size={16} />

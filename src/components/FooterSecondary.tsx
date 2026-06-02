@@ -40,7 +40,7 @@ const FooterSecondary = () => {
             <div className={styles.contactItem}>
               <Phone className={styles.icon} size={18} />
               <div className={styles.contactText}>
-                <a href="tel:+9189435555592">+91 89435555592</a>
+                <a href="tel:+918943555592">+91 8943555592</a>
               </div>
             </div>
             <div className={styles.contactItem}>
