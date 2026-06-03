@@ -23,13 +23,22 @@ export async function POST(req: Request) {
     const categoryParam = url.searchParams.get('category');
     if (categoryParam) body.category = categoryParam;
 
-    // Ensure category is set, default to 'General' only if not provided
-    if (!body.category) body.category = 'General';
+    // Normalize incoming category (accept variants like 'online ug', 'online-ug', etc.)
+    const normalizeCategory = (c: any) => {
+      if (!c) return null;
+      const s = String(c).trim().toLowerCase();
+      if (s.includes('online') && s.includes('ug')) return 'Online UG';
+      if (s.includes('online') && s.includes('pg')) return 'Online PG';
+      if (s.includes('credit')) return 'Credit Transfer';
+      return 'General';
+    };
 
-    // Validate category is one of the allowed values
+    if (categoryParam) body.category = normalizeCategory(categoryParam);
+    body.category = normalizeCategory(body.category || '');
+
     const validCategories = ['Online UG', 'Online PG', 'Credit Transfer', 'General'];
     if (!validCategories.includes(body.category)) {
-      return NextResponse.json({ error: 'Invalid category' }, { status: 400 });
+      body.category = 'General';
     }
 
     const q = await ScholarshipQuestion.create(body);

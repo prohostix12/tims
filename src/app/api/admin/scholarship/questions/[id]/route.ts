@@ -10,16 +10,19 @@ export async function PUT(req: Request, { params }: { params: Promise<{ id: stri
     const { id } = await params;
     const body = await req.json();
     
-    // Ensure category is set, default to 'General' only if not provided
-    if (!body.category) {
-      body.category = 'General';
-    }
-    
-    // Validate category is one of the allowed values
+    // Normalize and validate category
+    const normalizeCategory = (c: any) => {
+      if (!c) return null;
+      const s = String(c).trim().toLowerCase();
+      if (s.includes('online') && s.includes('ug')) return 'Online UG';
+      if (s.includes('online') && s.includes('pg')) return 'Online PG';
+      if (s.includes('credit')) return 'Credit Transfer';
+      return 'General';
+    };
+
+    body.category = normalizeCategory(body.category || '');
     const validCategories = ['Online UG', 'Online PG', 'Credit Transfer', 'General'];
-    if (!validCategories.includes(body.category)) {
-      return NextResponse.json({ error: 'Invalid category' }, { status: 400 });
-    }
+    if (!validCategories.includes(body.category)) body.category = 'General';
     
     const q = await ScholarshipQuestion.findByIdAndUpdate(id, body, { new: true });
     if (!q) return NextResponse.json({ error: 'Not found' }, { status: 404 });
