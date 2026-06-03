@@ -181,7 +181,17 @@ export default function UniversityLogosAdminPage() {
                 src={`/api/proxy-image?url=${encodeURIComponent(logo.logoUrl)}`}
                 alt={logo.name}
                 style={{ height: '44px', width: 'auto', maxWidth: '120px', objectFit: 'contain', flexShrink: 0, filter: 'grayscale(20%)', opacity: 0.85 }}
-                onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = 'none'; }}
+                onError={(e) => { 
+                  const img = e.currentTarget as HTMLImageElement;
+                  // Try direct URL as fallback
+                  if (img.src.includes('/api/proxy-image')) {
+                    img.src = (img as any).dataset.directUrl || '';
+                    if (!img.src) img.style.display = 'none';
+                  } else {
+                    img.style.display = 'none';
+                  }
+                }}
+                data-direct-url={logo.logoUrl}
               />
             ))}
           </div>
@@ -216,12 +226,33 @@ export default function UniversityLogosAdminPage() {
               {logos.map((logo: any) => (
                 <tr key={logo._id} style={{ borderTop: '1px solid #f1f5f9' }}>
                   <td style={{ padding: '1rem 1.5rem' }}>
-                    <div style={{ width: '80px', height: '44px', background: '#f8fafc', borderRadius: '6px', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1px solid #e2e8f0', overflow: 'hidden' }}>
+                    <div style={{ width: '80px', height: '44px', background: '#f8fafc', borderRadius: '6px', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1px solid #e2e8f0', overflow: 'hidden', position: 'relative' }}>
                       <img
-                        src={logo.logoUrl}
+                        src={`/api/proxy-image?url=${encodeURIComponent(logo.logoUrl)}`}
                         alt={logo.name}
                         style={{ height: '36px', width: 'auto', maxWidth: '72px', objectFit: 'contain' }}
-                        onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = 'none'; }}
+                        onError={(e) => { 
+                          const img = e.currentTarget as HTMLImageElement;
+                          const parent = img.parentElement;
+                          // Try direct URL as fallback
+                          if (img.src.includes('/api/proxy-image')) {
+                            img.src = (img as any).dataset.directUrl || '';
+                            if (img.src) {
+                              img.onerror = () => {
+                                img.style.display = 'none';
+                                if (parent) {
+                                  parent.innerHTML = '<div style="font-size: 0.7rem; color: #94a3b8; text-align: center; width: 100%;">No image</div>';
+                                }
+                              };
+                              return;
+                            }
+                          }
+                          img.style.display = 'none';
+                          if (parent) {
+                            parent.innerHTML = '<div style="font-size: 0.7rem; color: #94a3b8; text-align: center; width: 100%;">No image</div>';
+                          }
+                        }}
+                        data-direct-url={logo.logoUrl}
                       />
                     </div>
                   </td>
