@@ -37,7 +37,19 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'this email already used' }, { status: 409 });
     }
 
-    const allQuestions = await ScholarshipQuestion.find({ isActive: true });
+    // Map the student's program to a question bank category
+    const prog = university.trim().toLowerCase();
+    let category: string;
+    if (prog.includes('online ug')) category = 'Online UG';
+    else if (prog.includes('online pg')) category = 'Online PG';
+    else if (prog.includes('credit transfer')) category = 'Credit Transfer';
+    else category = 'General';
+
+    // Try to get questions from the matching bank; fall back to General
+    let allQuestions = await ScholarshipQuestion.find({ isActive: true, category });
+    if (allQuestions.length === 0) {
+      allQuestions = await ScholarshipQuestion.find({ isActive: true });
+    }
     if (allQuestions.length === 0) {
       return NextResponse.json({ error: 'Exam questions are not ready yet.' }, { status: 503 });
     }
@@ -45,7 +57,7 @@ export async function POST(req: Request) {
     const config = await ScholarshipConfig.findOne({}) || await ScholarshipConfig.create({});
     const questionsPerExam: number = config.totalQuestionsForScore ?? 5;
 
-    // Shuffle the full pool, then take the first N — each student gets a different random subset
+    // Shuffle the category pool, then take the first N — each student gets a different random subset
     const shuffled = shuffle(allQuestions);
     const selected = shuffled.slice(0, Math.min(questionsPerExam, shuffled.length));
 

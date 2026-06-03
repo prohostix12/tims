@@ -5,11 +5,14 @@ export interface IOption {
   isCorrect: boolean;
 }
 
+export type QuestionCategory = 'Online UG' | 'Online PG' | 'Credit Transfer' | 'General';
+
 export interface IScholarshipQuestion extends Document {
   question: string;
   options: IOption[];
   order: number;
   isActive: boolean;
+  category: QuestionCategory;
 }
 
 const OptionSchema = new Schema({
@@ -22,6 +25,7 @@ const ScholarshipQuestionSchema: Schema = new Schema({
   options:  { type: [OptionSchema], required: true },
   order:    { type: Number, default: 0 },
   isActive: { type: Boolean, default: true },
+  category: { type: String, enum: ['Online UG', 'Online PG', 'Credit Transfer', 'General'], default: 'General' },
 }, { timestamps: true });
 
 export const ScholarshipQuestion =
