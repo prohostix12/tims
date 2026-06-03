@@ -18,6 +18,13 @@ export async function POST(req: Request) {
   try {
     await connectDB();
     const body = await req.json();
+    // Temporary debug logs to trace category persistence issues
+    try {
+      // eslint-disable-next-line no-console
+      console.log('[scholarship/questions POST] url=', req.url);
+      // eslint-disable-next-line no-console
+      console.log('[scholarship/questions POST] received body=', JSON.stringify(body));
+    } catch (e) {}
     // Allow category override via query param (safer when client state is out-of-sync)
     const url = new URL(req.url);
     const categoryParam = url.searchParams.get('category');
