@@ -2,8 +2,9 @@
 'use client';
 
 import React, { useState } from 'react';
+import Image from 'next/image';
 import styles from './login.module.css';
-import { Mail, Lock, LogIn, ArrowLeft } from 'lucide-react';
+import { Mail, Lock, LogIn, ArrowLeft, CheckCircle } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
@@ -33,15 +34,30 @@ export default function LoginPage() {
       {/* Left branding panel */}
       <div className={styles.leftPanel}>
         <div className={styles.brandContent}>
-          <div className={styles.logo}>
-            TIMS<span>.</span>
+          <div className={styles.logoWrap}>
+            <Image
+              src="/images/Untitled-46777.png"
+              alt="Find Your University"
+              width={200}
+              height={68}
+              style={{ objectFit: 'contain' }}
+              priority
+            />
           </div>
-          <p className={styles.brandTagline}>Transforming Education, Shaping Futures</p>
+          <p className={styles.brandTagline}>Connecting Students to the Right University</p>
           <div className={styles.brandDivider}></div>
           <h2 className={styles.brandTitle}>Your Gateway to Academic Excellence</h2>
           <p className={styles.brandDesc}>
-            Access the TIMS administration panel to manage courses, students, results, and institutional resources — all in one secure place.
+            Access the Find Your University administration panel to manage programs, universities, scholarships, and student resources — all in one secure place.
           </p>
+          <div className={styles.brandFeatures}>
+            {['UGC-DEB Approved Universities', 'Online & Distance Programs', 'Scholarship Management', 'Student Counselling'].map(f => (
+              <div key={f} className={styles.brandFeatureItem}>
+                <CheckCircle size={15} className={styles.brandFeatureIcon} />
+                <span>{f}</span>
+              </div>
+            ))}
+          </div>
           <div className={styles.brandBadge}>
             <span className={styles.brandBadgeDot}></span>
             Admin Portal
