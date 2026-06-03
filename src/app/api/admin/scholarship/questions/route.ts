@@ -14,38 +14,18 @@ export async function GET() {
   }
 }
 
+const VALID_CATEGORIES = ['Online UG', 'Online PG', 'Credit Transfer', 'General'] as const;
+
 export async function POST(req: Request) {
   try {
     await connectDB();
     const body = await req.json();
-    // Temporary debug logs to trace category persistence issues
-    try {
-      // eslint-disable-next-line no-console
-      console.log('[scholarship/questions POST] url=', req.url);
-      // eslint-disable-next-line no-console
-      console.log('[scholarship/questions POST] received body=', JSON.stringify(body));
-    } catch (e) {}
-    // Allow category override via query param (safer when client state is out-of-sync)
-    const url = new URL(req.url);
-    const categoryParam = url.searchParams.get('category');
-    if (categoryParam) body.category = categoryParam;
 
-    // Normalize incoming category (accept variants like 'online ug', 'online-ug', etc.)
-    const normalizeCategory = (c: any) => {
-      if (!c) return null;
-      const s = String(c).trim().toLowerCase();
-      if (s.includes('online') && s.includes('ug')) return 'Online UG';
-      if (s.includes('online') && s.includes('pg')) return 'Online PG';
-      if (s.includes('credit')) return 'Credit Transfer';
-      return 'General';
-    };
-
-    if (categoryParam) body.category = normalizeCategory(categoryParam);
-    body.category = normalizeCategory(body.category || '');
-
-    const validCategories = ['Online UG', 'Online PG', 'Credit Transfer', 'General'];
-    if (!validCategories.includes(body.category)) {
-      body.category = 'General';
+    // Trust the body category if it's a known value; otherwise fall back to query param
+    if (!VALID_CATEGORIES.includes(body.category)) {
+      const { searchParams } = new URL(req.url);
+      const qp = searchParams.get('category') ?? '';
+      body.category = VALID_CATEGORIES.includes(qp as any) ? qp : 'General';
     }
 
     const q = await ScholarshipQuestion.create(body);

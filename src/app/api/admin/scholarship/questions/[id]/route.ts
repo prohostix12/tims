@@ -4,26 +4,19 @@ import { ScholarshipQuestion } from '@/models/ScholarshipQuestion';
 
 export const dynamic = 'force-dynamic';
 
+const VALID_CATEGORIES = ['Online UG', 'Online PG', 'Credit Transfer', 'General'] as const;
+
 export async function PUT(req: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
     await connectDB();
     const { id } = await params;
     const body = await req.json();
-    
-    // Normalize and validate category
-    const normalizeCategory = (c: any) => {
-      if (!c) return null;
-      const s = String(c).trim().toLowerCase();
-      if (s.includes('online') && s.includes('ug')) return 'Online UG';
-      if (s.includes('online') && s.includes('pg')) return 'Online PG';
-      if (s.includes('credit')) return 'Credit Transfer';
-      return 'General';
-    };
 
-    body.category = normalizeCategory(body.category || '');
-    const validCategories = ['Online UG', 'Online PG', 'Credit Transfer', 'General'];
-    if (!validCategories.includes(body.category)) body.category = 'General';
-    
+    // Keep the category as-is if valid; otherwise default to General
+    if (!VALID_CATEGORIES.includes(body.category)) {
+      body.category = 'General';
+    }
+
     const q = await ScholarshipQuestion.findByIdAndUpdate(id, body, { new: true });
     if (!q) return NextResponse.json({ error: 'Not found' }, { status: 404 });
     return NextResponse.json(q);

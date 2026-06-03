@@ -198,30 +198,26 @@ export default function AdminScholarshipPage() {
         isActive: editQ.isActive,
         category: editQ.category,
       };
-      
-      // When creating a new question, pass the category as a query param to
-      // ensure server-side assignment even if client state is inconsistent.
+
       const url = editingId
         ? `/api/admin/scholarship/questions/${editingId}`
-        : `/api/admin/scholarship/questions?category=${encodeURIComponent(questionData.category)}`;
+        : '/api/admin/scholarship/questions';
 
       const res = await fetch(url, {
         method: editingId ? 'PUT' : 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(questionData),
       });
-      
+
       if (!res.ok) {
         const errData = await res.json();
         setQMsg(`Error: ${errData.error || 'Failed to save'}`);
         return;
       }
-      
-      setEditQ(null); 
+
+      setEditQ(null);
       setEditingId(null);
       fetchQuestions();
-      setQMsg('Question saved successfully!');
-      setTimeout(() => setQMsg(''), 2000);
     } catch (e: any) { 
       setQMsg(`Error saving question: ${e.message}`); 
     }
