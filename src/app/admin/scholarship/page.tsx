@@ -199,10 +199,12 @@ export default function AdminScholarshipPage() {
         category: editQ.category,
       };
       
+      // When creating a new question, pass the category as a query param to
+      // ensure server-side assignment even if client state is inconsistent.
       const url = editingId
         ? `/api/admin/scholarship/questions/${editingId}`
-        : '/api/admin/scholarship/questions';
-      
+        : `/api/admin/scholarship/questions?category=${encodeURIComponent(questionData.category)}`;
+
       const res = await fetch(url, {
         method: editingId ? 'PUT' : 'POST',
         headers: { 'Content-Type': 'application/json' },
