@@ -81,7 +81,7 @@ export default function LoginPage() {
                 <Mail className={styles.inputIcon} size={20} />
                 <input
                   type="email"
-                  placeholder="admin@tims.edu"
+                  placeholder="Enter your email"
                   value={email}
                   onChange={(e) => {
                     setEmail(e.target.value);
