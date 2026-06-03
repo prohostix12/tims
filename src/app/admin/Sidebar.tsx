@@ -25,6 +25,7 @@ import {
   Layers,
   UserSquare2,
   Award,
+  LayoutTemplate,
 } from 'lucide-react';
 
 interface SidebarProps {
@@ -51,6 +52,7 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
     { name: 'FAQs', path: '/admin/faqs', icon: <HelpCircle size={20} /> },
     { name: 'Services', path: '/admin/services', icon: <Layers size={20} /> },
 
+    { name: 'Footer', path: '/admin/footer', icon: <LayoutTemplate size={20} /> },
     { name: 'Directors', path: '/admin/directors', icon: <UserSquare2 size={20} /> },
     { name: 'Messages', path: '/admin/messages', icon: <Mail size={20} /> },
     { name: 'SEO Settings', path: '/admin/seo', icon: <Globe size={20} /> },
