@@ -23,13 +23,22 @@ export async function GET(req: Request) {
     const questionMap = new Map();
     allQuestions.forEach((q: any) => questionMap.set(String(q._id), q));
 
+    const shuffle = <T,>(arr: T[]): T[] => {
+      const a = [...arr];
+      for (let i = a.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]];
+      }
+      return a;
+    };
+
     const questions = application.questionIds
       .map((id: any) => questionMap.get(String(id)))
       .filter(Boolean)
       .map((q: any) => ({
         _id: q._id,
         question: q.question,
-        options: q.options.map((o: any) => ({ text: o.text, isCorrect: o.isCorrect })),
+        options: shuffle(q.options.map((o: any) => ({ text: o.text, isCorrect: o.isCorrect }))),
       }));
 
     return NextResponse.json({ questions, applicantName: application.name });

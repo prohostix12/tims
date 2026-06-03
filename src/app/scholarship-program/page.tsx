@@ -5,7 +5,7 @@ import styles from './scholarship.module.css';
 import {
   Award, Trophy, Tag, Clock,
   ArrowRight, X, User, Phone, Mail, GraduationCap, Building2,
-  Download, ChevronRight, Copy, Check, CheckCircle, XCircle
+  Download, ChevronRight, Copy, Check, CheckCircle, XCircle, FileText
 } from 'lucide-react';
 
 interface Option { text: string; isCorrect: boolean }
@@ -23,16 +23,27 @@ interface ProgramSection { categoryName: string; courses: { name: string; iconNa
 
 type Phase = 'landing' | 'form' | 'exam' | 'result';
 
+function getVoucherBrand(program: string): string {
+  const p = program.toLowerCase();
+  if (p.includes('online ug')) return 'TIMS Education';
+  if (p.includes('credit transfer')) return 'Edumentora';
+  if (p.includes('skill')) return 'Professional Skill Campus';
+  return '';
+}
+
 export default function ScholarshipPage() {
   const [programSections, setProgramSections] = useState<Record<string, { name: string; iconName?: string; order?: number }[]>>({});
   const [programCategories, setProgramCategories] = useState<string[]>([]);
   const [phase, setPhase] = useState<Phase>('landing');
   const [token, setToken] = useState('');
+  const [termsAndConditions, setTermsAndConditions] = useState('');
 
   const [form, setForm] = useState({ name: '', phone: '', email: '', course: '', program: '' });
   const [formError, setFormError] = useState('');
   const [formLoading, setFormLoading] = useState(false);
   const [examLoading, setExamLoading] = useState(false);
+  const [termsAccepted, setTermsAccepted] = useState(false);
+  const [showTnC, setShowTnC] = useState(false);
 
   const [questions, setQuestions] = useState<Question[]>([]);
   const [applicantName, setApplicantName] = useState('');
@@ -48,24 +59,14 @@ export default function ScholarshipPage() {
   useEffect(() => {
     setProgramSections({
       'Online PG': [
-        { name: 'MBA' },
-        { name: 'MCA' },
-        { name: 'M.Com' },
-        { name: 'M.Sc' },
-        { name: 'MA' },
+        { name: 'MBA' }, { name: 'MCA' }, { name: 'M.Com' }, { name: 'M.Sc' }, { name: 'MA' },
       ],
       'Online UG': [
-        { name: 'BBA' },
-        { name: 'BCA' },
-        { name: 'B.Com' },
-        { name: 'B.Sc' },
-        { name: 'BA' },
+        { name: 'BBA' }, { name: 'BCA' }, { name: 'B.Com' }, { name: 'B.Sc' }, { name: 'BA' },
       ],
       'Credit Transfer Programme': [
-        { name: 'B.Tech Credit Transfer' },
-        { name: 'UG Credit Transfer' },
-        { name: 'PG Credit Transfer' },
-        { name: 'Diploma Credit Transfer' },
+        { name: 'B.Tech Credit Transfer' }, { name: 'UG Credit Transfer' },
+        { name: 'PG Credit Transfer' }, { name: 'Diploma Credit Transfer' },
       ],
     });
     setProgramCategories(['Online PG', 'Online UG', 'Credit Transfer Programme']);
@@ -81,17 +82,26 @@ export default function ScholarshipPage() {
         }
       })
       .catch(() => {});
+
+    fetch('/api/public/scholarship/content')
+      .then(r => r.ok ? r.json() : {})
+      .then((d: any) => {
+        if (d?.termsAndConditions) setTermsAndConditions(d.termsAndConditions);
+      })
+      .catch(() => {});
   }, []);
 
-  const filteredCourses = form.program
-    ? programSections[form.program] ?? []
-    : [];
+  const filteredCourses = form.program ? programSections[form.program] ?? [] : [];
 
   const handleProgramChange = (val: string) => {
     setForm(f => ({ ...f, program: val, course: '' }));
   };
 
   const submitForm = async () => {
+    if (!termsAccepted) {
+      setFormError('Please read and accept the Terms & Conditions to continue.');
+      return;
+    }
     const { name, phone, email, course, program } = form;
     if (!name.trim() || !phone.trim() || !email.trim() || !course || !program) {
       setFormError('Please fill in all fields.');
@@ -111,13 +121,7 @@ export default function ScholarshipPage() {
       const res = await fetch('/api/public/scholarship/apply', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          name,
-          phone,
-          email,
-          course,
-          university: program,
-        }),
+        body: JSON.stringify({ name, phone, email, course, university: program }),
       });
       const data = await res.json();
       if (!res.ok) { setFormError(data.error || 'Something went wrong.'); return; }
@@ -190,6 +194,11 @@ export default function ScholarshipPage() {
     const validDate = new Date(voucher.validUntil).toLocaleDateString('en-IN', {
       day: 'numeric', month: 'long', year: 'numeric',
     });
+    const brand = getVoucherBrand(university);
+    const brandHtml = brand
+      ? `<div class="brand">${brand}</div>`
+      : '';
+
     const html = `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -215,6 +224,7 @@ export default function ScholarshipPage() {
   .det-v{font-size:.92rem;color:#002060;font-weight:700}
   .valid{text-align:center;color:#94a3b8;font-size:.8rem;margin-top:20px}
   .badge{display:inline-block;background:#fff5f0;border:1.5px solid rgba(232,80,42,.3);color:#E8502A;font-size:.78rem;font-weight:700;padding:3px 12px;border-radius:999px;margin-bottom:18px}
+  .brand{text-align:center;font-size:.85rem;font-weight:700;color:#002060;margin-top:16px;letter-spacing:.04em;padding-top:12px;border-top:1px solid #e2e8f0}
   @media print{body{background:#fff;padding:0} .wrap{box-shadow:none}}
 </style>
 </head>
@@ -240,6 +250,7 @@ export default function ScholarshipPage() {
   </div>
   <div class="divider"></div>
   <div class="valid">Valid until: <strong>${validDate}</strong> &nbsp;·&nbsp; ${voucher.validityDays} days from issue &nbsp;·&nbsp; Present at the time of admission</div>
+  ${brandHtml}
 </div>
 <script>window.onload=()=>{window.print()}</script>
 </body>
@@ -263,9 +274,52 @@ export default function ScholarshipPage() {
 
   /* ══════════════════════════ RENDER ══════════════════════════ */
 
+  /* ── T&C MODAL ─────────────────────────────────────────────── */
+  const TnCModal = () => (
+    <div className={styles.tncOverlay} onClick={() => setShowTnC(false)}>
+      <div className={styles.tncModal} onClick={e => e.stopPropagation()}>
+        <div className={styles.tncHeader}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            <FileText size={18} style={{ color: '#E8502A' }} />
+            <h3 className={styles.tncTitle}>Terms &amp; Conditions</h3>
+          </div>
+          <button className={styles.tncClose} onClick={() => setShowTnC(false)}>
+            <X size={18} />
+          </button>
+        </div>
+        <div className={styles.tncBody}>
+          {termsAndConditions
+            ? termsAndConditions.split('\n').filter(l => l.trim()).map((line, i) => (
+                <p key={i} className={styles.tncLine}>{line}</p>
+              ))
+            : <p className={styles.tncLine}>No terms and conditions set.</p>}
+        </div>
+        <div className={styles.tncFooter}>
+          <label className={styles.tncCheckLabel}>
+            <input
+              type="checkbox"
+              checked={termsAccepted}
+              onChange={e => setTermsAccepted(e.target.checked)}
+              className={styles.tncCheckbox}
+            />
+            <span>I have read and agree to the Terms &amp; Conditions</span>
+          </label>
+          <button
+            className={styles.tncAcceptBtn}
+            onClick={() => { if (termsAccepted) setShowTnC(false); }}
+            disabled={!termsAccepted}
+          >
+            {termsAccepted ? 'Continue' : 'Accept to Continue'}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+
   /* ── LANDING ───────────────────────────────────────────────── */
   if (phase === 'landing') return (
     <main className={styles.page}>
+      {showTnC && <TnCModal />}
 
       {/* ── TICKER BAR ────────────────────────────────────────── */}
       <div className={styles.tickerBar}>
@@ -332,13 +386,13 @@ export default function ScholarshipPage() {
           </div>
         </div>
       </section>
-
     </main>
   );
 
   /* ── FORM PHASE ─────────────────────────────────────────────── */
   if (phase === 'form') return (
     <main className={styles.page}>
+      {showTnC && <TnCModal />}
       <section className={styles.formSection}>
         <div className={styles.formCard}>
           <button className={styles.formBack} onClick={() => setPhase('landing')}>
@@ -419,6 +473,27 @@ export default function ScholarshipPage() {
             </div>
           </div>
 
+          {/* Terms & Conditions */}
+          <div className={styles.tncRow}>
+            <input
+              type="checkbox"
+              id="tnc-check"
+              checked={termsAccepted}
+              onChange={e => setTermsAccepted(e.target.checked)}
+              className={styles.tncCheckbox}
+            />
+            <label htmlFor="tnc-check" className={styles.tncInlineLabel}>
+              I agree to the{' '}
+              <button
+                type="button"
+                className={styles.tncLink}
+                onClick={() => setShowTnC(true)}
+              >
+                Terms &amp; Conditions
+              </button>
+            </label>
+          </div>
+
           {formError && <div className={styles.formError}>{formError}</div>}
 
           <button
@@ -486,75 +561,82 @@ export default function ScholarshipPage() {
   );
 
   /* ── RESULT PHASE ────────────────────────────────────────────── */
-  if (phase === 'result' && result) return (
-    <main className={styles.page}>
-      <section className={styles.resultSection}>
-        <div className={styles.resultCard}>
+  if (phase === 'result' && result) {
+    const voucherBrand = getVoucherBrand(result.university);
+    return (
+      <main className={styles.page}>
+        <section className={styles.resultSection}>
+          <div className={styles.resultCard}>
 
-          <div className={result.passed ? styles.scoreCirclePass : styles.scoreCircleFail}>
-            <span className={styles.scoreNum}>{result.score}/{result.total}</span>
-            <span className={styles.scoreLabel}>Your Score</span>
-          </div>
+            <div className={result.passed ? styles.scoreCirclePass : styles.scoreCircleFail}>
+              <span className={styles.scoreNum}>{result.score}/{result.total}</span>
+              <span className={styles.scoreLabel}>Your Score</span>
+            </div>
 
-          <h2 className={styles.resultTitle}>
-            {result.passed
-              ? '🎉 Congratulations! You\'ve Earned a Scholarship!'
-              : 'Keep Practising — Almost There!'}
-          </h2>
-          <p className={styles.resultSub}>
-            {result.applicantName}, you answered <strong>{result.score}</strong> out of <strong>{result.total}</strong> questions correctly.
-          </p>
+            <h2 className={styles.resultTitle}>
+              {result.passed
+                ? '🎉 Congratulations! You\'ve Earned a Scholarship!'
+                : 'Keep Practising — Almost There!'}
+            </h2>
+            <p className={styles.resultSub}>
+              {result.applicantName}, you answered <strong>{result.score}</strong> out of <strong>{result.total}</strong> questions correctly.
+            </p>
 
-          {result.voucher ? (
-            <div className={styles.voucherBox}>
-              <div className={styles.voucherTop}>
-                <Tag size={20} /> <span>Your Scholarship Voucher</span>
-              </div>
-              <div className={styles.voucherLabel}>{result.voucher.label}</div>
-              <div className={styles.voucherAmount}>₹{result.voucher.amount.toLocaleString('en-IN')}</div>
-              <div className={styles.voucherSubLabel}>Scholarship Discount</div>
+            {result.voucher ? (
+              <div className={styles.voucherBox}>
+                <div className={styles.voucherTop}>
+                  <Tag size={20} /> <span>Your Scholarship Voucher</span>
+                </div>
+                <div className={styles.voucherLabel}>{result.voucher.label}</div>
+                <div className={styles.voucherAmount}>₹{result.voucher.amount.toLocaleString('en-IN')}</div>
+                <div className={styles.voucherSubLabel}>Scholarship Discount</div>
 
-              <div className={styles.voucherCodeWrap}>
-                <code className={styles.voucherCode}>{result.voucher.code}</code>
-                <button className={styles.copyBtn} onClick={copyCode}>
-                  {copied ? <Check size={16} /> : <Copy size={16} />}
-                  {copied ? 'Copied!' : 'Copy'}
+                <div className={styles.voucherCodeWrap}>
+                  <code className={styles.voucherCode}>{result.voucher.code}</code>
+                  <button className={styles.copyBtn} onClick={copyCode}>
+                    {copied ? <Check size={16} /> : <Copy size={16} />}
+                    {copied ? 'Copied!' : 'Copy'}
+                  </button>
+                </div>
+
+                <div className={styles.voucherValidity}>
+                  <Clock size={14} />
+                  Valid until: <strong>{formatDate(result.voucher.validUntil)}</strong>
+                  &nbsp;({result.voucher.validityDays} days)
+                </div>
+
+                <button className={styles.downloadBtn} onClick={downloadVoucher}>
+                  <Download size={16} /> Download Voucher
                 </button>
+
+                <p className={styles.voucherInstruction}>
+                  Present this voucher code at the time of admission to avail your scholarship discount.
+                </p>
+
+                {voucherBrand && (
+                  <div className={styles.voucherBrand}>{voucherBrand}</div>
+                )}
               </div>
-
-              <div className={styles.voucherValidity}>
-                <Clock size={14} />
-                Valid until: <strong>{formatDate(result.voucher.validUntil)}</strong>
-                &nbsp;({result.voucher.validityDays} days)
+            ) : (
+              <div className={styles.noVoucherBox}>
+                <p>You scored {result.score} out of {result.total}.</p>
+                <p>
+                  You need at least{' '}
+                  <strong>{result.minCorrectToPass ?? Math.ceil((result.passingScorePercent ?? 50) / 100 * result.total)} correct answer{(result.minCorrectToPass ?? 1) !== 1 ? 's' : ''}</strong>{' '}
+                  ({result.passingScorePercent ?? 50}% passing score) to earn a scholarship voucher.
+                  Better luck next time!
+                </p>
               </div>
+            )}
 
-              <button className={styles.downloadBtn} onClick={downloadVoucher}>
-                <Download size={16} /> Download Voucher
-              </button>
-
-              <p className={styles.voucherInstruction}>
-                Present this voucher code at the time of admission to avail your scholarship discount.
-              </p>
-            </div>
-          ) : (
-            <div className={styles.noVoucherBox}>
-              <p>You scored {result.score} out of {result.total}.</p>
-              <p>
-                You need at least{' '}
-                <strong>{result.minCorrectToPass ?? Math.ceil((result.passingScorePercent ?? 50) / 100 * result.total)} correct answer{(result.minCorrectToPass ?? 1) !== 1 ? 's' : ''}</strong>{' '}
-                ({result.passingScorePercent ?? 50}% passing score) to earn a scholarship voucher.
-                Better luck next time!
-              </p>
-            </div>
-          )}
-
-          <button className={styles.retryBtn} onClick={() => setPhase('landing')}>
-            Back to Scholarship Page
-          </button>
-        </div>
-      </section>
-    </main>
-  );
+            <button className={styles.retryBtn} onClick={() => setPhase('landing')}>
+              Back to Scholarship Page
+            </button>
+          </div>
+        </section>
+      </main>
+    );
+  }
 
   return null;
 }

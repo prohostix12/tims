@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import connectDB from '@/lib/db';
 import { ScholarshipApplication } from '@/models/ScholarshipApplication';
 import { ScholarshipQuestion } from '@/models/ScholarshipQuestion';
+import { ScholarshipConfig } from '@/models/ScholarshipConfig';
 import crypto from 'crypto';
 
 export const dynamic = 'force-dynamic';
@@ -41,7 +42,13 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Exam questions are not ready yet.' }, { status: 503 });
     }
 
+    const config = await ScholarshipConfig.findOne({}) || await ScholarshipConfig.create({});
+    const questionsPerExam: number = config.totalQuestionsForScore ?? 5;
+
+    // Shuffle the full pool, then take the first N — each student gets a different random subset
     const shuffled = shuffle(allQuestions);
+    const selected = shuffled.slice(0, Math.min(questionsPerExam, shuffled.length));
+
     const token = crypto.randomBytes(24).toString('hex');
 
     await ScholarshipApplication.create({
@@ -51,7 +58,7 @@ export async function POST(req: Request) {
       course: course.trim(),
       university: university.trim(),
       token,
-      questionIds: shuffled.map((q: any) => q._id),
+      questionIds: selected.map((q: any) => q._id),
     });
 
     return NextResponse.json({ token });

@@ -279,14 +279,14 @@
 /* ── Exam Section ─────────────────────────────────────────── */
 .examSection {
   min-height: 100vh; display: flex;
-  align-items: flex-start; justify-content: center;
-  padding: 5rem 1.5rem 4rem;
+  align-items: center; justify-content: center;
+  padding: 2rem 1.5rem;
   background: linear-gradient(160deg, #fff8f5 0%, #fdf0ea 60%, #fff 100%);
 }
 
 .examCard {
   background: #fff; border: 1.5px solid rgba(232,80,42,.12); border-radius: 24px;
-  padding: 2.5rem 2.2rem; width: 100%; max-width: 640px;
+  padding: 1.5rem 1.75rem; width: 100%; max-width: 640px;
   box-shadow: 0 8px 40px rgba(232,80,42,.1);
 }
 
@@ -298,8 +298,8 @@
 .qCounter { font-weight: 800; color: #E8502A; font-size: .9rem; }
 
 .progressWrap {
-  height: 7px; background: rgba(232,80,42,.12); border-radius: 999px;
-  overflow: hidden; margin-bottom: 2.2rem;
+  height: 6px; background: rgba(232,80,42,.12); border-radius: 999px;
+  overflow: hidden; margin-bottom: 1.2rem;
 }
 .progressBar {
   height: 100%;
@@ -308,16 +308,16 @@
 }
 
 .questionText {
-  font-size: 1.2rem; font-weight: 800; line-height: 1.5;
-  margin: 0 0 1.75rem; color: #002060;
+  font-size: 1.1rem; font-weight: 800; line-height: 1.5;
+  margin: 0 0 1rem; color: #002060;
 }
 
-.optionsList { display: flex; flex-direction: column; gap: .75rem; margin-bottom: 1.75rem; }
+.optionsList { display: flex; flex-direction: column; gap: .55rem; margin-bottom: 1.1rem; }
 
 .optionBtn {
-  display: flex; align-items: center; gap: .9rem; width: 100%;
-  background: #f8fafc; border: 1.5px solid #e2e8f0; border-radius: 14px;
-  padding: .95rem 1.1rem; color: #002060; font-size: .97rem; cursor: pointer;
+  display: flex; align-items: center; gap: .8rem; width: 100%;
+  background: #f8fafc; border: 1.5px solid #e2e8f0; border-radius: 12px;
+  padding: .7rem 1rem; color: #002060; font-size: .93rem; cursor: pointer;
   text-align: left; font-family: inherit;
   transition: background .15s, border-color .15s, transform .1s;
 }
@@ -460,6 +460,81 @@
 }
 .retryBtn:hover { border-color: #E8502A; color: #E8502A; background: #fff5f2; }
 
+/* ── Voucher Brand Label ──────────────────────────────────── */
+.voucherBrand {
+  font-size: .88rem; font-weight: 800; color: #002060;
+  letter-spacing: .05em; text-transform: uppercase;
+  padding-top: .75rem; border-top: 1px solid rgba(232,80,42,.2);
+  width: 100%; text-align: center; margin-top: .25rem;
+}
+
+/* ── T&C Inline Row ──────────────────────────────────────── */
+.tncRow {
+  display: flex; align-items: center; gap: .55rem;
+  margin-top: .9rem; margin-bottom: .1rem;
+}
+.tncCheckbox {
+  width: 16px; height: 16px; accent-color: #E8502A;
+  cursor: pointer; flex-shrink: 0;
+}
+.tncInlineLabel {
+  font-size: .8rem; color: #475569; font-weight: 500; cursor: pointer;
+}
+.tncLink {
+  background: none; border: none; padding: 0;
+  color: #E8502A; font-weight: 700; font-size: .8rem;
+  cursor: pointer; text-decoration: underline; font-family: inherit;
+}
+.tncLink:hover { color: #c93f1e; }
+
+/* ── T&C Modal ───────────────────────────────────────────── */
+.tncOverlay {
+  position: fixed; inset: 0; background: rgba(0,0,0,.55); z-index: 1000;
+  display: flex; align-items: center; justify-content: center; padding: 1rem;
+}
+.tncModal {
+  background: #fff; border-radius: 18px; width: 100%; max-width: 560px;
+  max-height: 85vh; display: flex; flex-direction: column;
+  box-shadow: 0 20px 60px rgba(0,0,0,.2);
+  border: 1.5px solid rgba(232,80,42,.15);
+}
+.tncHeader {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 1.25rem 1.5rem; border-bottom: 1px solid #e2e8f0;
+  flex-shrink: 0;
+}
+.tncTitle { margin: 0; font-size: 1rem; font-weight: 800; color: #002060; }
+.tncClose {
+  background: #f1f5f9; border: none; border-radius: 50%;
+  width: 32px; height: 32px; display: flex; align-items: center;
+  justify-content: center; cursor: pointer; color: #64748b;
+  flex-shrink: 0; transition: background .15s, color .15s;
+}
+.tncClose:hover { background: #fde8df; color: #E8502A; }
+.tncBody {
+  flex: 1; overflow-y: auto; padding: 1.25rem 1.5rem;
+  display: flex; flex-direction: column; gap: .55rem;
+}
+.tncLine {
+  font-size: .87rem; color: #374151; line-height: 1.7; margin: 0;
+}
+.tncFooter {
+  padding: 1.1rem 1.5rem; border-top: 1px solid #e2e8f0;
+  display: flex; flex-direction: column; gap: .8rem; flex-shrink: 0;
+}
+.tncCheckLabel {
+  display: flex; align-items: center; gap: .6rem;
+  font-size: .87rem; color: #374151; font-weight: 600; cursor: pointer;
+}
+.tncAcceptBtn {
+  background: #E8502A; color: #fff; border: none;
+  padding: .75rem 1.5rem; border-radius: 10px;
+  font-size: .92rem; font-weight: 700; cursor: pointer; font-family: inherit;
+  transition: background .2s, opacity .2s;
+}
+.tncAcceptBtn:disabled { opacity: .45; cursor: not-allowed; }
+.tncAcceptBtn:not(:disabled):hover { background: #c93f1e; }
+
 /* ── Responsive ───────────────────────────────────────────── */
 @media (max-width: 900px) {
   .featureChips { justify-content: center; }
@@ -470,7 +545,7 @@
   .heroTitle { font-size: 1.9rem; }
   .howSection { padding: 3.5rem 1.25rem; }
   .steps { grid-template-columns: 1fr; gap: 2.5rem; }
-  .examCard { padding: 1.75rem 1.2rem; }
+  .examCard { padding: 1.1rem 1rem; }
   .formCard { padding: 1.4rem 1.1rem; }
   .formRow { grid-template-columns: 1fr; }
   .voucherBox { padding: 1.5rem 1.1rem; }

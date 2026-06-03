@@ -10,7 +10,7 @@ import {
 /* ── Types ──────────────────────────────────────────────────── */
 interface ContentForm {
   badge: string; heading: string; subheading: string;
-  description: string; buttonText: string;
+  description: string; buttonText: string; termsAndConditions: string;
 }
 
 interface OptionForm { text: string; isCorrect: boolean }
@@ -26,6 +26,7 @@ interface ConfigForm {
   eligibleCourses: string[];
   partnerCompanies: PartnerCompany[];
   passingScore: number;
+  totalQuestionsForScore: number;
 }
 
 type Tab = 'content' | 'questions' | 'config' | 'applications';
@@ -46,7 +47,7 @@ export default function AdminScholarshipPage() {
 
   /* Content */
   const [content, setContent] = useState<ContentForm>({
-    badge: '', heading: '', subheading: '', description: '', buttonText: '',
+    badge: '', heading: '', subheading: '', description: '', buttonText: '', termsAndConditions: '',
   });
   const [contentSaving, setContentSaving] = useState(false);
   const [contentMsg, setContentMsg] = useState('');
@@ -63,7 +64,7 @@ export default function AdminScholarshipPage() {
   /* Config */
   const [config, setConfig] = useState<ConfigForm>({
     tiers: [], voucherValidityDays: 90, eligibleCourses: [],
-    partnerCompanies: [], passingScore: 50,
+    partnerCompanies: [], passingScore: 50, totalQuestionsForScore: 5,
   });
   const [configSaving, setConfigSaving] = useState(false);
   const [configMsg, setConfigMsg] = useState('');
@@ -87,6 +88,7 @@ export default function AdminScholarshipPage() {
     fetch('/api/admin/scholarship/content').then(r => r.json()).then(d => setContent({
       badge: d.badge || '', heading: d.heading || '', subheading: d.subheading || '',
       description: d.description || '', buttonText: d.buttonText || '',
+      termsAndConditions: d.termsAndConditions || '',
     }));
     fetchQuestions();
     fetch('/api/admin/scholarship/config').then(r => r.json()).then(d => setConfig({
@@ -95,6 +97,7 @@ export default function AdminScholarshipPage() {
       eligibleCourses: d.eligibleCourses || [],
       partnerCompanies: d.partnerCompanies || [],
       passingScore: d.passingScore ?? 50,
+      totalQuestionsForScore: d.totalQuestionsForScore ?? 5,
     }));
   }, []);
 
@@ -289,7 +292,7 @@ export default function AdminScholarshipPage() {
               />
             </div>
           ))}
-          <div style={{ marginBottom: '1.5rem' }}>
+          <div style={{ marginBottom: '1.25rem' }}>
             <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 600, color: '#374151', marginBottom: '0.4rem' }}>Description</label>
             <textarea
               value={content.description}
@@ -297,6 +300,22 @@ export default function AdminScholarshipPage() {
               rows={5}
               className={styles.input}
               style={{ width: '100%', resize: 'vertical' }}
+            />
+          </div>
+          <div style={{ marginBottom: '1.5rem' }}>
+            <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 600, color: '#374151', marginBottom: '0.4rem' }}>
+              Terms &amp; Conditions
+              <span style={{ fontWeight: 400, color: '#94a3b8', marginLeft: '0.5rem', fontSize: '0.78rem' }}>
+                (one rule per line — shown to students before they start the exam)
+              </span>
+            </label>
+            <textarea
+              value={content.termsAndConditions}
+              onChange={e => setContent(c => ({ ...c, termsAndConditions: e.target.value }))}
+              rows={10}
+              className={styles.input}
+              style={{ width: '100%', resize: 'vertical', fontFamily: 'inherit', fontSize: '0.88rem' }}
+              placeholder="1. The voucher is valid for 90 days from the date of issue.&#10;2. It is non-transferable and can be used only once.&#10;..."
             />
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
@@ -516,7 +535,7 @@ export default function AdminScholarshipPage() {
           {/* Voucher Validity & Passing Score */}
           <div style={{ background: '#fff', borderRadius: '12px', padding: '1.75rem', border: '1px solid #e2e8f0' }}>
             <h3 style={{ margin: '0 0 1rem', fontWeight: 700 }}>Voucher & Exam Settings</h3>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '1rem' }}>
               <div>
                 <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 600, marginBottom: '0.4rem', color: '#374151' }}>Voucher Validity (days)</label>
                 <input type="number" value={config.voucherValidityDays}
@@ -528,6 +547,15 @@ export default function AdminScholarshipPage() {
                 <input type="number" value={config.passingScore}
                   onChange={e => setConfig(c => ({ ...c, passingScore: Number(e.target.value) }))}
                   className={styles.input} style={{ width: '100%' }} min={0} max={100} />
+              </div>
+              <div>
+                <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 600, marginBottom: '0.4rem', color: '#374151' }}>Questions per Exam</label>
+                <input type="number" value={config.totalQuestionsForScore}
+                  onChange={e => setConfig(c => ({ ...c, totalQuestionsForScore: Number(e.target.value) }))}
+                  className={styles.input} style={{ width: '100%' }} min={1} />
+                <p style={{ margin: '0.3rem 0 0', fontSize: '0.75rem', color: '#94a3b8' }}>
+                  How many questions each student gets (picked randomly from the pool)
+                </p>
               </div>
             </div>
           </div>
