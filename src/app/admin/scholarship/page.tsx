@@ -131,13 +131,29 @@ export default function AdminScholarshipPage() {
   /* ── Question helpers ────────────────────────────────────── */
   function openNew() {
     setEditingId(null);
-    setEditQ({ ...BLANK_Q, order: questions.filter(q => q.category === activeQCategory).length + 1, category: activeQCategory });
+    const qCount = questions.filter(q => (q.category || 'General') === activeQCategory).length;
+    setEditQ({ 
+      question: '', 
+      order: qCount + 1, 
+      isActive: true, 
+      category: activeQCategory,
+      options: [
+        { text: '', isCorrect: false },
+        { text: '', isCorrect: false },
+        { text: '', isCorrect: false },
+        { text: '', isCorrect: false },
+      ],
+    });
     setQMsg('');
   }
 
   function openEdit(q: QuestionForm) {
     setEditingId(q._id || null);
-    setEditQ({ ...q, options: q.options.map(o => ({ ...o })) });
+    setEditQ({ 
+      ...q, 
+      category: q.category || 'General',
+      options: q.options.map(o => ({ ...o })) 
+    });
     setQMsg('');
   }
 
@@ -170,19 +186,43 @@ export default function AdminScholarshipPage() {
     if (!editQ.question.trim()) { setQMsg('Question text is required.'); return; }
     if (editQ.options.some(o => !o.text.trim())) { setQMsg('All options must have text.'); return; }
     if (!editQ.options.some(o => o.isCorrect)) { setQMsg('Mark at least one option as correct.'); return; }
-    setQSaving(true); setQMsg('');
+    if (!editQ.category) { setQMsg('Please select a question bank/category.'); return; }
+    
+    setQSaving(true); 
+    setQMsg('');
     try {
+      const questionData = {
+        question: editQ.question.trim(),
+        options: editQ.options,
+        order: Number(editQ.order),
+        isActive: editQ.isActive,
+        category: editQ.category,
+      };
+      
       const url = editingId
         ? `/api/admin/scholarship/questions/${editingId}`
         : '/api/admin/scholarship/questions';
-      await fetch(url, {
+      
+      const res = await fetch(url, {
         method: editingId ? 'PUT' : 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(editQ),
+        body: JSON.stringify(questionData),
       });
-      setEditQ(null); setEditingId(null);
+      
+      if (!res.ok) {
+        const errData = await res.json();
+        setQMsg(`Error: ${errData.error || 'Failed to save'}`);
+        return;
+      }
+      
+      setEditQ(null); 
+      setEditingId(null);
       fetchQuestions();
-    } catch { setQMsg('Error saving question.'); }
+      setQMsg('Question saved successfully!');
+      setTimeout(() => setQMsg(''), 2000);
+    } catch (e: any) { 
+      setQMsg(`Error saving question: ${e.message}`); 
+    }
     finally { setQSaving(false); }
   }
 
