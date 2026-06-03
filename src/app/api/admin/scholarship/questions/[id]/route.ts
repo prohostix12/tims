@@ -4,7 +4,7 @@ import { ScholarshipQuestion } from '@/models/ScholarshipQuestion';
 
 export const dynamic = 'force-dynamic';
 
-const VALID_CATEGORIES = ['Online UG', 'Online PG', 'Credit Transfer', 'General'] as const;
+const VALID_CATEGORIES = ['Online UG', 'Online PG', 'Credit Transfer', 'General'];
 
 export async function PUT(req: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
@@ -12,12 +12,24 @@ export async function PUT(req: Request, { params }: { params: Promise<{ id: stri
     const { id } = await params;
     const body = await req.json();
 
-    // Keep the category as-is if valid; otherwise default to General
-    if (!VALID_CATEGORIES.includes(body.category)) {
-      body.category = 'General';
-    }
+    const category = VALID_CATEGORIES.includes(body.category) ? body.category : 'General';
 
-    const q = await ScholarshipQuestion.findByIdAndUpdate(id, body, { new: true });
+    // Use updateOne on the raw collection to guarantee category is always stored
+    await ScholarshipQuestion.collection.updateOne(
+      { _id: new (await import('mongoose')).Types.ObjectId(id) },
+      {
+        $set: {
+          question: body.question,
+          options: body.options,
+          order: Number(body.order) || 0,
+          isActive: body.isActive !== false,
+          category,
+          updatedAt: new Date(),
+        },
+      }
+    );
+
+    const q = await ScholarshipQuestion.findById(id).lean();
     if (!q) return NextResponse.json({ error: 'Not found' }, { status: 404 });
     return NextResponse.json(q);
   } catch (error: any) {

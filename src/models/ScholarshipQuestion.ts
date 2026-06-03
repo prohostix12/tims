@@ -28,6 +28,11 @@ const ScholarshipQuestionSchema: Schema = new Schema({
   category: { type: String, enum: ['Online UG', 'Online PG', 'Credit Transfer', 'General'], default: 'General' },
 }, { timestamps: true });
 
+// If the cached model is missing the category path (stale HMR cache), force re-registration
+if (mongoose.models.ScholarshipQuestion && !mongoose.models.ScholarshipQuestion.schema.path('category')) {
+  delete mongoose.models.ScholarshipQuestion;
+}
+
 export const ScholarshipQuestion =
-  mongoose.models.ScholarshipQuestion ||
+  (mongoose.models.ScholarshipQuestion as mongoose.Model<IScholarshipQuestion>) ||
   mongoose.model<IScholarshipQuestion>('ScholarshipQuestion', ScholarshipQuestionSchema);
