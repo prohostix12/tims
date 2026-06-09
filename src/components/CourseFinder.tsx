@@ -278,7 +278,7 @@ function EnquiryGate({ onSuccess }: { onSuccess: (data: { name: string, email: s
         <div className="cf-field">
           <span className="cf-field-icon"><IconPhone /></span>
           <div className="cf-phone-group">
-            <select 
+            <select
               className="cf-country-select"
               value={form.countryCode}
               onChange={e => setForm({ ...form, countryCode: e.target.value })}
@@ -291,14 +291,14 @@ function EnquiryGate({ onSuccess }: { onSuccess: (data: { name: string, email: s
               <option value="+974">+974 (QA)</option>
               <option value="+973">+973 (BH)</option>
             </select>
-            <input 
-              className="cf-input cf-phone-input" 
-              type="tel" 
-              placeholder="10-Digit Phone Number" 
-              required 
+            <input
+              className="cf-input cf-phone-input"
+              type="tel"
+              placeholder="10-Digit Phone Number"
+              required
               maxLength={10}
-              value={form.phone} 
-              onChange={e => setForm({ ...form, phone: e.target.value.replace(/\D/g, '').slice(0, 10) })} 
+              value={form.phone}
+              onChange={e => setForm({ ...form, phone: e.target.value.replace(/\D/g, '').slice(0, 10) })}
             />
           </div>
         </div>
@@ -351,6 +351,18 @@ export const FALLBACK_QUESTIONS = [
       { value: 'working', label: 'Working Professional' },
       { value: 'fresher', label: 'Fresher / Job Seeking' },
       { value: 'other',   label: 'Homemaker / Other' },
+    ],
+  },
+  {
+    _id: 'fq4', field: 'field', order: 4, isActive: true,
+    question: 'Which field of study interests you?',
+    options: [
+      { value: 'commerce',   label: 'Commerce',    categories: ['B.Com', 'M.Com', 'BBA', 'MBA', 'Commerce'] },
+      { value: 'arts',       label: 'Arts',         categories: ['BA', 'MA', 'Arts'] },
+      { value: 'science',    label: 'Science',      categories: ['B.Sc', 'M.Sc', 'Science'] },
+      { value: 'technology', label: 'Technology',   categories: ['BCA', 'MCA', 'B.Tech', 'M.Tech', 'Computer'] },
+      { value: 'management', label: 'Management',   categories: ['MBA', 'BBA', 'PGDM', 'Management'] },
+      { value: 'law',        label: 'Law',          categories: ['LLB', 'LLM', 'Law'] },
     ],
   },
   {
@@ -418,22 +430,23 @@ export const FALLBACK_QUESTIONS = [
 
 // ── Step label map ─────────────────────────────────────────────────────────────
 const STEP_LABELS = [
-  'Course Interest',
-  'Qualification',
-  'Current Status',
-  'Specialization',
-  'Career Goal',
-  'University Location',
-  'University Type',
-  'Experience',
-  'Budget'
+  'Course Interest',     // step 1 – what_course_are_you_interested
+  'Qualification',       // step 2 – education
+  'Current Status',      // step 3 – current_status
+  'Field of Study',      // step 4 – field
+  'Specialization',      // step 5 – specialization
+  'Career Goal',         // step 6 – goal
+  'University Location', // step 7 – pref_university_location
+  'University Type',     // step 8 – university_type
+  'Experience',          // step 9 – experience
+  'Budget',              // step 10 – budget
 ];
 
 export default function CourseFinder() {
   const [isOpen, setIsOpen] = useState(false);
   const [gateCleared, setGateCleared] = useState(false);
   const [userData, setUserData] = useState({ name: '', email: '', phone: '' });
-  const [questions, setQuestions] = useState<any[]>([]);
+  const [questions, setQuestions] = useState<any[]>(FALLBACK_QUESTIONS);
   const [step, setStep] = useState(1);
   const [answers, setAnswers] = useState<Record<string, string>>({});
   const [results, setResults] = useState<any[]>([]);
@@ -442,7 +455,7 @@ export default function CourseFinder() {
   const [loading, setLoading] = useState(false);
   const [showResults, setShowResults] = useState(false);
   const [animate, setAnimate] = useState(true);
-  const [questionsLoading, setQuestionsLoading] = useState(false);
+  const [questionsLoading] = useState(false);
 
   useEffect(() => {
     const handleOpen = () => setIsOpen(true);
@@ -461,34 +474,35 @@ export default function CourseFinder() {
     return () => document.removeEventListener('keydown', fn);
   }, [isOpen]);
 
+  // Pre-fetch DB questions on mount with a 3s timeout.
+  // FALLBACK_QUESTIONS are already loaded as default state — zero wait for users.
   useEffect(() => {
-    if (!isOpen) return;
-    setQuestionsLoading(true);
-    fetch('/api/public/course-finder-questions', { cache: 'no-store' })
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), 3000);
+    fetch('/api/public/course-finder-questions', { cache: 'no-store', signal: controller.signal })
       .then(r => {
-        if (!r.ok) throw new Error('Not found');
+        if (!r.ok) throw new Error();
         const ct = r.headers.get('content-type');
-        if (!ct || !ct.includes('application/json')) throw new Error('Not JSON');
+        if (!ct?.includes('application/json')) throw new Error();
         return r.json();
       })
       .then(data => {
-        const dbArr = Array.isArray(data) ? data : [];
-        if (dbArr.length > 0) {
-          const sorted = [...dbArr].sort((a: any, b: any) => (a.order ?? 0) - (b.order ?? 0));
-          setQuestions(sorted);
-        } else {
-          setQuestions(FALLBACK_QUESTIONS);
+        const arr = Array.isArray(data) ? data : [];
+        if (arr.length > 0) {
+          setQuestions([...arr].sort((a: any, b: any) => (a.order ?? 0) - (b.order ?? 0)));
         }
+        // If DB is empty, keep FALLBACK_QUESTIONS already in state
       })
-      .catch(() => setQuestions(FALLBACK_QUESTIONS))
-      .finally(() => setQuestionsLoading(false));
-  }, [isOpen]);
+      .catch(() => { /* keep FALLBACK_QUESTIONS */ })
+      .finally(() => clearTimeout(timer));
+    return () => { controller.abort(); clearTimeout(timer); };
+  }, []);
 
   const closeModal = () => { setIsOpen(false); reset(); };
   const reset = () => {
     setGateCleared(false); setUserData({ name: '', email: '', phone: '' }); setStep(1);
     setAnswers({}); setResults([]); setFallbackResults([]); setMatchedUniversities([]); setShowResults(false); setAnimate(true);
-    setQuestions([]);
+    // Keep questions in state — they were fetched on mount and don't need reloading
   };
 
   const handleOption = (field: string, value: string) => {
@@ -507,32 +521,20 @@ export default function CourseFinder() {
   const findCourses = async () => {
     setLoading(true);
     try {
-      // Fire lead save in background — don't await it
+      // Save quiz answers as lead in background
       const formattedAnswers = questions.map(q => { const opt = q.options.find((o: any) => o.value === answers[q.field]); return opt ? opt.label : ''; }).filter(Boolean).join(' | ');
       fetch('/api/leads', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ name: userData.name, email: userData.email, phone: userData.phone || 'N/A', source: 'Course Finder Quiz', description: `Preferences: ${formattedAnswers}` }) }).catch(() => {});
 
-      // Main path: server-side filtered query with timeout
       const controller = new AbortController();
       const timeout = setTimeout(() => controller.abort(), 8000);
 
-      // Try primary API endpoint
-      let res = await fetch('/api/public/course-finder-results', {
+      const res = await fetch('/api/public/course-finder-results', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ answers, questions }),
         signal: controller.signal,
       }).catch(() => null);
 
-      // If primary fails, fallback to legacy endpoint
-      if (!res || !res.ok) {
-        console.warn('Primary results endpoint failed, trying fallback');
-        res = await fetch('/api/course-finder-results', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ answers, questions }),
-          signal: controller.signal,
-        }).catch(() => null);
-      }
       clearTimeout(timeout);
 
       let programs: any[] = [];
@@ -541,8 +543,17 @@ export default function CourseFinder() {
         const data = await res.json();
         programs = data.programs || [];
         universities = data.universities || [];
-      } else {
-        console.error('Failed to fetch course suggestions');
+      }
+
+      // ── Last-resort fallback: fetch all universities so we NEVER show nothing ──
+      if (programs.length === 0 && universities.length === 0) {
+        try {
+          const uniRes = await fetch('/api/public/universities', { cache: 'no-store' }).catch(() => null);
+          if (uniRes && uniRes.ok) {
+            const uniData = await uniRes.json().catch(() => []);
+            universities = (Array.isArray(uniData) ? uniData : []).slice(0, 10);
+          }
+        } catch { /* ignore */ }
       }
 
       setResults(programs);
@@ -551,7 +562,6 @@ export default function CourseFinder() {
       setShowResults(true);
     } catch (err) {
       console.error(err);
-      // Still show results screen even on error
       setShowResults(true);
     } finally {
       setLoading(false);
@@ -669,19 +679,19 @@ export default function CourseFinder() {
                     {results.length > 0
                       ? 'Recommended Courses For You!'
                       : matchedUniversities.length > 0
-                        ? 'Related Universities For You'
+                        ? 'Explore These Universities'
                         : fallbackResults.length > 0
-                          ? 'Similar Courses you may like'
-                          : 'No Matches Found'}
+                          ? 'Similar Courses You May Like'
+                          : 'Browse Our Catalog'}
                   </h2>
                   <p className="cf-results-subtitle">
                     {results.length > 0
-                      ? `We found ${results.length} courses matching your preferences`
+                      ? `Found ${results.length} course${results.length > 1 ? 's' : ''} matching your preferences`
                       : matchedUniversities.length > 0
-                        ? 'No exact course match — here are universities that may suit you'
+                        ? 'These universities offer programs that match your interests'
                         : fallbackResults.length > 0
-                          ? 'No exact match — here are similar courses based on your choices'
-                          : 'Try adjusting your preferences'}
+                          ? 'Here are some similar courses based on your choices'
+                          : 'Explore our full range of programs and universities'}
                   </p>
                 </div>
                 <div className="cf-results-list">
@@ -728,12 +738,20 @@ export default function CourseFinder() {
                     );
                   })}
 
-                  {/* No results at all */}
+                  {/* No results at all — show helpful navigation, never a dead end */}
                   {results.length === 0 && fallbackResults.length === 0 && matchedUniversities.length === 0 && (
                     <div className="cf-no-results">
                       <span className="cf-no-results-icon"><IconFrown /></span>
-                      <p>No programs match your criteria.</p>
-                      <Link href="/courses" className="cf-browse-all-btn" onClick={() => setIsOpen(false)}>Browse All Programs</Link>
+                      <p style={{ fontWeight: 600, color: '#1e293b', marginBottom: 4 }}>We couldn't load personalised results right now.</p>
+                      <p style={{ color: '#64748b', fontSize: '0.9rem', marginBottom: 20 }}>Browse our full catalog — your perfect course is waiting.</p>
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: 10, width: '100%' }}>
+                        <Link href="/courses" className="cf-browse-all-btn" onClick={() => setIsOpen(false)} style={{ textAlign: 'center' }}>
+                          Browse All Programs
+                        </Link>
+                        <Link href="/universities" className="cf-browse-all-btn" onClick={() => setIsOpen(false)} style={{ textAlign: 'center', background: '#fff', color: '#E8502A', border: '2px solid #E8502A' }}>
+                          Browse All Universities
+                        </Link>
+                      </div>
                     </div>
                   )}
                 </div>

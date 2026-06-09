@@ -70,6 +70,38 @@
 .cf-submit-btn:disabled { opacity: 0.7; cursor: not-allowed; }
 .cf-error { background: #FEF2F2; color: #DC2626; padding: 12px 15px; border-radius: 10px; font-size: 0.9rem; margin-bottom: 15px; border-left: 4px solid #DC2626; }
 .cf-privacy { color: #94A3B8; font-size: 0.8rem; margin: 15px 0 0; display: flex; align-items: center; justify-content: center; gap: 6px; }
+
+/* ── OTP Input ── */
+.cf-otp-wrap { display: flex; justify-content: center; margin: 10px 0 18px; }
+.cf-otp-input {
+  font-size: 2rem;
+  font-weight: 700;
+  letter-spacing: 0.5em;
+  text-align: center;
+  padding: 14px 20px;
+  border: 2px solid #E2E8F0;
+  border-radius: 14px;
+  outline: none;
+  width: 220px;
+  color: #1E293B;
+  background: #F8FAFC;
+  transition: border-color 0.2s;
+}
+.cf-otp-input:focus { border-color: #E8502A; background: #fff; }
+.cf-resend-btn {
+  display: block;
+  margin: 12px auto 0;
+  background: none;
+  border: none;
+  color: #E8502A;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  padding: 4px 0;
+}
+.cf-resend-btn:disabled { color: #94A3B8; cursor: default; text-decoration: none; }
 .cf-loading-screen { padding: 60px 30px; text-align: center; color: #64748B; display: flex; flex-direction: column; align-items: center; gap: 15px; font-size: 1rem; }
 
 /* ── Header ── */

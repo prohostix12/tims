@@ -11,6 +11,7 @@ export async function GET() {
     const universities = await University.find({}).sort({ createdAt: -1 });
     return NextResponse.json(universities);
   } catch (error: any) {
+    console.error('GET /api/admin/universities error:', error.message);
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }

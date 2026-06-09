@@ -60,11 +60,17 @@ export default function CourseFinderAdminPage() {
       const payload = {
         ...data,
         field: data.field || data.question.toLowerCase().replace(/[^a-z0-9]+/g, '_').slice(0, 30),
-        options: data.options.map((o: any) => ({
-          label: o.label,
-          value: o.value || o.label.toLowerCase().replace(/[^a-z0-9]+/g, '_'),
-          icon: 'fa-circle'
-        }))
+        options: data.options.map((o: any) => {
+          const cleanOpt: Record<string, any> = {
+            label: o.label,
+            value: o.value || o.label.toLowerCase().replace(/[^a-z0-9]+/g, '_'),
+          };
+          // Preserve numeric range fields and category arrays if present
+          if (o.min != null && o.min !== '') cleanOpt.min = Number(o.min);
+          if (o.max != null && o.max !== '') cleanOpt.max = Number(o.max);
+          if (Array.isArray(o.categories) && o.categories.length > 0) cleanOpt.categories = o.categories;
+          return cleanOpt;
+        }),
       };
 
       const res = await fetch(url, { method, headers: getHeaders(), body: JSON.stringify(payload) });
@@ -240,21 +246,84 @@ export default function CourseFinderAdminPage() {
                  </div>
               </div>
 
+              <div style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '12px 16px', background: '#f8fafc', borderRadius: 10, border: '1px solid #e2e8f0' }}>
+                <label style={{ fontSize: '0.9rem', fontWeight: 600, flex: 1, cursor: 'pointer' }} htmlFor="cf-active-toggle">Active (visible to users)</label>
+                <button
+                  id="cf-active-toggle"
+                  type="button"
+                  onClick={() => setModal({...modal, data: {...modal.data, isActive: !modal.data.isActive}})}
+                  style={{ width: 44, height: 24, borderRadius: 12, border: 'none', cursor: 'pointer', background: modal.data.isActive ? ACCENT : '#d1d5db', position: 'relative', transition: 'background 0.2s', flexShrink: 0 }}
+                  aria-pressed={modal.data.isActive}
+                >
+                  <span style={{ position: 'absolute', top: 3, left: modal.data.isActive ? 23 : 3, width: 18, height: 18, borderRadius: '50%', background: '#fff', transition: 'left 0.2s', boxShadow: '0 1px 3px rgba(0,0,0,0.3)' }} />
+                </button>
+              </div>
+
               <div>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
                   <label style={{ fontSize: '0.9rem', fontWeight: 600 }}>Options</label>
                   <button onClick={() => setModal({...modal, data: {...modal.data, options: [...modal.data.options, {label:''}]}})} style={{ background: '#eff6ff', color: ACCENT, border: 'none', padding: '6px 12px', borderRadius: 8, fontWeight: 600, fontSize: '0.85rem', cursor: 'pointer' }}>+ Add Option</button>
                 </div>
                 {modal.data.options.map((o: any, idx: number) => (
-                  <div key={idx} style={{ display: 'flex', gap: 8, marginBottom: 8 }}>
-                    <input value={o.label} onChange={e => {
-                      const opts = [...modal.data.options]; opts[idx].label = e.target.value;
-                      setModal({...modal, data: {...modal.data, options: opts}});
-                    }} placeholder={`Option ${idx+1}`} style={{ flex: 1, padding: '10px', borderRadius: 8, border: '1px solid #e2e8f0', outline: 'none' }} />
-                    <button onClick={() => {
-                      const opts = modal.data.options.filter((_:any, i:number) => i !== idx);
-                      setModal({...modal, data: {...modal.data, options: opts}});
-                    }} style={{ background: '#fff1f2', border: 'none', padding: '8px', borderRadius: 8, cursor: 'pointer' }}><X size={14} color="#ef4444" /></button>
+                  <div key={idx} style={{ marginBottom: 8 }}>
+                    <div style={{ display: 'flex', gap: 6 }}>
+                      <input
+                        value={o.label}
+                        onChange={e => {
+                          const opts = [...modal.data.options];
+                          opts[idx] = { ...opts[idx], label: e.target.value };
+                          setModal({...modal, data: {...modal.data, options: opts}});
+                        }}
+                        placeholder={`Label (e.g. MBA)`}
+                        style={{ flex: 2, padding: '9px 10px', borderRadius: 8, border: '1px solid #e2e8f0', outline: 'none', fontSize: '0.9rem' }}
+                      />
+                      <input
+                        value={o.value || ''}
+                        onChange={e => {
+                          const opts = [...modal.data.options];
+                          opts[idx] = { ...opts[idx], value: e.target.value };
+                          setModal({...modal, data: {...modal.data, options: opts}});
+                        }}
+                        placeholder={`value (auto)`}
+                        style={{ flex: 1, padding: '9px 10px', borderRadius: 8, border: '1px solid #e2e8f0', outline: 'none', fontSize: '0.85rem', color: '#64748b' }}
+                      />
+                      <button
+                        onClick={() => {
+                          const opts = modal.data.options.filter((_: any, i: number) => i !== idx);
+                          setModal({...modal, data: {...modal.data, options: opts}});
+                        }}
+                        style={{ background: '#fff1f2', border: 'none', padding: '8px', borderRadius: 8, cursor: 'pointer', flexShrink: 0 }}
+                      >
+                        <X size={14} color="#ef4444" />
+                      </button>
+                    </div>
+                    {/* Show min/max hint if already set on this option */}
+                    {(o.min != null || o.max != null) && (
+                      <div style={{ display: 'flex', gap: 6, marginTop: 4 }}>
+                        <input
+                          type="number"
+                          value={o.min ?? ''}
+                          onChange={e => {
+                            const opts = [...modal.data.options];
+                            opts[idx] = { ...opts[idx], min: e.target.value === '' ? undefined : Number(e.target.value) };
+                            setModal({...modal, data: {...modal.data, options: opts}});
+                          }}
+                          placeholder="Min fee (₹)"
+                          style={{ flex: 1, padding: '7px 10px', borderRadius: 8, border: '1px solid #e2e8f0', outline: 'none', fontSize: '0.8rem' }}
+                        />
+                        <input
+                          type="number"
+                          value={o.max ?? ''}
+                          onChange={e => {
+                            const opts = [...modal.data.options];
+                            opts[idx] = { ...opts[idx], max: e.target.value === '' ? undefined : Number(e.target.value) };
+                            setModal({...modal, data: {...modal.data, options: opts}});
+                          }}
+                          placeholder="Max fee (₹)"
+                          style={{ flex: 1, padding: '7px 10px', borderRadius: 8, border: '1px solid #e2e8f0', outline: 'none', fontSize: '0.8rem' }}
+                        />
+                      </div>
+                    )}
                   </div>
                 ))}
               </div>

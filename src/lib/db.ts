@@ -1,14 +1,11 @@
 import mongoose from 'mongoose';
 import dns from 'node:dns';
 
-// Force Google DNS ONLY in development — local DNS blocks SRV queries on this network
-// In production, this causes crashes on serverless platforms.
 if (process.env.NODE_ENV === 'development') {
   dns.setServers(['8.8.8.8', '8.8.4.4', '1.1.1.1']);
   dns.setDefaultResultOrder('ipv4first');
 }
 
-// Pre-register all schemas to prevent Mongoose populates from throwing "Schema hasn't been registered" errors
 import '@/models/University';
 import '@/models/Program';
 import '@/models/Batch';
@@ -32,44 +29,72 @@ import '@/models/Testimonial';
 import '@/models/Timetable';
 import '@/models/UniversityLogo';
 import '@/models/CourseFinderQuestion';
-
+import '@/models/AdminConfig';
+import '@/models/OtpVerification';
+import '@/models/ScholarshipQuestion';
+import '@/models/ScholarshipConfig';
+import '@/models/ScholarshipApplication';
+import '@/models/ScholarshipContent';
 
 declare global {
-  var mongoose: {
-    conn: mongoose.Mongoose | null;
-    promise: Promise<mongoose.Mongoose> | null;
-  } | undefined;
+  var _mongoCache: { conn: mongoose.Mongoose | null; promise: Promise<mongoose.Mongoose> | null } | undefined;
+  var _memoryServer: any;
+  var _atlasUnreachable: boolean | undefined;
 }
 
-let cached = global.mongoose;
+const cached = global._mongoCache ?? (global._mongoCache = { conn: null, promise: null });
 
-if (!cached) {
-  cached = global.mongoose = { conn: null, promise: null };
+async function connectToLocal(): Promise<mongoose.Mongoose> {
+  try { await mongoose.disconnect(); } catch {}
+
+  if (!global._memoryServer) {
+    const { MongoMemoryServer } = await import('mongodb-memory-server');
+    global._memoryServer = await MongoMemoryServer.create();
+    console.log('[DB] Local MongoDB started at', global._memoryServer.getUri());
+  }
+
+  const m = await mongoose.connect(global._memoryServer.getUri(), { bufferCommands: false });
+  console.log('[DB] Connected to local MongoDB');
+  return m;
 }
 
-async function connectDB() {
-  const MONGODB_URI = process.env.MONGODB_URI?.trim();
+async function connectDB(): Promise<mongoose.Mongoose> {
+  // Return live connection
+  if (cached.conn && mongoose.connection.readyState === 1) return cached.conn;
 
-  if (!MONGODB_URI) {
-    throw new Error('Please define the MONGODB_URI environment variable inside .env.local');
+  // If a connection attempt is already in progress, wait for it
+  if (cached.promise) {
+    try { cached.conn = await cached.promise; return cached.conn!; } catch {}
   }
 
-  if (!cached) {
-    cached = global.mongoose = { conn: null, promise: null };
-  }
+  // Reset stale connection
+  cached.conn = null;
+  cached.promise = null;
 
-  if (cached.conn) {
-    return cached.conn;
-  }
+  const ATLAS_URI = process.env.MONGODB_URI?.trim();
+  if (!ATLAS_URI) throw new Error('MONGODB_URI not defined in .env.local');
 
-  if (!cached.promise) {
-    const opts = {
-      bufferCommands: false,
-      serverSelectionTimeoutMS: 10000,
-    };
+  cached.promise = (async () => {
+    // Skip Atlas if we already know it's unreachable
+    if (!global._atlasUnreachable) {
+      try {
+        const m = await mongoose.connect(ATLAS_URI, {
+          bufferCommands: false,
+          serverSelectionTimeoutMS: 5000,
+        });
+        console.log('[DB] Connected to MongoDB Atlas');
+        global._atlasUnreachable = false;
+        return m;
+      } catch {
+        console.warn('[DB] Atlas unreachable — falling back to local MongoDB (will not retry Atlas)');
+        global._atlasUnreachable = true;
+      }
+    } else {
+      console.log('[DB] Skipping Atlas (known unreachable) — using local MongoDB');
+    }
 
-    cached.promise = mongoose.connect(MONGODB_URI, opts).then((m) => m);
-  }
+    return connectToLocal();
+  })();
 
   try {
     cached.conn = await cached.promise;

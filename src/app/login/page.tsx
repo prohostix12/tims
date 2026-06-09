@@ -1,10 +1,9 @@
-
 'use client';
 
 import React, { useState } from 'react';
 import Image from 'next/image';
 import styles from './login.module.css';
-import { Mail, Lock, LogIn, ArrowLeft, CheckCircle } from 'lucide-react';
+import { Mail, Lock, LogIn, ArrowLeft, CheckCircle, KeyRound, X } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
@@ -13,24 +12,91 @@ export default function LoginPage() {
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [showForgot, setShowForgot] = useState(false);
+  const [forgotEmail, setForgotEmail] = useState('');
+  const [forgotLoading, setForgotLoading] = useState(false);
+  const [forgotMsg, setForgotMsg] = useState('');
   const router = useRouter();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-
-    // Hardcoded credentials for testing
-    if (email === 'admin@tims.edu' && password === 'admin123') {
-      // Success! Redirect to admin
+    setError('');
+    try {
+      const res = await fetch('/api/admin/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        setError(data.error || 'Invalid email or password.');
+        setLoading(false);
+        return;
+      }
       router.push('/admin');
-    } else {
-      setError('Invalid email or password. Please try again.');
+    } catch {
+      setError('Connection error. Please try again.');
       setLoading(false);
+    }
+  };
+
+  const handleForgot = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setForgotLoading(true);
+    setForgotMsg('');
+    try {
+      const res = await fetch('/api/admin/auth/forgot-password', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: forgotEmail }),
+      });
+      const data = await res.json();
+      setForgotMsg(data.message || 'If that email exists, a reset link has been sent.');
+    } catch {
+      setForgotMsg('Something went wrong. Please try again.');
+    } finally {
+      setForgotLoading(false);
     }
   };
 
   return (
     <div className={styles.loginWrapper}>
+      {/* Forgot Password Modal */}
+      {showForgot && (
+        <div className={styles.modalOverlay}>
+          <div className={styles.modalCard}>
+            <button className={styles.modalClose} onClick={() => { setShowForgot(false); setForgotMsg(''); setForgotEmail(''); }}>
+              <X size={18} />
+            </button>
+            <div className={styles.modalIcon}><KeyRound size={28} /></div>
+            <h2 className={styles.modalTitle}>Forgot Password?</h2>
+            <p className={styles.modalSub}>Enter your admin email and we will send you a reset link.</p>
+            {forgotMsg ? (
+              <div className={styles.successMsg}>{forgotMsg}</div>
+            ) : (
+              <form onSubmit={handleForgot} className={styles.modalForm}>
+                <div className={styles.inputGroup}>
+                  <div className={styles.inputWrapper}>
+                    <Mail className={styles.inputIcon} size={18} />
+                    <input
+                      type="email"
+                      placeholder="Admin email address"
+                      value={forgotEmail}
+                      onChange={e => setForgotEmail(e.target.value)}
+                      required
+                    />
+                  </div>
+                </div>
+                <button type="submit" className={styles.loginBtn} disabled={forgotLoading}>
+                  {forgotLoading ? 'Sending...' : 'Send Reset Link'}
+                </button>
+              </form>
+            )}
+          </div>
+        </div>
+      )}
+
       {/* Left branding panel */}
       <div className={styles.leftPanel}>
         <div className={styles.brandContent}>
@@ -83,10 +149,7 @@ export default function LoginPage() {
                   type="email"
                   placeholder="Enter your email"
                   value={email}
-                  onChange={(e) => {
-                    setEmail(e.target.value);
-                    if (error) setError('');
-                  }}
+                  onChange={(e) => { setEmail(e.target.value); if (error) setError(''); }}
                   required
                 />
               </div>
@@ -100,13 +163,16 @@ export default function LoginPage() {
                   type="password"
                   placeholder="••••••••"
                   value={password}
-                  onChange={(e) => {
-                    setPassword(e.target.value);
-                    if (error) setError('');
-                  }}
+                  onChange={(e) => { setPassword(e.target.value); if (error) setError(''); }}
                   required
                 />
               </div>
+            </div>
+
+            <div className={styles.forgotRow}>
+              <button type="button" className={styles.forgotLink} onClick={() => setShowForgot(true)}>
+                Forgot password?
+              </button>
             </div>
 
             <button type="submit" className={styles.loginBtn} disabled={loading}>

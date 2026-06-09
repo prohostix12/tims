@@ -21,7 +21,7 @@ interface SubmitResult {
 }
 interface ProgramSection { categoryName: string; courses: { name: string; iconName?: string; order?: number }[] }
 
-type Phase = 'landing' | 'form' | 'exam' | 'result';
+type Phase = 'landing' | 'form' | 'otp' | 'exam' | 'result';
 
 function getVoucherBrand(program: string): string {
   const p = program.toLowerCase();
@@ -44,6 +44,18 @@ export default function ScholarshipPage() {
   const [examLoading, setExamLoading] = useState(false);
   const [termsAccepted, setTermsAccepted] = useState(false);
   const [showTnC, setShowTnC] = useState(false);
+
+  // OTP state
+  const [otp, setOtp] = useState('');
+  const [otpLoading, setOtpLoading] = useState(false);
+  const [otpError, setOtpError] = useState('');
+  const [resendCooldown, setResendCooldown] = useState(0);
+
+  useEffect(() => {
+    if (resendCooldown <= 0) return;
+    const t = setTimeout(() => setResendCooldown(c => c - 1), 1000);
+    return () => clearTimeout(t);
+  }, [resendCooldown]);
 
   const [questions, setQuestions] = useState<Question[]>([]);
   const [applicantName, setApplicantName] = useState('');
@@ -118,17 +130,63 @@ export default function ScholarshipPage() {
     setFormLoading(true);
     setFormError('');
     try {
-      const res = await fetch('/api/public/scholarship/apply', {
+      const res = await fetch('/api/public/otp/send', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: email.trim(), name: name.trim() }),
+      });
+      const data = await res.json();
+      if (!res.ok) { setFormError(data.error || 'Failed to send OTP. Please try again.'); return; }
+      setOtp('');
+      setOtpError('');
+      setResendCooldown(30);
+      setPhase('otp');
+    } finally {
+      setFormLoading(false);
+    }
+  };
+
+  const verifyOtpAndApply = async () => {
+    if (otp.length !== 6) { setOtpError('Please enter the 6-digit OTP.'); return; }
+    setOtpLoading(true);
+    setOtpError('');
+    try {
+      const verifyRes = await fetch('/api/public/otp/verify', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: form.email.trim(), code: otp }),
+      });
+      const verifyData = await verifyRes.json();
+      if (!verifyRes.ok) { setOtpError(verifyData.error || 'Invalid OTP. Please try again.'); return; }
+
+      const { name, phone, email, course, program } = form;
+      const applyRes = await fetch('/api/public/scholarship/apply', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name, phone, email, course, university: program }),
       });
-      const data = await res.json();
-      if (!res.ok) { setFormError(data.error || 'Something went wrong.'); return; }
-      setToken(data.token);
-      await loadExam(data.token);
+      const applyData = await applyRes.json();
+      if (!applyRes.ok) { setOtpError(applyData.error || 'Something went wrong. Please try again.'); return; }
+      setToken(applyData.token);
+      await loadExam(applyData.token);
     } finally {
-      setFormLoading(false);
+      setOtpLoading(false);
+    }
+  };
+
+  const resendOtp = async () => {
+    if (resendCooldown > 0) return;
+    setOtpError('');
+    try {
+      await fetch('/api/public/otp/send', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: form.email.trim(), name: form.name.trim() }),
+      });
+      setResendCooldown(30);
+      setOtp('');
+    } catch {
+      setOtpError('Failed to resend OTP. Please try again.');
     }
   };
 
@@ -499,9 +557,62 @@ export default function ScholarshipPage() {
           <button
             className={styles.applyBtn}
             onClick={submitForm}
-            disabled={formLoading || examLoading}
+            disabled={formLoading}
           >
-            {formLoading || examLoading ? 'Please wait…' : <>Start Exam <ArrowRight size={16} /></>}
+            {formLoading ? 'Sending OTP…' : <>Send OTP & Continue <ArrowRight size={16} /></>}
+          </button>
+        </div>
+      </section>
+    </main>
+  );
+
+  /* ── OTP PHASE ──────────────────────────────────────────────── */
+  if (phase === 'otp') return (
+    <main className={styles.page}>
+      <section className={styles.formSection}>
+        <div className={styles.formCard}>
+          <button className={styles.formBack} onClick={() => { setPhase('form'); setOtpError(''); }}>
+            <X size={18} />
+          </button>
+
+          <div className={styles.formHeader}>
+            <Mail size={24} className={styles.formIcon} />
+            <h2>Verify Your Email</h2>
+            <p>
+              We sent a 6-digit OTP to <strong>{form.email}</strong>.<br />
+              Enter it below to start the exam.
+            </p>
+          </div>
+
+          {otpError && <div className={styles.formError}>{otpError}</div>}
+
+          <div className={styles.otpWrap}>
+            <input
+              className={styles.otpInput}
+              type="text"
+              inputMode="numeric"
+              maxLength={6}
+              placeholder="• • • • • •"
+              value={otp}
+              onChange={e => setOtp(e.target.value.replace(/\D/g, '').slice(0, 6))}
+              autoFocus
+            />
+          </div>
+
+          <button
+            className={styles.applyBtn}
+            onClick={verifyOtpAndApply}
+            disabled={otpLoading || otp.length !== 6}
+          >
+            {otpLoading ? 'Verifying…' : <>Verify & Start Exam <ArrowRight size={16} /></>}
+          </button>
+
+          <button
+            className={styles.resendBtn}
+            onClick={resendOtp}
+            disabled={resendCooldown > 0}
+          >
+            {resendCooldown > 0 ? `Resend OTP in ${resendCooldown}s` : 'Resend OTP'}
           </button>
         </div>
       </section>

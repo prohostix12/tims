@@ -26,7 +26,9 @@ import {
   UserSquare2,
   Award,
   LayoutTemplate,
+  Settings,
 } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 
 interface SidebarProps {
   isOpen: boolean;
@@ -35,6 +37,12 @@ interface SidebarProps {
 
 export default function Sidebar({ isOpen, onClose }: SidebarProps) {
   const pathname = usePathname();
+  const router = useRouter();
+
+  const handleLogout = async () => {
+    await fetch('/api/admin/auth/logout', { method: 'POST' });
+    router.push('/login');
+  };
 
   const navItems = [
     { name: 'Dashboard', path: '/admin', icon: <LayoutDashboard size={20} /> },
@@ -56,6 +64,7 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
     { name: 'Directors', path: '/admin/directors', icon: <UserSquare2 size={20} /> },
     { name: 'Messages', path: '/admin/messages', icon: <Mail size={20} /> },
     { name: 'SEO Settings', path: '/admin/seo', icon: <Globe size={20} /> },
+    { name: 'Settings', path: '/admin/settings', icon: <Settings size={20} /> },
   ];
 
   return (
@@ -95,7 +104,7 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
           <ExternalLink size={18} />
           <span className={styles.navText}>View Website</span>
         </Link>
-        <button className={`${styles.secondaryBtn} ${styles.logoutBtn}`}>
+        <button className={`${styles.secondaryBtn} ${styles.logoutBtn}`} onClick={handleLogout}>
           <LogOut size={18} />
           <span className={styles.navText}>Logout</span>
         </button>

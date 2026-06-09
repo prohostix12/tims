@@ -535,6 +535,47 @@
 .tncAcceptBtn:disabled { opacity: .45; cursor: not-allowed; }
 .tncAcceptBtn:not(:disabled):hover { background: #c93f1e; }
 
+/* ── OTP ───────────────────────────────────────────────────── */
+.otpWrap {
+  display: flex;
+  justify-content: center;
+  margin: 1.5rem 0 1.2rem;
+}
+.otpInput {
+  font-size: 1.1rem;
+  font-weight: 600;
+  letter-spacing: 0.3em;
+  text-align: center;
+  padding: 14px 20px;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 12px;
+  outline: none;
+  width: 100%;
+  max-width: 320px;
+  color: #002060;
+  background: #f8fafc;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.otpInput:focus {
+  border-color: #E8502A;
+  background: #fff;
+  box-shadow: 0 0 0 3px rgba(232, 80, 42, 0.1);
+}
+.resendBtn {
+  display: block;
+  margin: 1rem auto 0;
+  background: none;
+  border: none;
+  color: #E8502A;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  padding: 4px 0;
+}
+.resendBtn:disabled { color: #94a3b8; cursor: default; text-decoration: none; }
+
 /* ── Responsive ───────────────────────────────────────────── */
 @media (max-width: 900px) {
   .featureChips { justify-content: center; }
