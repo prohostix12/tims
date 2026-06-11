@@ -168,17 +168,6 @@ export default function CoursesPage() {
             <div style={{ maxWidth: '1400px', margin: '0 auto', padding: '0 5%' }}>
               <div className={styles.filterGlass}>
                 <div className={styles.searchBar}>
-                  <div className={styles.searchWrapper}>
-                    <Search className={styles.searchIcon} size={22} />
-                    <input 
-                      type="text" 
-                      placeholder="Filter results..." 
-                      className={styles.searchInput}
-                      value={searchQuery}
-                      onChange={(e) => setSearchQuery(e.target.value)}
-                    />
-                  </div>
-                  
                   <div className={styles.categoryGroup}>
                     {categories.map(cat => (
                       <button
