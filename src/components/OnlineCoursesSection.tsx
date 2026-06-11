@@ -201,25 +201,23 @@ export default function OnlineCoursesSection() {
         <div className={styles.uniRow}>
           <p className={styles.uniCount}>Available 90+ Universities</p>
 
-          {/* Moving logo banner — only shown when logos are loaded from DB */}
-          {logos.length > 0 && (
-            <div className={styles.logoBannerWrapper}>
-              <div className={styles.logoBannerTrack}>
-                {[...logos, ...logos, ...logos].map((logo, i) => (
-                  <div key={i} className={styles.logoItem}>
-                    <img
-                      src={logo.logoUrl}
-                      alt={logo.name}
-                      className={styles.logoImg}
-                      onError={(e) => {
-                        (e.currentTarget as HTMLImageElement).style.display = 'none';
-                      }}
-                    />
-                  </div>
-                ))}
-              </div>
+          {/* Moving logo banner */}
+          <div className={styles.logoBannerWrapper}>
+            <div className={styles.logoBannerTrack}>
+              {[...logos, ...logos, ...logos].map((logo, i) => (
+                <div key={i} className={styles.logoItem}>
+                  <img
+                    src={logo.logoUrl}
+                    alt={logo.name}
+                    className={styles.logoImg}
+                    onError={(e) => {
+                      (e.currentTarget as HTMLImageElement).style.display = 'none';
+                    }}
+                  />
+                </div>
+              ))}
             </div>
-          )}
+          </div>
 
           <a href="/universities" className={styles.uniBtn}>View All Universities</a>
         </div>
