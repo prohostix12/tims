@@ -14,7 +14,16 @@ export async function GET(request: Request) {
     
     let query = {};
     if (universityId) {
-      query = { university: universityId };
+      if (universityId.match(/^[0-9a-fA-F]{24}$/)) {
+        query = { university: universityId };
+      } else {
+        const uni = await University.findOne({ slug: universityId });
+        if (uni) {
+          query = { university: uni._id };
+        } else {
+          return NextResponse.json([]);
+        }
+      }
     }
 
     const programs = await Program.find(query)

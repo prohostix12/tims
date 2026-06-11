@@ -675,7 +675,7 @@ export default function CourseFinder() {
                   {/* Course results */}
                   {(results.length > 0 ? results : (matchedUniversities.length === 0 ? fallbackResults : [])).map(program => {
                     const uniName = program.university?.name || program.university || program.universityId?.name || 'University';
-                    const courseHref = program.slug ? `/courses/${program.slug}` : '/courses';
+                    const courseHref = `/courses/${program.slug || program._id}`;
                     return (
                       <Link key={program._id} href={courseHref} className="cf-result-card" onClick={() => { trackCourseClick(program); setIsOpen(false); }}>
                         <div className="cf-result-info">

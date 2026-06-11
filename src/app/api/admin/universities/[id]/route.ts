@@ -6,7 +6,13 @@ export async function GET(request: Request, { params }: { params: Promise<{ id: 
   try {
     const { id } = await params;
     await connectDB();
-    const doc = await University.findById(id);
+    let doc = null;
+    if (id.match(/^[0-9a-fA-F]{24}$/)) {
+      doc = await University.findById(id);
+    }
+    if (!doc) {
+      doc = await University.findOne({ slug: id });
+    }
     if (!doc) return NextResponse.json({ error: 'Not found' }, { status: 404 });
     return NextResponse.json(doc);
   } catch (error: any) {

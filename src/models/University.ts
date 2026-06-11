@@ -4,6 +4,7 @@ import mongoose, { Schema, Document } from 'mongoose';
 export interface IUniversity extends Document {
   name: string;
   code: string;
+  slug?: string;
   description?: string;
   location?: string;
   establishedYear?: number;
@@ -24,6 +25,7 @@ export interface IUniversity extends Document {
 const UniversitySchema: Schema = new Schema({
   name: { type: String, required: true },
   code: { type: String, required: true, unique: true },
+  slug: { type: String, unique: true, sparse: true },
   description: { type: String },
   location: { type: String },
   establishedYear: { type: Number },
