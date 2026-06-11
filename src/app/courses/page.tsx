@@ -51,7 +51,27 @@ const CourseCard = ({ course, i, onEnquire }: { course: any, i: number, onEnquir
           >
             ENQUIRE
           </button>
-          <Link href={`/courses/${course.slug || course._id}`} className={styles.detailsBtn}>
+          <Link 
+            href={`/courses/${course.slug || course._id}`} 
+            className={styles.detailsBtn}
+            onClick={() => {
+              try {
+                const cacheData = {
+                  _id: course._id,
+                  slug: course.slug,
+                  name: course.title,
+                  description: course.description,
+                  duration: course.duration,
+                  eligibility: course.eligibility,
+                  university: {
+                    name: course.universityName,
+                    logo: course.universityLogo
+                  }
+                };
+                sessionStorage.setItem(`course_${course.slug || course._id}`, JSON.stringify(cacheData));
+              } catch (e) {}
+            }}
+          >
             DETAILS
           </Link>
         </div>

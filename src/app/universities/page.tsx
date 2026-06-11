@@ -219,7 +219,13 @@ export default function UniversitiesPage() {
                       </div>
                       
                       <div className={styles.cardActions}>
-                        <Link href={`/universities/${uni._id || i}`} className={styles.detailsBtn}>
+                        <Link 
+                          href={`/universities/${uni.slug || uni._id || i}`} 
+                          className={styles.detailsBtn}
+                          onClick={() => {
+                            try { sessionStorage.setItem(`uni_${uni.slug || uni._id}`, JSON.stringify(uni)); } catch (e) {}
+                          }}
+                        >
                           View Details
                         </Link>
                         <button 

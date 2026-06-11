@@ -34,6 +34,17 @@ export default function CourseDetailsPage() {
 
   useEffect(() => {
     async function fetchData() {
+      // Try to load from cache first for instant render
+      try {
+        const cached = sessionStorage.getItem(`course_${slug}`);
+        if (cached) {
+          const parsed = JSON.parse(cached);
+          const view = buildCourseView(parsed, slug);
+          setCourseData(view);
+          if (view.specializations.length) setActiveTab(view.specializations[0].id);
+        }
+      } catch (e) {}
+
       try {
         const res = await fetch(`/api/courses/${encodeURIComponent(slug)}`);
         if (!res.ok) {
@@ -44,14 +55,20 @@ export default function CourseDetailsPage() {
             if (staticOnly.specializations.length) setActiveTab(staticOnly.specializations[0].id);
             return;
           }
-          throw new Error('Course not found');
+          if (!sessionStorage.getItem(`course_${slug}`)) {
+            throw new Error('Course not found');
+          }
+          return;
         }
         const data = await res.json();
         const view = buildCourseView(data, slug);
         setCourseData(view);
         if (view.specializations.length) setActiveTab(view.specializations[0].id);
+        try { sessionStorage.setItem(`course_${slug}`, JSON.stringify(data)); } catch (e) {}
       } catch (e: any) {
-        setError(e.message || 'Failed to load course');
+        if (!sessionStorage.getItem(`course_${slug}`)) {
+          setError(e.message || 'Failed to load course');
+        }
       }
     }
     if (slug) fetchData();

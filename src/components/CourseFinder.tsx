@@ -654,11 +654,20 @@ export default function CourseFinder() {
                 </div>
                 <div className="cf-results-list">
                   {/* University results — shown first */}
+                  {/* University results — shown first */}
                   {matchedUniversities.length > 0 && (
                     <div className="cf-universities-section">
                       <p className="cf-section-heading">{results.length > 0 ? 'Matched Universities' : 'Related Universities'}</p>
                       {matchedUniversities.map((uni: any) => (
-                        <Link key={uni._id} href={`/universities/${uni.slug || uni._id}`} className="cf-result-card" onClick={() => setIsOpen(false)}>
+                        <Link 
+                          key={uni._id} 
+                          href={`/universities/${uni.slug || uni._id}`} 
+                          className="cf-result-card" 
+                          onClick={() => {
+                            try { sessionStorage.setItem(`uni_${uni.slug || uni._id}`, JSON.stringify(uni)); } catch (e) {}
+                            setIsOpen(false);
+                          }}
+                        >
                           <div className="cf-result-info">
                             <h4 className="cf-result-name">{uni.name}</h4>
                             {uni.location && <p className="cf-result-university"><IconBuilding /> {uni.location}</p>}
@@ -677,7 +686,16 @@ export default function CourseFinder() {
                     const uniName = program.university?.name || program.university || program.universityId?.name || 'University';
                     const courseHref = `/courses/${program.slug || program._id}`;
                     return (
-                      <Link key={program._id} href={courseHref} className="cf-result-card" onClick={() => { trackCourseClick(program); setIsOpen(false); }}>
+                      <Link 
+                        key={program._id} 
+                        href={courseHref} 
+                        className="cf-result-card" 
+                        onClick={() => { 
+                          try { sessionStorage.setItem(`course_${program.slug || program._id}`, JSON.stringify(program)); } catch (e) {}
+                          trackCourseClick(program); 
+                          setIsOpen(false); 
+                        }}
+                      >
                         <div className="cf-result-info">
                           <h4 className="cf-result-name">{program.name}</h4>
                           <p className="cf-result-university"><IconBuilding /> {uniName}</p>

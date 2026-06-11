@@ -30,10 +30,23 @@ export default function UniversityDetailPage() {
 
   useEffect(() => {
     if (id) {
+      // Try to load from cache first for instant render
+      try {
+        const cached = sessionStorage.getItem(`uni_${id}`);
+        if (cached) {
+          const parsed = JSON.parse(cached);
+          setUni(parsed);
+          setLoading(false);
+        }
+      } catch (e) {}
+
       fetch(`/api/admin/universities/${id}`)
         .then((r) => r.json())
         .then((data) => {
-          if (!data.error) setUni(data);
+          if (!data.error) {
+            setUni(data);
+            try { sessionStorage.setItem(`uni_${id}`, JSON.stringify(data)); } catch (e) {}
+          }
         })
         .catch(() => {})
         .finally(() => setLoading(false));
