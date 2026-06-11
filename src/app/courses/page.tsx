@@ -6,6 +6,15 @@ import Link from 'next/link';
 import { Search, GraduationCap, Clock, BookOpen, ArrowRight, Loader2, ShieldCheck, Globe, Zap, Check, FileText } from 'lucide-react';
 import EnquiryModal from '@/components/EnquiryModal';
 
+const cleanHeaderTitle = (title: string) =>
+  title
+    .replace(/\s*\(Credit Transfer\)/gi, '')
+    .replace(/\s*\bCredit Transfer\b/gi, '')
+    .replace(/\s*\bLateral Entry\b/gi, '')
+    .replace(/\s*\(CT\)/gi, '')
+    .replace(/\s*\bRPL\b/gi, '')
+    .trim();
+
 const CourseCard = ({ course, i, onEnquire }: { course: any, i: number, onEnquire: (interest: string) => void }) => {
   const initials = course.universityName
     ? course.universityName.split(' ').map((w: string) => w[0]).slice(0, 2).join('')
@@ -18,7 +27,7 @@ const CourseCard = ({ course, i, onEnquire }: { course: any, i: number, onEnquir
     >
       <div className={styles.cardImage}>
         {course.level && <span className={styles.levelBadge}>{course.level}</span>}
-        <span className={styles.cardCourseName}>{course.title}</span>
+        <span className={styles.cardCourseName}>{cleanHeaderTitle(course.title)}</span>
         <div className={styles.uniLogoCorner}>
           {course.universityLogo
             ? <img src={course.universityLogo} alt={course.universityName} className={styles.uniLogoImg} />
