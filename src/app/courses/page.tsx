@@ -63,6 +63,7 @@ const CourseCard = ({ course, i, onEnquire }: { course: any, i: number, onEnquir
                   description: course.description,
                   duration: course.duration,
                   eligibility: course.eligibility,
+                  type: course.type,
                   university: {
                     name: course.universityName,
                     logo: course.universityLogo
@@ -104,6 +105,7 @@ export default function CoursesPage() {
             title: c.name || c.title || '',
             level: c.level || '',
             category: c.category || '',
+            type: c.type || '',
             courseType: c.courseType || '',
             description: c.description || '',
             duration: c.duration || '',
@@ -127,11 +129,11 @@ export default function CoursesPage() {
 
   const categoryMatches = (course: any) => {
     if (activeCategory === 'All') return true;
-    if (activeCategory === 'UG') return (course.level === 'UG' || course.category === 'Online UG') && course.category !== 'SSLC' && course.category !== '+2' && course.level !== 'Secondary' && course.level !== 'Sr Secondary' && course.level !== 'Senior Secondary';
-    if (activeCategory === 'PG') return course.level === 'PG' || course.category === 'Online PG';
-    if (activeCategory === 'Credit Transfer') return course.category === 'Credit Transfer';
+    if (activeCategory === 'UG') return (course.level === 'UG' || course.category === 'Online UG' || course.level === 'Undergraduate') && course.category !== 'SSLC' && course.category !== '+2' && course.level !== 'Secondary' && course.level !== 'Sr Secondary' && course.level !== 'Senior Secondary';
+    if (activeCategory === 'PG') return course.level === 'PG' || course.category === 'Online PG' || course.level === 'Postgraduate';
+    if (activeCategory === 'Credit Transfer') return (course.category || '').toLowerCase().includes('credit transfer') || course.type === 'Credit Transfer';
     if (activeCategory === 'SSLC/Plus Two') return course.category === 'SSLC' || course.category === '+2' || course.level === 'Secondary' || course.level === 'Sr Secondary' || course.level === 'Senior Secondary';
-    if (activeCategory === 'Diploma') return (course.category === 'Diploma' || course.courseType === 'Others' || course.category === 'Others') && course.category !== 'SSLC' && course.category !== '+2' && course.level !== 'Secondary' && course.level !== 'Sr Secondary' && course.level !== 'Senior Secondary';
+    if (activeCategory === 'Diploma') return (course.category === 'Diploma' || course.courseType === 'Others' || course.category === 'Others' || course.level === 'Diploma') && course.category !== 'SSLC' && course.category !== '+2' && course.level !== 'Secondary' && course.level !== 'Sr Secondary' && course.level !== 'Senior Secondary';
     return course.category === activeCategory;
   };
 
