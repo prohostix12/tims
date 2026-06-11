@@ -5,66 +5,26 @@ import UniversityLogo from '@/models/UniversityLogo';
 export const dynamic = 'force-dynamic';
 
 const LOGOS = [
-  {
-    name: 'Manipal University Jaipur',
-    logoUrl: 'https://upload.wikimedia.org/wikipedia/en/thumb/7/7d/Manipal_Academy_of_Higher_Education_logo.svg/320px-Manipal_Academy_of_Higher_Education_logo.svg.png',
-    order: 1,
-  },
-  {
-    name: 'Jain University',
-    logoUrl: 'https://upload.wikimedia.org/wikipedia/en/thumb/3/30/Jain_University_logo.png/320px-Jain_University_logo.png',
-    order: 2,
-  },
-  {
-    name: 'Sikkim Manipal University',
-    logoUrl: 'https://upload.wikimedia.org/wikipedia/en/thumb/7/7f/Sikkim_Manipal_University_logo.png/240px-Sikkim_Manipal_University_logo.png',
-    order: 3,
-  },
-  {
-    name: 'Amrita Vishwa Vidyapeetham',
-    logoUrl: 'https://upload.wikimedia.org/wikipedia/en/thumb/4/4d/Amrita_logo.svg/320px-Amrita_logo.svg.png',
-    order: 4,
-  },
-  {
-    name: 'Amity University',
-    logoUrl: 'https://upload.wikimedia.org/wikipedia/en/thumb/4/44/Amity_University_logo.svg/320px-Amity_University_logo.svg.png',
-    order: 5,
-  },
-  {
-    name: 'Andhra University',
-    logoUrl: 'https://upload.wikimedia.org/wikipedia/en/thumb/d/d7/Andhra_University_logo.png/240px-Andhra_University_logo.png',
-    order: 6,
-  },
-  {
-    name: 'Aligarh Muslim University',
-    logoUrl: 'https://upload.wikimedia.org/wikipedia/en/thumb/1/1f/Aligarh_Muslim_University_crest.svg/200px-Aligarh_Muslim_University_crest.svg.png',
-    order: 7,
-  },
-  {
-    name: 'Mizoram University',
-    logoUrl: 'https://upload.wikimedia.org/wikipedia/en/thumb/3/3b/MZU_logo.png/200px-MZU_logo.png',
-    order: 8,
-  },
-  {
-    name: 'GLA University',
-    logoUrl: 'https://upload.wikimedia.org/wikipedia/en/thumb/7/77/GLA_University_Logo.jpg/200px-GLA_University_Logo.jpg',
-    order: 9,
-  },
-  {
-    name: 'Swami Vivekanand Subharti University',
-    logoUrl: 'https://upload.wikimedia.org/wikipedia/en/thumb/f/fa/Subharti_University_logo.png/200px-Subharti_University_logo.png',
-    order: 10,
-  },
-  {
-    name: 'Suresh Gyan Vihar University',
-    logoUrl: 'https://ui-avatars.com/api/?name=SGVU&background=006400&color=fff&size=256&bold=true&format=png',
-    order: 11,
-  },
-  {
-    name: 'Mangalayatan University',
-    logoUrl: 'https://ui-avatars.com/api/?name=Mangalayatan&background=8B1A1A&color=fff&size=256&bold=true&format=png',
-    order: 12,
-  },
+  { name: 'Manipal University Jaipur',            logoUrl: '/university-logos/manipal-jaipur.svg',  order: 1 },
+  { name: 'Jain University',                       logoUrl: '/university-logos/jain.svg',             order: 2 },
+  { name: 'Sikkim Manipal University',             logoUrl: '/university-logos/smu.svg',              order: 3 },
+  { name: 'Amrita Vishwa Vidyapeetham',            logoUrl: '/university-logos/amrita.svg',           order: 4 },
+  { name: 'Amity University',                      logoUrl: '/university-logos/amity.svg',            order: 5 },
+  { name: 'Andhra University',                     logoUrl: '/university-logos/andhra.svg',           order: 6 },
+  { name: 'Aligarh Muslim University',             logoUrl: '/university-logos/amu.svg',              order: 7 },
+  { name: 'Mizoram University',                    logoUrl: '/university-logos/mizoram.svg',          order: 8 },
+  { name: 'GLA University',                        logoUrl: '/university-logos/gla.svg',              order: 9 },
+  { name: 'Swami Vivekanand Subharti University',  logoUrl: '/university-logos/svsu.svg',             order: 10 },
+  { name: 'Suresh Gyan Vihar University',          logoUrl: '/university-logos/sgvu.svg',             order: 11 },
+  { name: 'Mangalayatan University',               logoUrl: '/university-logos/mangalayatan.svg',     order: 12 },
+  { name: 'Manipal University',                    logoUrl: '/university-logos/manipal.svg',          order: 13 },
+  { name: 'LPU',                                   logoUrl: '/university-logos/lpu.svg',              order: 14 },
+  { name: 'Chandigarh University',                 logoUrl: '/university-logos/chandigarh.svg',       order: 15 },
+  { name: 'IGNOU',                                 logoUrl: '/university-logos/ignou.svg',            order: 16 },
+  { name: 'Symbiosis',                             logoUrl: '/university-logos/symbiosis.svg',        order: 17 },
+  { name: 'Annamalai University',                  logoUrl: '/university-logos/annamalai.svg',        order: 18 },
+  { name: 'Venkateshwara University',              logoUrl: '/university-logos/venkateshwara.svg',    order: 19 },
+  { name: 'Karnataka State Open University',       logoUrl: '/university-logos/karnataka.svg',        order: 20 },
 ];
 
 export async function GET() {
@@ -75,7 +35,7 @@ export async function GET() {
     for (const logo of LOGOS) {
       const doc = await UniversityLogo.findOneAndUpdate(
         { name: logo.name },
-        { $setOnInsert: { ...logo, isActive: true } },
+        { $set: { logoUrl: logo.logoUrl, order: logo.order, isActive: true } },
         { upsert: true, new: true }
       );
       results.push({ name: logo.name, id: doc._id });
@@ -83,7 +43,7 @@ export async function GET() {
 
     return NextResponse.json({
       success: true,
-      message: `Seeded ${results.length} university logos`,
+      message: `Seeded/updated ${results.length} university logos`,
       logos: results,
     });
   } catch (error: any) {

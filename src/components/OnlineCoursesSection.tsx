@@ -212,7 +212,10 @@ export default function OnlineCoursesSection() {
                       src={logo.logoUrl}
                       alt={logo.name}
                       className={styles.logoImg}
-                      onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = 'none'; }}
+                      onError={(e) => {
+                        const img = e.currentTarget as HTMLImageElement;
+                        img.style.display = 'none';
+                      }}
                     />
                   </div>
                 ))}
