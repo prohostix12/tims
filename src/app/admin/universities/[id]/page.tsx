@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
-import { ArrowLeft, Edit, Globe, Mail, MapPin, Calendar, Award, CheckCircle, Shield, Building2 } from 'lucide-react';
+import { ArrowLeft, Edit, Globe, Mail, MapPin, Calendar, Award, CheckCircle, Shield, Building2, BookOpen, Loader2 } from 'lucide-react';
 
 export default function UniversityDetailsPage() {
   const params = useParams();
@@ -10,6 +10,9 @@ export default function UniversityDetailsPage() {
   const [uni, setUni] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [programs, setPrograms] = useState<any[]>([]);
+  const [programsLoading, setProgramsLoading] = useState(true);
+  const [activeLevel, setActiveLevel] = useState<'ALL' | 'UG' | 'PG'>('ALL');
 
   useEffect(() => {
     if (!id) return;
@@ -25,7 +28,19 @@ export default function UniversityDetailsPage() {
         setLoading(false);
       }
     };
+    const fetchPrograms = async () => {
+      try {
+        const res = await fetch(`/api/admin/programs?universityId=${id}`);
+        if (res.ok) {
+          const data = await res.json();
+          setPrograms(Array.isArray(data) ? data : []);
+        }
+      } finally {
+        setProgramsLoading(false);
+      }
+    };
     fetchUniversity();
+    fetchPrograms();
   }, [id]);
 
   if (loading) {
@@ -175,6 +190,86 @@ export default function UniversityDetailsPage() {
 
         </div>
       </div>
+
+      {/* ── Programs / Courses Section ─────────────────────────────── */}
+      <div style={{ marginTop: '2rem', background: '#fff', borderRadius: '16px', boxShadow: '0 4px 12px rgba(0,0,0,0.03)', border: '1px solid #e2e8f0', padding: '2rem' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem', flexWrap: 'wrap', gap: '1rem' }}>
+          <h3 style={{ fontSize: '1.2rem', fontWeight: 700, color: '#0f172a', margin: 0, display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            <BookOpen size={20} color="#E8502A" /> Courses Offered
+            <span style={{ background: '#f1f5f9', color: '#64748b', borderRadius: '999px', padding: '0.15rem 0.6rem', fontSize: '0.8rem', fontWeight: 700 }}>
+              {programs.length}
+            </span>
+          </h3>
+          {/* Level filter tabs */}
+          <div style={{ display: 'flex', gap: '0.4rem' }}>
+            {(['ALL', 'UG', 'PG'] as const).map(lvl => (
+              <button key={lvl} onClick={() => setActiveLevel(lvl)} style={{
+                padding: '0.4rem 1rem', borderRadius: '999px', border: '2px solid',
+                borderColor: activeLevel === lvl ? '#E8502A' : '#e2e8f0',
+                background: activeLevel === lvl ? '#E8502A' : '#fff',
+                color: activeLevel === lvl ? '#fff' : '#64748b',
+                fontWeight: 700, fontSize: '0.82rem', cursor: 'pointer',
+              }}>{lvl === 'ALL' ? 'All' : lvl}</button>
+            ))}
+          </div>
+        </div>
+
+        {programsLoading ? (
+          <div style={{ textAlign: 'center', padding: '3rem', color: '#64748b', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }}>
+            <Loader2 size={20} style={{ animation: 'spin 1s linear infinite' }} /> Loading courses...
+          </div>
+        ) : programs.length === 0 ? (
+          <div style={{ textAlign: 'center', padding: '3rem', color: '#94a3b8', background: '#f8fafc', borderRadius: '12px', border: '1px dashed #e2e8f0' }}>
+            No courses found for this university.
+          </div>
+        ) : (
+          <div style={{ overflowX: 'auto' }}>
+            <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.88rem' }}>
+              <thead>
+                <tr style={{ background: '#f8fafc', borderBottom: '2px solid #e2e8f0' }}>
+                  {['Course Name', 'Level', 'Stream', 'Duration', 'Fee (₹)'].map(h => (
+                    <th key={h} style={{ padding: '0.65rem 1rem', textAlign: 'left', fontWeight: 700, color: '#64748b', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.05em', whiteSpace: 'nowrap' }}>{h}</th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {programs
+                  .filter(p => activeLevel === 'ALL' || p.level === activeLevel)
+                  .map((p: any, i: number) => {
+                    const courseTypeColors: Record<string, string> = {
+                      IT: '#3b82f6', Management: '#8b5cf6', Commerce: '#059669',
+                      Arts: '#f59e0b', Science: '#06b6d4', Others: '#64748b',
+                    };
+                    const color = courseTypeColors[p.courseType] || '#64748b';
+                    return (
+                      <tr key={p._id} style={{ borderBottom: '1px solid #f1f5f9', background: i % 2 === 0 ? '#fff' : '#fafafa' }}>
+                        <td style={{ padding: '0.7rem 1rem', fontWeight: 600, color: '#1e293b' }}>{p.name}</td>
+                        <td style={{ padding: '0.7rem 1rem' }}>
+                          <span style={{ background: p.level === 'UG' ? '#dbeafe' : '#ede9fe', color: p.level === 'UG' ? '#1d4ed8' : '#6d28d9', borderRadius: '999px', padding: '0.2rem 0.65rem', fontSize: '0.75rem', fontWeight: 700 }}>
+                            {p.level || '—'}
+                          </span>
+                        </td>
+                        <td style={{ padding: '0.7rem 1rem' }}>
+                          <span style={{ background: `${color}18`, color, borderRadius: '999px', padding: '0.2rem 0.65rem', fontSize: '0.75rem', fontWeight: 700 }}>
+                            {p.courseType || '—'}
+                          </span>
+                        </td>
+                        <td style={{ padding: '0.7rem 1rem', color: '#475569' }}>{p.duration || '—'}</td>
+                        <td style={{ padding: '0.7rem 1rem', fontWeight: 700, color: '#0f172a' }}>
+                          {p.fee ? `₹${Number(p.fee).toLocaleString('en-IN')}` : '—'}
+                        </td>
+                      </tr>
+                    );
+                  })}
+              </tbody>
+            </table>
+            {programs.filter(p => activeLevel === 'ALL' || p.level === activeLevel).length === 0 && (
+              <div style={{ textAlign: 'center', padding: '2rem', color: '#94a3b8' }}>No {activeLevel} courses found.</div>
+            )}
+          </div>
+        )}
+      </div>
+
     </div>
   );
 }
