@@ -246,77 +246,52 @@ export default function ScholarshipPage() {
     }
   };
 
-  const downloadVoucher = () => {
+  const downloadVoucher = async () => {
     if (!result?.voucher) return;
     const { voucher, applicantName: aName, course, university, score, total } = result;
     const validDate = new Date(voucher.validUntil).toLocaleDateString('en-IN', {
       day: 'numeric', month: 'long', year: 'numeric',
     });
-    const brand = getVoucherBrand(university);
-    const brandHtml = brand
-      ? `<div class="brand">${brand}</div>`
-      : '';
 
-    const html = `<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8"/>
-<title>Scholarship Voucher – ${aName}</title>
-<style>
-  *{box-sizing:border-box;margin:0;padding:0}
-  body{font-family:'Segoe UI',Arial,sans-serif;background:#f3f4f6;display:flex;align-items:center;justify-content:center;min-height:100vh;padding:24px}
-  .wrap{background:#fff;border:3px solid #E8502A;border-radius:20px;padding:40px 44px;max-width:560px;width:100%;box-shadow:0 12px 40px rgba(232,80,42,.18)}
-  .org{font-size:.82rem;font-weight:700;letter-spacing:.1em;color:#94a3b8;text-transform:uppercase;margin-bottom:6px}
-  .title{font-size:1.55rem;font-weight:900;color:#002060;margin-bottom:4px}
-  .sub{font-size:.88rem;color:#64748b;margin-bottom:28px}
-  .divider{height:1px;background:#e2e8f0;margin:22px 0}
-  .amount-wrap{text-align:center;margin:24px 0 10px}
-  .amount{font-size:4.2rem;font-weight:900;color:#E8502A;line-height:1}
-  .amount-label{font-size:.95rem;color:#64748b;margin-top:4px}
-  .code-wrap{background:#fff5f0;border:2px dashed #E8502A;border-radius:12px;padding:14px 20px;text-align:center;margin:20px 0}
-  .code-label{font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:#94a3b8;font-weight:700;margin-bottom:4px}
-  .code{font-family:'Courier New',monospace;font-size:1.45rem;letter-spacing:.14em;color:#002060;font-weight:700}
-  .details{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:18px 0}
-  .det{background:#f8fafc;border-radius:10px;padding:12px 14px}
-  .det-l{font-size:.72rem;color:#94a3b8;font-weight:700;text-transform:uppercase;letter-spacing:.06em;margin-bottom:3px}
-  .det-v{font-size:.92rem;color:#002060;font-weight:700}
-  .valid{text-align:center;color:#94a3b8;font-size:.8rem;margin-top:20px}
-  .badge{display:inline-block;background:#fff5f0;border:1.5px solid rgba(232,80,42,.3);color:#E8502A;font-size:.78rem;font-weight:700;padding:3px 12px;border-radius:999px;margin-bottom:18px}
-  .brand{text-align:center;font-size:.85rem;font-weight:700;color:#002060;margin-top:16px;letter-spacing:.04em;padding-top:12px;border-top:1px solid #e2e8f0}
-  @media print{body{background:#fff;padding:0} .wrap{box-shadow:none}}
-</style>
-</head>
-<body>
-<div class="wrap">
-  <div class="org">Find Your University</div>
-  <div class="title">Scholarship Voucher</div>
-  <div class="sub">Congratulations on qualifying for our scholarship program!</div>
-  <div class="badge">${voucher.label}</div>
-  <div class="amount-wrap">
-    <div class="amount">₹${voucher.amount.toLocaleString('en-IN')}</div>
-    <div class="amount-label">Scholarship Discount</div>
-  </div>
-  <div class="code-wrap">
-    <div class="code-label">Voucher Code</div>
-    <div class="code">${voucher.code}</div>
-  </div>
-  <div class="details">
-    <div class="det"><div class="det-l">Student Name</div><div class="det-v">${aName}</div></div>
-    <div class="det"><div class="det-l">Score</div><div class="det-v">${score} / ${total} correct</div></div>
-    <div class="det"><div class="det-l">Course Applied</div><div class="det-v">${course}</div></div>
-    <div class="det"><div class="det-l">Program</div><div class="det-v">${university}</div></div>
-  </div>
-  <div class="divider"></div>
-  <div class="valid">Valid until: <strong>${validDate}</strong> &nbsp;·&nbsp; ${voucher.validityDays} days from issue &nbsp;·&nbsp; Present at the time of admission</div>
-  ${brandHtml}
-</div>
-<script>window.onload=()=>{window.print()}</script>
-</body>
-</html>`;
-    const blob = new Blob([html], { type: 'text/html' });
-    const url = URL.createObjectURL(blob);
-    window.open(url, '_blank');
-    setTimeout(() => URL.revokeObjectURL(url), 10000);
+    // Build a hidden div, capture with html2canvas, export with jsPDF
+    const div = document.createElement('div');
+    div.style.cssText = 'position:fixed;left:-9999px;top:0;width:560px;background:#fff;font-family:Segoe UI,Arial,sans-serif;padding:0;z-index:-1';
+    div.innerHTML = `
+      <div style="background:#fff;border:3px solid #E8502A;border-radius:20px;padding:40px 44px;width:560px;box-sizing:border-box">
+        <div style="font-size:11px;font-weight:700;letter-spacing:2px;color:#94a3b8;text-transform:uppercase;margin-bottom:6px">Find Your University</div>
+        <div style="font-size:26px;font-weight:900;color:#002060;margin-bottom:4px">Scholarship Voucher</div>
+        <div style="font-size:13px;color:#64748b;margin-bottom:20px">Congratulations on qualifying for our scholarship program!</div>
+        <div style="display:inline-block;background:#fff5f0;border:1.5px solid rgba(232,80,42,.3);color:#E8502A;font-size:12px;font-weight:700;padding:4px 14px;border-radius:999px;margin-bottom:18px">${voucher.label}</div>
+        <div style="text-align:center;margin:16px 0 8px">
+          <div style="font-size:62px;font-weight:900;color:#E8502A;line-height:1">&#8377;${voucher.amount.toLocaleString('en-IN')}</div>
+          <div style="font-size:14px;color:#64748b;margin-top:4px">Scholarship Discount</div>
+        </div>
+        <div style="background:#fff5f0;border:2px dashed #E8502A;border-radius:12px;padding:14px 20px;text-align:center;margin:18px 0">
+          <div style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:#94a3b8;font-weight:700;margin-bottom:4px">Voucher Code</div>
+          <div style="font-family:Courier New,monospace;font-size:22px;letter-spacing:3px;color:#002060;font-weight:700">${voucher.code}</div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:14px 0">
+          <div style="background:#f8fafc;border-radius:10px;padding:12px 14px"><div style="font-size:10px;color:#94a3b8;font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-bottom:3px">Student Name</div><div style="font-size:13px;color:#002060;font-weight:700">${aName}</div></div>
+          <div style="background:#f8fafc;border-radius:10px;padding:12px 14px"><div style="font-size:10px;color:#94a3b8;font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-bottom:3px">Score</div><div style="font-size:13px;color:#002060;font-weight:700">${score} / ${total} correct</div></div>
+          <div style="background:#f8fafc;border-radius:10px;padding:12px 14px"><div style="font-size:10px;color:#94a3b8;font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-bottom:3px">Course Applied</div><div style="font-size:13px;color:#002060;font-weight:700">${course}</div></div>
+          <div style="background:#f8fafc;border-radius:10px;padding:12px 14px"><div style="font-size:10px;color:#94a3b8;font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-bottom:3px">Program</div><div style="font-size:13px;color:#002060;font-weight:700">${university}</div></div>
+        </div>
+        <div style="height:1px;background:#e2e8f0;margin:18px 0"></div>
+        <div style="text-align:center;color:#94a3b8;font-size:12px">Valid until: <strong style="color:#475569">${validDate}</strong> &nbsp;·&nbsp; ${voucher.validityDays} days &nbsp;·&nbsp; Present at time of admission</div>
+      </div>`;
+    document.body.appendChild(div);
+
+    try {
+      const html2canvas = (await import('html2canvas')).default;
+      const { jsPDF } = await import('jspdf');
+      const canvas = await html2canvas(div.firstElementChild as HTMLElement, { scale: 2, useCORS: true, backgroundColor: '#ffffff' });
+      const imgData = canvas.toDataURL('image/png');
+      const pdf = new jsPDF({ orientation: 'portrait', unit: 'px', format: [canvas.width / 2, canvas.height / 2] });
+      pdf.addImage(imgData, 'PNG', 0, 0, canvas.width / 2, canvas.height / 2);
+      pdf.save(`Scholarship-Voucher-${aName.replace(/\s+/g, '-')}.pdf`);
+    } finally {
+      document.body.removeChild(div);
+    }
   };
 
   const copyCode = () => {
