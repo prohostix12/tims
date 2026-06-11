@@ -478,7 +478,7 @@ export default function CourseFinder() {
   // FALLBACK_QUESTIONS are already loaded as default state — zero wait for users.
   useEffect(() => {
     const controller = new AbortController();
-    const timer = setTimeout(() => controller.abort(), 3000);
+    const timer = setTimeout(() => controller.abort(), 10000);
     fetch('/api/public/course-finder-questions', { cache: 'no-store', signal: controller.signal })
       .then(r => {
         if (!r.ok) throw new Error();
@@ -522,7 +522,7 @@ export default function CourseFinder() {
     setLoading(true);
     try {
       // Save quiz answers as lead in background
-      const formattedAnswers = questions.map(q => { const opt = q.options.find((o: any) => o.value === answers[q.field]); return opt ? opt.label : ''; }).filter(Boolean).join(' | ');
+      const formattedAnswers = questions.map(q => { const key = q.field || q.stepId; const opt = q.options.find((o: any) => o.value === answers[key]); return opt ? opt.label : ''; }).filter(Boolean).join(' | ');
       fetch('/api/leads', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ name: userData.name, email: userData.email, phone: userData.phone || 'N/A', source: 'Course Finder Quiz', description: `Preferences: ${formattedAnswers}` }) }).catch(() => {});
 
       const controller = new AbortController();
@@ -573,7 +573,7 @@ export default function CourseFinder() {
   // Determine options based on education selection
   let currentOptions = currentQ?.options || [];
 
-  const allAnswered = currentQ && answers[currentQ.field];
+  const allAnswered = currentQ && answers[currentQ.field || currentQ.stepId];
 
   const trackCourseClick = async (program: any) => {
     try {
@@ -637,8 +637,8 @@ export default function CourseFinder() {
                     {currentOptions.map((opt: any) => (
                       <button
                         key={opt.value}
-                        className={`cf-option-btn ${answers[currentQ.field] === opt.value ? 'selected' : ''}`}
-                        onClick={() => handleOption(currentQ.field, opt.value)}
+                        className={`cf-option-btn ${answers[currentQ.field || currentQ.stepId] === opt.value ? 'selected' : ''}`}
+                        onClick={() => handleOption(currentQ.field || currentQ.stepId, opt.value)}
                       >
                         <span className="cf-option-icon">{optionIcon(opt.value)}</span>
                         <span>{opt.label}</span>
