@@ -38,6 +38,7 @@ export default function EditUniversity() {
         .then(res => res.json())
         .then(data => {
           if (!data.error) {
+            const cleanUrl = (val: string) => (val && val.startsWith('data:')) ? '' : (val || '');
             setFormData({
               name: data.name || '',
               code: data.code || '',
@@ -50,8 +51,8 @@ export default function EditUniversity() {
               accreditations: data.accreditations || '',
               type: data.type || 'private',
               contactEmail: data.contactEmail || '',
-              image: data.image || '',
-              logo: data.logo || '',
+              image: cleanUrl(data.image),
+              logo: cleanUrl(data.logo),
               features: Array.isArray(data.features) ? data.features.join(', ') : (data.features || '')
             });
             if (data.facilities && data.facilities.length > 0) {
@@ -268,10 +269,10 @@ export default function EditUniversity() {
             <div className={styles.formGrid} style={{ padding: 0 }}>
               <div>
                 <label className={styles.label}>Main Image URL</label>
-                <input 
+                <input
                   name="image"
-                  type="url" 
-                  placeholder="https://example.edu/image.jpg" 
+                  type="text"
+                  placeholder="https://example.edu/image.jpg"
                   className={styles.input}
                   value={formData.image}
                   onChange={handleChange}
@@ -279,10 +280,10 @@ export default function EditUniversity() {
               </div>
               <div>
                 <label className={styles.label}>Logo URL</label>
-                <input 
+                <input
                   name="logo"
-                  type="url" 
-                  placeholder="https://example.edu/logo.png" 
+                  type="text"
+                  placeholder="https://example.edu/logo.png"
                   className={styles.input}
                   value={formData.logo}
                   onChange={handleChange}

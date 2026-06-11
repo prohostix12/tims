@@ -19,7 +19,10 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
     const { id } = await params;
     await connectDB();
     const body = await request.json();
-    const doc = await University.findByIdAndUpdate(id, body, { new: true });
+    // Strip base64 blobs — only accept real URLs
+    if (body.image && body.image.startsWith('data:')) delete body.image;
+    if (body.logo && body.logo.startsWith('data:')) delete body.logo;
+    const doc = await University.findByIdAndUpdate(id, { $set: body }, { new: true, runValidators: false });
     return NextResponse.json(doc);
   } catch (error: any) {
     return NextResponse.json({ error: error.message }, { status: 500 });
