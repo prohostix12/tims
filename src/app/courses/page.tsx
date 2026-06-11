@@ -38,7 +38,7 @@ const CourseCard = ({ course, i, onEnquire }: { course: any, i: number, onEnquir
       
       <div className={styles.cardContent}>
         <span className={styles.courseCategory}>{course.category}</span>
-        <h3 className={styles.courseTitle}>{course.title}</h3>
+        <h3 className={styles.courseTitle}>{cleanHeaderTitle(course.title)}</h3>
         <p className={styles.courseDescription}>
           {course.description}
         </p>
