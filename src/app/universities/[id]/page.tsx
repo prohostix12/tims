@@ -20,8 +20,6 @@ import {
 } from 'lucide-react';
 import EnquiryModal from '@/components/EnquiryModal';
 
-import UniversityLogoBanner from '@/components/UniversityLogoBanner';
-
 export default function UniversityDetailPage() {
   const { id } = useParams();
   const [uni, setUni] = useState<any>(null);
@@ -69,7 +67,6 @@ export default function UniversityDetailPage() {
   return (
     <>
       <main style={{ minHeight: '100vh', background: '#F0E6CE', paddingBottom: '100px' }}>
-        <UniversityLogoBanner />
         {/* Hero Section */}
         <div style={{ position: 'relative', minHeight: '550px', width: '100%', overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center', paddingTop: '80px' }}>
           <Image 

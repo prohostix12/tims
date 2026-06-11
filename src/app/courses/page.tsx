@@ -62,7 +62,7 @@ export default function CoursesPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedInterest, setSelectedInterest] = useState('');
 
-  const categories = ['All', 'Degree', 'Post Graduate', 'Credit Transfer', 'Others'];
+  const categories = ['All', 'SSLC/Plus Two', 'UG', 'PG', 'Credit Transfer', 'Diploma'];
   
   useEffect(() => {
     fetch('/api/admin/programs', { cache: 'no-store' })
@@ -98,10 +98,11 @@ export default function CoursesPage() {
 
   const categoryMatches = (course: any) => {
     if (activeCategory === 'All') return true;
-    if (activeCategory === 'Degree') return course.level === 'UG' || course.category === 'Online UG';
-    if (activeCategory === 'Post Graduate') return course.level === 'PG' || course.category === 'Online PG';
+    if (activeCategory === 'UG') return (course.level === 'UG' || course.category === 'Online UG') && course.category !== 'SSLC' && course.category !== '+2' && course.level !== 'Secondary' && course.level !== 'Sr Secondary' && course.level !== 'Senior Secondary';
+    if (activeCategory === 'PG') return course.level === 'PG' || course.category === 'Online PG';
     if (activeCategory === 'Credit Transfer') return course.category === 'Credit Transfer';
-    if (activeCategory === 'Others') return course.courseType === 'Others' || course.category === 'Others';
+    if (activeCategory === 'SSLC/Plus Two') return course.category === 'SSLC' || course.category === '+2' || course.level === 'Secondary' || course.level === 'Sr Secondary' || course.level === 'Senior Secondary';
+    if (activeCategory === 'Diploma') return (course.category === 'Diploma' || course.courseType === 'Others' || course.category === 'Others') && course.category !== 'SSLC' && course.category !== '+2' && course.level !== 'Secondary' && course.level !== 'Sr Secondary' && course.level !== 'Senior Secondary';
     return course.category === activeCategory;
   };
 

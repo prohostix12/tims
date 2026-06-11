@@ -86,10 +86,10 @@ const EnquiryModal: React.FC<EnquiryModalProps> = ({
   };
 
   return (
-    <div className="modal-overlay">
-      <div className="modal-content">
-        <button className="modal-close" onClick={onClose}>
-          <X size={24} />
+    <div className="modal-overlay" onClick={onClose}>
+      <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+        <button className="modal-close" onClick={onClose} aria-label="Close modal">
+          <X size={20} />
         </button>
 
         {success ? (
@@ -181,8 +181,10 @@ const EnquiryModal: React.FC<EnquiryModalProps> = ({
           background: #ffffff;
           width: 100%;
           max-width: 500px;
+          max-height: calc(100vh - 40px);
+          overflow-y: auto;
           border-radius: 24px;
-          padding: 40px;
+          padding: 30px;
           position: relative;
           box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
           animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
@@ -208,12 +210,13 @@ const EnquiryModal: React.FC<EnquiryModalProps> = ({
         }
 
         .modal-header {
-          margin-bottom: 30px;
+          margin-bottom: 20px;
           text-align: center;
+          padding-right: 20px;
         }
 
         .modal-header h2 {
-          font-size: 1.75rem;
+          font-size: 1.5rem;
           font-weight: 800;
           color: #0f172a;
           margin-bottom: 8px;
@@ -221,19 +224,19 @@ const EnquiryModal: React.FC<EnquiryModalProps> = ({
 
         .modal-header p {
           color: #64748b;
-          font-size: 0.95rem;
+          font-size: 0.9rem;
         }
 
         .enquiry-form {
           display: flex;
           flex-direction: column;
-          gap: 20px;
+          gap: 16px;
         }
 
         .input-group {
           display: flex;
           flex-direction: column;
-          gap: 8px;
+          gap: 6px;
         }
 
         .input-group label {
@@ -246,10 +249,10 @@ const EnquiryModal: React.FC<EnquiryModalProps> = ({
         }
 
         .input-group input, .input-group textarea {
-          padding: 12px 16px;
+          padding: 10px 14px;
           border-radius: 12px;
           border: 2px solid #e2e8f0;
-          font-size: 1rem;
+          font-size: 0.95rem;
           transition: all 0.2s;
           font-family: inherit;
         }
@@ -263,10 +266,10 @@ const EnquiryModal: React.FC<EnquiryModalProps> = ({
         .submit-button {
           background: #ef233c;
           color: white;
-          padding: 14px;
+          padding: 12px;
           border-radius: 12px;
           font-weight: 700;
-          font-size: 1rem;
+          font-size: 0.95rem;
           border: none;
           cursor: pointer;
           display: flex;
@@ -274,7 +277,7 @@ const EnquiryModal: React.FC<EnquiryModalProps> = ({
           justify-content: center;
           gap: 10px;
           transition: all 0.2s;
-          margin-top: 10px;
+          margin-top: 5px;
         }
 
         .submit-button:hover:not(:disabled) {
