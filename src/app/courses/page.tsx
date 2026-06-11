@@ -75,6 +75,7 @@ export default function CoursesPage() {
             title: c.name || c.title || '',
             level: c.level || '',
             category: c.category || '',
+            courseType: c.courseType || '',
             description: c.description || '',
             duration: c.duration || '',
             eligibility: c.eligibility || '',
@@ -95,8 +96,16 @@ export default function CoursesPage() {
 
   const universities = ['All', ...Array.from(new Set(courses.map(c => c.universityName).filter(Boolean))).sort()];
 
+  const categoryMatches = (course: any) => {
+    if (activeCategory === 'All') return true;
+    if (activeCategory === 'Degree') return course.level === 'UG' || course.category === 'Online UG';
+    if (activeCategory === 'Post Graduate') return course.level === 'PG' || course.category === 'Online PG';
+    if (activeCategory === 'Others') return course.courseType === 'Others' || course.category === 'Others';
+    return course.category === activeCategory;
+  };
+
   const filteredCourses = courses.filter(course => {
-    const matchesCategory = activeCategory === 'All' || course.category === activeCategory;
+    const matchesCategory = categoryMatches(course);
     const matchesSearch = (course.title || '').toLowerCase().includes(searchQuery.toLowerCase());
     const matchesUniversity = selectedUniversity === 'All' || course.universityName === selectedUniversity;
     return matchesCategory && matchesSearch && matchesUniversity;
