@@ -311,135 +311,93 @@ function EnquiryGate({ onSuccess }: { onSuccess: (data: { name: string, email: s
   );
 }
 
-// ── Fallback questions (10 steps) — used when DB has no questions ──────────────
+// ── Fallback questions (6 steps) — used when DB has no questions ──────────────
 export const FALLBACK_QUESTIONS = [
   {
-    _id: 'fq1', field: 'what_course_are_you_interested', order: 1, isActive: true,
-    question: 'What course are you interested in pursuing?',
+    _id: 'fq1', stepId: 'qualification', field: 'qualification', order: 1, isActive: true,
+    question: "What's your highest qualification?",
+    subtitle: "We use this to find programs you are eligible for.",
+    emoji: "🎓",
     options: [
-      { value: 'mba', label: 'MBA' },
-      { value: 'mca', label: 'MCA' },
-      { value: 'm_com', label: 'M.COM' },
-      { value: 'ma', label: 'MA' },
-      { value: 'msc', label: 'MSC' },
-      { value: 'msw', label: 'MSW' },
-      { value: 'bba', label: 'BBA' },
-      { value: 'bca', label: 'BCA' },
-      { value: 'b_com', label: 'B.COM' },
-      { value: 'ba', label: 'BA' },
-      { value: 'bsc', label: 'BSC' },
-      { value: 'b_com_mba', label: 'B.COM+MBA' },
-      { value: 'bba_mba', label: 'BBA+MBA' },
-      { value: 'bca_mca', label: 'BCA+MCA' },
+      { value: 'sslc', label: '10th Pass (SSLC)', desc: 'Looking for 11th, 12th or foundation courses' },
+      { value: 'plus-two', label: '12th Pass (Plus Two)', desc: 'Ready for undergraduate programs' },
+      { value: 'graduate', label: 'Bachelor\'s Degree', desc: 'Looking for PG, MBA or professional programs' },
+      { value: 'postgraduate', label: 'Master\'s Degree', desc: 'Advanced certifications or research programs' }
     ],
   },
   {
-    _id: 'fq2', field: 'education', order: 2, isActive: true,
-    question: 'What is your highest qualification?',
+    _id: 'fq2', stepId: 'category', field: 'category', order: 2, isActive: true,
+    question: 'Which program category interests you?',
+    subtitle: 'Choose the type of course you want to pursue.',
+    emoji: '📋',
     options: [
-      { value: 'below_12',     label: 'Below 12th' },
-      { value: '12th',         label: '12th Pass'  },
-      { value: 'graduate',     label: 'Graduate (Bachelors)' },
-      { value: 'postgraduate', label: 'Post Graduate' },
+      { value: 'online_ug', label: 'Online UG' },
+      { value: 'online_pg', label: 'Online PG' },
+      { value: 'credit_transfer_program', label: 'Credit Transfer Program' },
+      { value: 'skill_integrated_diploma_programs', label: 'Skill Integrated Diploma Programs' },
+      { value: 'diploma', label: 'Diploma' },
+      { value: 'plus_two', label: 'Plus Two' },
+      { value: 'sslc', label: 'SSLC' }
     ],
   },
   {
-    _id: 'fq3', field: 'current_status', order: 3, isActive: true,
-    question: 'What are you currently doing?',
+    _id: 'fq3', stepId: 'interest', field: 'interest', order: 3, isActive: true,
+    question: 'Which subject area do you prefer?',
+    subtitle: 'Pick the field you want to build your career in.',
+    emoji: '💡',
     options: [
-      { value: 'student', label: 'Studying / Student' },
-      { value: 'working', label: 'Working Professional' },
-      { value: 'fresher', label: 'Fresher / Job Seeking' },
-      { value: 'other',   label: 'Homemaker / Other' },
+      { value: 'management', label: 'Management & Business', desc: 'MBA, BBA, B.Com, M.Com, Finance' },
+      { value: 'technology', label: 'Technology & Computers', desc: 'BCA, MCA, B.Tech, IT certifications' },
+      { value: 'arts-science', label: 'Arts, Science & Humanities', desc: 'BA, B.Sc, MA, M.Sc, Literature' },
+      { value: 'foundation', label: '10th / 12th Foundation', desc: 'NIOS, BOSSE programs' },
+      { value: 'skill', label: 'Skill & Short Courses', desc: 'Digital marketing, Tally, Spoken English' },
+      { value: 'any', label: 'Show All Options', desc: 'No preference — show me everything' }
     ],
   },
   {
-    _id: 'fq4', field: 'field', order: 4, isActive: true,
-    question: 'Which field of study interests you?',
+    _id: 'fq4', stepId: 'mode', field: 'mode', order: 4, isActive: true,
+    question: 'How do you prefer to study?',
+    subtitle: 'Choose what fits your schedule and lifestyle.',
+    emoji: '💻',
     options: [
-      { value: 'commerce',   label: 'Commerce',    categories: ['B.Com', 'M.Com', 'BBA', 'MBA', 'Commerce'] },
-      { value: 'arts',       label: 'Arts',         categories: ['BA', 'MA', 'Arts'] },
-      { value: 'science',    label: 'Science',      categories: ['B.Sc', 'M.Sc', 'Science'] },
-      { value: 'technology', label: 'Technology',   categories: ['BCA', 'MCA', 'B.Tech', 'M.Tech', 'Computer'] },
-      { value: 'management', label: 'Management',   categories: ['MBA', 'BBA', 'PGDM', 'Management'] },
-      { value: 'law',        label: 'Law',          categories: ['LLB', 'LLM', 'Law'] },
+      { value: 'online', label: 'Online (Live & Interactive)', desc: 'Study from home with real-time classes' },
+      { value: 'distance', label: 'Distance Learning', desc: 'Self-paced study with materials' },
+      { value: 'hybrid', label: 'Hybrid (Both)', desc: 'Mix of online and offline study' }
     ],
   },
   {
-    _id: 'fq5', field: 'specialization', order: 5, isActive: true,
-    question: 'Which specialization interests you most?',
+    _id: 'fq5', stepId: 'goal', field: 'goal', order: 5, isActive: true,
+    question: "What's your main goal?",
+    subtitle: "This helps us rank the most relevant programs for you.",
+    emoji: '🎯',
     options: [
-      { value: 'finance',     label: 'Finance & Accounting' },
-      { value: 'marketing',   label: 'Marketing & Sales' },
-      { value: 'it_software', label: 'IT & Software' },
-      { value: 'hr',          label: 'Human Resources' },
-      { value: 'operations',  label: 'Operations & Logistics' },
-      { value: 'general',     label: 'General / Not Sure' },
+      { value: 'degree', label: 'Get a Recognised Degree', desc: 'For govt jobs, higher studies, or career growth' },
+      { value: 'career-upgrade', label: 'Upgrade My Career', desc: 'A better job, promotion, or pay hike' },
+      { value: 'skill', label: 'Learn a Specific Skill', desc: 'Practical, job-ready skills fast' },
+      { value: 'govt-job', label: 'Prepare for Govt Jobs', desc: 'Eligibility for PSC, SSC, or banking exams' }
     ],
   },
   {
-    _id: 'fq6', field: 'goal', order: 6, isActive: true,
-    question: 'What is your primary career goal?',
+    _id: 'fq6', stepId: 'budget', field: 'budget', order: 6, isActive: true,
+    question: 'What is your annual budget?',
+    subtitle: 'We will filter out programs outside your range.',
+    emoji: '💰',
     options: [
-      { value: 'get_job',        label: 'Get a Job' },
-      { value: 'advance_career', label: 'Advance My Career' },
-      { value: 'switch_field',   label: 'Switch Career Field' },
-      { value: 'higher_studies', label: 'Pursue Higher Studies' },
-    ],
-  },
-  {
-    _id: 'fq7', field: 'pref_university_location', order: 7, isActive: true,
-    question: 'Do you prefer Indian or International Universities?',
-    options: [
-      { value: 'indian', label: 'Indian University' },
-      { value: 'international', label: 'International University' },
-      { value: 'both', label: 'Open to Both' },
-    ],
-  },
-  {
-    _id: 'fq8', field: 'university_type', order: 8, isActive: true,
-    question: 'What type of university do you prefer?',
-    options: [
-      { value: 'private', label: 'Private University' },
-      { value: 'public',  label: 'Public / Government' },
-      { value: 'state',   label: 'State University' },
-      { value: 'any',     label: 'No Preference' },
-    ],
-  },
-  {
-    _id: 'fq9', field: 'experience', order: 9, isActive: true,
-    question: 'How much work experience do you have?',
-    options: [
-      { value: 'no_experience', label: 'No Experience (Fresher)' },
-      { value: 'less_2',        label: 'Less than 2 Years' },
-      { value: 'two_five',      label: '2 – 5 Years' },
-      { value: 'five_plus',     label: '5+ Years' },
-    ],
-  },
-  {
-    _id: 'fq10', field: 'budget', order: 10, isActive: true,
-    question: 'What is your preferred fee range?',
-    options: [
-      { value: 'low',  label: 'Under ₹50,000',  max: 50000 },
-      { value: 'mid1', label: '₹50K – ₹1 Lakh', min: 50000,  max: 100000 },
-      { value: 'mid2', label: '₹1L – ₹2 Lakh',  min: 100000, max: 200000 },
-      { value: 'any',  label: 'No Preference' },
+      { value: 'low', label: 'Under ₹20,000 / year', desc: 'Very affordable options', max: 20000 },
+      { value: 'medium', label: '₹20,000 – ₹75,000 / year', desc: 'Mid-range programs', min: 20000, max: 75000 },
+      { value: 'high', label: 'Above ₹75,000 / year', desc: 'Premium universities', min: 75000 }
     ],
   },
 ];
 
 // ── Step label map ─────────────────────────────────────────────────────────────
 const STEP_LABELS = [
-  'Course Interest',     // step 1 – what_course_are_you_interested
-  'Qualification',       // step 2 – education
-  'Current Status',      // step 3 – current_status
-  'Field of Study',      // step 4 – field
-  'Specialization',      // step 5 – specialization
-  'Career Goal',         // step 6 – goal
-  'University Location', // step 7 – pref_university_location
-  'University Type',     // step 8 – university_type
-  'Experience',          // step 9 – experience
-  'Budget',              // step 10 – budget
+  'Qualification',
+  'Category Interest',
+  'Subject Area',
+  'Study Mode',
+  'Career Goal',
+  'Budget',
 ];
 
 export default function CourseFinder() {

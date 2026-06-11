@@ -1,6 +1,9 @@
-import { NextResponse } from 'next/server';
-import { CourseFinderQuestion } from '@/models/CourseFinderQuestion';
-import connectDB from '@/lib/db';
+require('dotenv').config({ path: '.env.local' });
+const mongoose = require('mongoose');
+const uri = process.env.MONGODB_URI;
+
+const schema = new mongoose.Schema({}, { strict: false });
+const CourseFinderQuestion = mongoose.models.CourseFinderQuestion || mongoose.model('CourseFinderQuestion', schema);
 
 const FALLBACK_QUESTIONS = [
   {
@@ -80,18 +83,11 @@ const FALLBACK_QUESTIONS = [
   },
 ];
 
-export async function POST(req: Request) {
-  try {
-    await connectDB();
-    
-    // Clear existing to avoid duplicates when seeding
-    await CourseFinderQuestion.deleteMany({});
-    
-    // Insert new
-    await CourseFinderQuestion.insertMany(FALLBACK_QUESTIONS);
-
-    return NextResponse.json({ success: true, message: 'Seeded successfully' });
-  } catch (error: any) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
-  }
+async function main() {
+  await mongoose.connect(uri);
+  await CourseFinderQuestion.deleteMany({});
+  await CourseFinderQuestion.insertMany(FALLBACK_QUESTIONS);
+  console.log('Successfully seeded 6 questions into database');
+  await mongoose.disconnect();
 }
+main();

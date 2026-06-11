@@ -21,33 +21,17 @@ const COURSE_NAME_PATTERN: Record<string, string> = {
   bca_mca:   '(?:BCA|MCA)',
 };
 
-const FIELD_TO_COURSE_TYPE: Record<string, string> = {
-  commerce:   'Commerce',
-  arts:       'Arts',
-  science:    'Science',
-  technology: 'IT',
-  management: 'Management',
-  medical:    'Medical',
-  law:        'Others',
-};
-
 const UG_PREFIX = '^(B\\.?Com|BBA|BCA|B\\.?A|B\\.?Sc|BSc|B\\.?Tech|BTech|BMS|BJMC|BHM|LLB|B\\.?Pharm|B\\.?Ed|BE\\b|Diploma|Secondary|Senior Secondary|Adib|Fazil|Vocational)';
 const PG_PREFIX = '^(MBA|MCA|M\\.?Com|M\\.?Sc|MSc|M\\.?Tech|MTech|PGDM|MMS|LLM|M\\.?Ed|M\\.?Pharm|Ph\\.?D|PhD|M\\.?A|MSW|ME\\b|Post Graduate)';
 
 function getAnswer(answers: Record<string, string>, questions: any[], field: string): string {
-  const q = questions.find((q: any) => q.field === field);
-  return (q ? answers[q.field] : answers[field]) || '';
-}
-
-function getCourseFilter(val: string): Record<string, any> | null {
-  const p = COURSE_NAME_PATTERN[val];
-  if (!p) return null;
-  // Match on both name and category fields
-  return { $or: [{ name: { $regex: p, $options: 'i' } }, { category: { $regex: p, $options: 'i' } }] };
+  const q = questions.find((q: any) => q.field === field || q.stepId === field);
+  return (q ? answers[q.field || q.stepId] : answers[field]) || '';
 }
 
 function getEduFilter(val: string): Record<string, any> | null {
-  if (val === '12th') {
+  if (!val) return null;
+  if (val === 'plus-two' || val === '12th') {
     return {
       $or: [
         { level: { $regex: '^(UG|Under|Bachelor|Diploma)', $options: 'i' } },
@@ -63,29 +47,39 @@ function getEduFilter(val: string): Record<string, any> | null {
       ],
     };
   }
-  return null; // below_12 → no level filter
+  return null;
 }
 
-function getFieldFilter(val: string, fieldOpt: any): Record<string, any> | null {
-  if (!val || val === 'skill' || val === 'openschool') return null;
-  const courseType = FIELD_TO_COURSE_TYPE[val];
-  if (!courseType) return null;
-  return { courseType };
+function getCategoryFilter(val: string): Record<string, any> | null {
+  if (!val) return null;
+  if (val === 'online_ug') return { $or: [{ level: 'UG' }, { category: { $regex: 'UG|Degree', $options: 'i' } }] };
+  if (val === 'online_pg') return { $or: [{ level: 'PG' }, { category: { $regex: 'PG|Post Graduate', $options: 'i' } }] };
+  if (val === 'credit_transfer_program') return { category: 'Credit Transfer' };
+  if (val === 'diploma') return { category: 'Diploma' };
+  if (val === 'sslc') return { category: 'SSLC' };
+  if (val === 'plus_two') return { category: '+2' };
+  return null;
 }
 
-function getSpecFilter(val: string): Record<string, any> | null {
-  if (!val || val === 'general') return null;
-  const specMap: Record<string, string[]> = {
-    finance:     ['Finance', 'Accounting', 'Banking'],
-    marketing:   ['Marketing', 'Sales', 'Advertising'],
-    it_software: ['IT', 'Software', 'Computer', 'Information Technology'],
-    hr:          ['HR', 'Human Resource'],
-    operations:  ['Operations', 'Logistics', 'Supply Chain'],
+function getInterestFilter(val: string): Record<string, any> | null {
+  if (!val || val === 'any') return null;
+  const map: Record<string, string> = {
+    management: 'Management|Commerce',
+    technology: 'IT',
+    'arts-science': 'Arts|Science',
+    foundation: 'Others',
+    skill: 'Others'
   };
-  const kw = specMap[val];
-  if (!kw) return null;
-  const rx = kw.map(k => new RegExp(k, 'i'));
-  return { $or: [{ 'specializations.title': { $in: rx } }, { category: { $in: rx } }, { name: { $in: rx } }] };
+  const type = map[val];
+  if (!type) return null;
+  return { courseType: { $regex: type, $options: 'i' } };
+}
+
+function getModeFilter(val: string): Record<string, any> | null {
+  if (!val) return null;
+  if (val === 'online') return { type: 'Online' };
+  if (val === 'distance') return { type: { $regex: 'Distance|Open', $options: 'i' } };
+  return null;
 }
 
 function getBudgetFilter(val: string, budgetQ: any): Record<string, any> | null {
@@ -113,8 +107,6 @@ async function queryPrograms(q: Record<string, any>, limit = 20): Promise<any[]>
 }
 
 export async function POST(req: Request) {
-  // Universities and programs are fetched independently so a program-query
-  // failure never prevents universities from being returned.
   let allUnis: any[] = [];
   let programs: any[] = [];
 
@@ -124,22 +116,19 @@ export async function POST(req: Request) {
     const body   = await req.json();
     const { answers = {}, questions = [] } = body;
 
-    const courseAns  = getAnswer(answers, questions, 'what_course_are_you_interested');
-    const eduAns     = getAnswer(answers, questions, 'education');
-    const fieldAns   = getAnswer(answers, questions, 'field');
-    const specAns    = getAnswer(answers, questions, 'specialization');
-    const budgetAns  = getAnswer(answers, questions, 'budget');
-    const uniTypeAns = getAnswer(answers, questions, 'university_type');
+    const eduAns      = getAnswer(answers, questions, 'qualification');
+    const categoryAns = getAnswer(answers, questions, 'category');
+    const interestAns = getAnswer(answers, questions, 'interest');
+    const modeAns     = getAnswer(answers, questions, 'mode');
+    const budgetAns   = getAnswer(answers, questions, 'budget');
 
-    const fieldQ  = questions.find((q: any) => q.field === 'field');
-    const fieldOpt = fieldQ?.options?.find((o: any) => o.value === fieldAns);
-    const budgetQ  = questions.find((q: any) => q.field === 'budget');
+    const budgetQ  = questions.find((q: any) => q.field === 'budget' || q.stepId === 'budget');
 
-    const courseF  = getCourseFilter(courseAns);
-    const eduF     = getEduFilter(eduAns);
-    const fieldF   = getFieldFilter(fieldAns, fieldOpt);
-    const specF    = getSpecFilter(specAns);
-    const budgetF  = getBudgetFilter(budgetAns, budgetQ);
+    const eduF      = getEduFilter(eduAns);
+    const catF      = getCategoryFilter(categoryAns);
+    const interestF = getInterestFilter(interestAns);
+    const modeF     = getModeFilter(modeAns);
+    const budgetF   = getBudgetFilter(budgetAns, budgetQ);
 
     // ── Fetch universities independently (always returned even if programs fail) ──
     try {
@@ -150,25 +139,14 @@ export async function POST(req: Request) {
     } catch { /* universities unavailable — return empty list */ }
 
     // ── Progressive relaxation: most specific → least specific ───────────────
-    // Each stage builds on the answers given; if a stage returns results, we stop.
     const stages: Array<Record<string, any>> = [];
 
-    if (courseF) {
-      // Most specific: exact course + all refinements
-      stages.push(merge(courseF, eduF, fieldF, specF, budgetF));
-      stages.push(merge(courseF, eduF, fieldF, budgetF));
-      stages.push(merge(courseF, eduF, fieldF));
-      stages.push(merge(courseF, eduF));
-      stages.push(courseF); // course name alone — always catches something
-    }
-
-    if (eduF || fieldF) {
-      if (specF) stages.push(merge(eduF, fieldF, specF, budgetF));
-      stages.push(merge(eduF, fieldF, budgetF));
-      stages.push(merge(eduF, fieldF));
-      if (eduF) stages.push(eduF);
-      if (fieldF) stages.push(fieldF);
-    }
+    stages.push(merge(catF, eduF, interestF, modeF, budgetF));
+    stages.push(merge(catF, eduF, interestF, budgetF));
+    stages.push(merge(catF, eduF, interestF));
+    stages.push(merge(catF, eduF));
+    if (catF) stages.push(catF);
+    if (eduF) stages.push(eduF);
 
     // Deduplicate identical query objects before running them
     const seen = new Set<string>();
@@ -189,13 +167,6 @@ export async function POST(req: Request) {
       try { programs = await queryPrograms({}, 12); } catch { /* DB may be down */ }
     }
 
-    // ── University type post-filter ──────────────────────────────────────────
-    const normType = uniTypeAns && uniTypeAns !== 'any' ? uniTypeAns.toLowerCase() : null;
-    if (normType && programs.length > 0) {
-      const typed = programs.filter((p: any) => (p.university?.type || '').toLowerCase() === normType);
-      if (typed.length > 0) programs = typed;
-    }
-
     programs.sort((a: any, b: any) => (b.featured ? 1 : 0) - (a.featured ? 1 : 0));
     const finalPrograms = programs.slice(0, 8);
 
@@ -209,14 +180,7 @@ export async function POST(req: Request) {
       if (u?._id && !uniMap.has(String(u._id))) uniMap.set(String(u._id), u);
     });
 
-    let universities = Array.from(uniMap.values());
-    if (normType) {
-      universities.sort((a: any, b: any) => {
-        const aM = (a.type || '').toLowerCase() === normType ? 0 : 1;
-        const bM = (b.type || '').toLowerCase() === normType ? 0 : 1;
-        return aM - bM;
-      });
-    }
+    const universities = Array.from(uniMap.values());
 
     return NextResponse.json({
       programs: finalPrograms,
@@ -225,7 +189,6 @@ export async function POST(req: Request) {
 
   } catch (err) {
     console.error('course-finder-results error:', err);
-    // Even on total failure, return whatever universities we managed to fetch
     return NextResponse.json({ programs: [], universities: allUnis.slice(0, 10) });
   }
 }
