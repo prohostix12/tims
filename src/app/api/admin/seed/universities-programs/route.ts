@@ -385,6 +385,59 @@ const PROGRAMS_BY_UNIVERSITY: Record<string, Array<{
   ],
 };
 
+/* ── Credit Transfer Programs ────────────────────────────────────── */
+const CREDIT_TRANSFER_PROGRAMS: Array<{
+  universityCode: string;
+  name: string; duration: string; fee: number; courseType: string; eligibility: string;
+}> = [
+  // Manipal University Jaipur
+  { universityCode: 'MUJ', name: 'B.Tech Lateral Entry (Civil Engineering)', duration: '2 Years', fee: 175000, courseType: 'Science', eligibility: 'Diploma in Engineering (3 years)' },
+  { universityCode: 'MUJ', name: 'B.Tech Lateral Entry (Computer Science)', duration: '2 Years', fee: 175000, courseType: 'IT', eligibility: 'Diploma in Engineering (3 years)' },
+  { universityCode: 'MUJ', name: 'BCA Lateral Entry', duration: '2 Years', fee: 115000, courseType: 'IT', eligibility: 'Diploma in Computer Science / BCA 1st year completed' },
+  { universityCode: 'MUJ', name: 'BBA Lateral Entry', duration: '2 Years', fee: 115000, courseType: 'Management', eligibility: 'Diploma in Business Management' },
+  { universityCode: 'MUJ', name: 'B.Com Lateral Entry', duration: '2 Years', fee: 99000, courseType: 'Commerce', eligibility: 'Diploma in Commerce or 1 year B.Com completed' },
+
+  // Jain University
+  { universityCode: 'JU', name: 'BCA Lateral Entry', duration: '2 Years', fee: 65000, courseType: 'IT', eligibility: 'Diploma in Computer Science / 1 year BCA completed' },
+  { universityCode: 'JU', name: 'BBA Lateral Entry', duration: '2 Years', fee: 65000, courseType: 'Management', eligibility: 'Diploma in Business / 1 year BBA completed' },
+  { universityCode: 'JU', name: 'B.Com Lateral Entry', duration: '2 Years', fee: 58000, courseType: 'Commerce', eligibility: 'Diploma in Commerce / 1 year B.Com completed' },
+  { universityCode: 'JU', name: 'MBA (Working Professionals)', duration: '2 Years', fee: 95000, courseType: 'Management', eligibility: 'Bachelor\'s degree with 2+ years work experience' },
+
+  // Amity University
+  { universityCode: 'AMITY', name: 'B.Tech Lateral Entry (Computer Science)', duration: '2 Years', fee: 198000, courseType: 'IT', eligibility: 'Diploma in Engineering (3 years)' },
+  { universityCode: 'AMITY', name: 'BCA Lateral Entry', duration: '2 Years', fee: 150000, courseType: 'IT', eligibility: 'Diploma in Computer Science / 1 year BCA completed' },
+  { universityCode: 'AMITY', name: 'BBA Lateral Entry', duration: '2 Years', fee: 155000, courseType: 'Management', eligibility: 'Diploma in Business / 1 year BBA completed' },
+  { universityCode: 'AMITY', name: 'MBA (Credit Transfer — International)', duration: '2 Years', fee: 250000, courseType: 'Management', eligibility: 'Bachelor\'s degree with credits from a recognised institution' },
+
+  // GLA University
+  { universityCode: 'GLA', name: 'BCA Lateral Entry', duration: '2 Years', fee: 85000, courseType: 'IT', eligibility: 'Diploma in Computer Science / 1 year BCA completed' },
+  { universityCode: 'GLA', name: 'B.Com Lateral Entry', duration: '2 Years', fee: 60000, courseType: 'Commerce', eligibility: 'Diploma in Commerce / 1 year B.Com completed' },
+  { universityCode: 'GLA', name: 'BBA Lateral Entry', duration: '2 Years', fee: 85000, courseType: 'Management', eligibility: 'Diploma in Business / 1 year BBA completed' },
+
+  // SVSU
+  { universityCode: 'SVSU', name: 'BBA Lateral Entry', duration: '2 Years', fee: 70000, courseType: 'Management', eligibility: 'Diploma in Business / 1 year BBA completed' },
+  { universityCode: 'SVSU', name: 'B.Com Lateral Entry', duration: '2 Years', fee: 48000, courseType: 'Commerce', eligibility: 'Diploma in Commerce / 1 year B.Com completed' },
+  { universityCode: 'SVSU', name: 'MBA (Credit Transfer)', duration: '2 Years', fee: 72000, courseType: 'Management', eligibility: 'Bachelor\'s degree with credits from a recognised institution' },
+
+  // Andhra University
+  { universityCode: 'AU', name: 'B.Com Lateral Entry', duration: '2 Years', fee: 38000, courseType: 'Commerce', eligibility: 'Diploma in Commerce / 1 year B.Com completed' },
+  { universityCode: 'AU', name: 'BBA Lateral Entry', duration: '2 Years', fee: 38000, courseType: 'Management', eligibility: 'Diploma in Business / 1 year BBA completed' },
+
+  // SGVU
+  { universityCode: 'SGVU', name: 'BCA Lateral Entry', duration: '2 Years', fee: 78000, courseType: 'IT', eligibility: 'Diploma in Computer Science / 1 year BCA completed' },
+  { universityCode: 'SGVU', name: 'B.Com Lateral Entry', duration: '2 Years', fee: 60000, courseType: 'Commerce', eligibility: 'Diploma in Commerce / 1 year B.Com completed' },
+  { universityCode: 'SGVU', name: 'MBA (Credit Transfer)', duration: '2 Years', fee: 75000, courseType: 'Management', eligibility: 'Bachelor\'s degree with credits from a recognised institution' },
+
+  // Amrita
+  { universityCode: 'AMRITA', name: 'BCA Lateral Entry', duration: '2 Years', fee: 130000, courseType: 'IT', eligibility: 'Diploma in Computer Science / 1 year BCA completed' },
+  { universityCode: 'AMRITA', name: 'MBA (Credit Transfer)', duration: '2 Years', fee: 170000, courseType: 'Management', eligibility: 'Bachelor\'s degree with credits from a recognised institution' },
+
+  // Mangalayatan
+  { universityCode: 'MGTN', name: 'BCA Lateral Entry', duration: '2 Years', fee: 72000, courseType: 'IT', eligibility: 'Diploma in Computer Science / 1 year BCA completed' },
+  { universityCode: 'MGTN', name: 'B.Com Lateral Entry', duration: '2 Years', fee: 44000, courseType: 'Commerce', eligibility: 'Diploma in Commerce / 1 year B.Com completed' },
+  { universityCode: 'MGTN', name: 'MBA (Credit Transfer)', duration: '2 Years', fee: 72000, courseType: 'Management', eligibility: 'Bachelor\'s degree with credits from a recognised institution' },
+];
+
 export async function GET() {
   try {
     await connectDB();
@@ -434,12 +487,40 @@ export async function GET() {
       };
     }
 
-    const totalPrograms = Object.values(summary).reduce((sum, s) => sum + s.programs, 0);
+    // Seed Credit Transfer programs
+    let ctInserted = 0;
+    for (const p of CREDIT_TRANSFER_PROGRAMS) {
+      const university = await University.findOne({ code: p.universityCode });
+      if (!university) continue;
+      const slug = `${slugify(p.universityCode)}-ct-${slugify(p.name)}`;
+      await Program.findOneAndUpdate(
+        { slug },
+        {
+          $setOnInsert: {
+            name: p.name,
+            university: university._id,
+            slug,
+            duration: p.duration,
+            type: 'Online',
+            category: 'Credit Transfer',
+            level: 'UG',
+            eligibility: p.eligibility,
+            courseType: p.courseType,
+            fee: p.fee,
+          },
+        },
+        { upsert: true, new: true }
+      );
+      ctInserted++;
+    }
+
+    const totalPrograms = Object.values(summary).reduce((sum, s) => sum + s.programs, 0) + ctInserted;
 
     return NextResponse.json({
       success: true,
-      message: `Seeded ${UNIVERSITIES.length} universities and ${totalPrograms} programs from edufolio.org`,
+      message: `Seeded ${UNIVERSITIES.length} universities, ${totalPrograms - ctInserted} regular programs, and ${ctInserted} Credit Transfer programs`,
       summary,
+      creditTransfer: ctInserted,
     });
   } catch (error: any) {
     return NextResponse.json({ success: false, error: error.message }, { status: 500 });

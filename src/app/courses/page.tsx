@@ -62,7 +62,7 @@ export default function CoursesPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedInterest, setSelectedInterest] = useState('');
 
-  const categories = ['All', 'SSLC', '+2', 'Degree', 'Post Graduate', 'Diploma', 'Others'];
+  const categories = ['All', 'Degree', 'Post Graduate', 'Credit Transfer', 'Others'];
   
   useEffect(() => {
     fetch('/api/admin/programs', { cache: 'no-store' })
@@ -100,6 +100,7 @@ export default function CoursesPage() {
     if (activeCategory === 'All') return true;
     if (activeCategory === 'Degree') return course.level === 'UG' || course.category === 'Online UG';
     if (activeCategory === 'Post Graduate') return course.level === 'PG' || course.category === 'Online PG';
+    if (activeCategory === 'Credit Transfer') return course.category === 'Credit Transfer';
     if (activeCategory === 'Others') return course.courseType === 'Others' || course.category === 'Others';
     return course.category === activeCategory;
   };
