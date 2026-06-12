@@ -52,7 +52,7 @@ const FooterSecondary = () => {
           </div>
           <div className={styles.socialIcons} style={{ marginTop: '1.5rem' }}>
             <a href="#" className={styles.socialIcon} aria-label="Facebook"><Facebook size={18} /></a>
-            <a href="#" className={styles.socialIcon} aria-label="Instagram"><Instagram size={18} /></a>
+            <a href="https://www.instagram.com/find_youruniversity?igsh=YW55NmE0czY3dncz&utm_source=qr" className={styles.socialIcon} aria-label="Instagram" target="_blank" rel="noopener noreferrer"><Instagram size={18} /></a>
             <a href="#" className={styles.socialIcon} aria-label="Youtube"><Youtube size={18} /></a>
           </div>
         </div>
