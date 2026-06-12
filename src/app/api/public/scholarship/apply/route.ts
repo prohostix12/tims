@@ -43,6 +43,8 @@ export async function POST(req: Request) {
     if (prog.includes('online ug')) category = 'Online UG';
     else if (prog.includes('online pg')) category = 'Online PG';
     else if (prog.includes('credit transfer')) category = 'Credit Transfer';
+    else if (prog.includes('sidp') || prog.includes('skill')) category = 'SIDP (Skill Integrated Diploma Programs)';
+    else if (prog.includes('diploma')) category = 'Diploma';
     else category = 'General';
 
     // Try to get questions from the matching bank; fall back to General
@@ -55,7 +57,7 @@ export async function POST(req: Request) {
     }
 
     const config = await ScholarshipConfig.findOne({}) || await ScholarshipConfig.create({});
-    const questionsPerExam: number = config.totalQuestionsForScore ?? 5;
+    const questionsPerExam: number = config.totalQuestionsForScore ?? 10;
 
     // Shuffle the category pool, then take the first N — each student gets a different random subset
     const shuffled = shuffle(allQuestions);

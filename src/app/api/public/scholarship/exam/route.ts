@@ -32,14 +32,14 @@ export async function GET(req: Request) {
       return a;
     };
 
-    const questions = application.questionIds
+    const questions = shuffle(application.questionIds
       .map((id: any) => questionMap.get(String(id)))
       .filter(Boolean)
       .map((q: any) => ({
         _id: q._id,
         question: q.question,
         options: shuffle(q.options.map((o: any) => ({ text: o.text, isCorrect: o.isCorrect }))),
-      }));
+      })));
 
     return NextResponse.json({ questions, applicantName: application.name });
   } catch (error: any) {

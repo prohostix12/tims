@@ -5,7 +5,7 @@ export interface IOption {
   isCorrect: boolean;
 }
 
-export type QuestionCategory = 'Online UG' | 'Online PG' | 'Credit Transfer' | 'General';
+export type QuestionCategory = 'Online UG' | 'Online PG' | 'Credit Transfer' | 'SIDP (Skill Integrated Diploma Programs)' | 'Diploma' | 'General';
 
 export interface IScholarshipQuestion extends Document {
   question: string;
@@ -25,7 +25,7 @@ const ScholarshipQuestionSchema: Schema = new Schema({
   options:  { type: [OptionSchema], required: true },
   order:    { type: Number, default: 0 },
   isActive: { type: Boolean, default: true },
-  category: { type: String, enum: ['Online UG', 'Online PG', 'Credit Transfer', 'General'], default: 'General' },
+  category: { type: String, enum: ['Online UG', 'Online PG', 'Credit Transfer', 'SIDP (Skill Integrated Diploma Programs)', 'Diploma', 'General'], default: 'General' },
 }, { timestamps: true });
 
 // If the cached model is missing the category path (stale HMR cache), force re-registration

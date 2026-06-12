@@ -15,7 +15,7 @@ const ScholarshipQuestionSchema = new mongoose.Schema({
   options: [{ text: { type: String, required: true }, isCorrect: { type: Boolean, default: false } }],
   order: { type: Number, default: 0 },
   isActive: { type: Boolean, default: true },
-  category: { type: String, enum: ['Online UG', 'Online PG', 'Credit Transfer', 'General'], default: 'General' },
+  category: { type: String, enum: ['Online UG', 'Online PG', 'Credit Transfer', 'SIDP (Skill Integrated Diploma Programs)', 'Diploma', 'General'], default: 'General' },
 }, { timestamps: true });
 
 const ScholarshipQuestion = mongoose.models.ScholarshipQuestion || 
@@ -132,6 +132,116 @@ const onlineUGQuestions = [
       { text: 'Only live classroom sessions', isCorrect: false },
     ],
   },
+  {
+    question: 'What does "UGC-DEB" stand for in Indian higher education?',
+    category: 'Online UG',
+    order: 11,
+    options: [
+      { text: 'University Grants Commission - Distance Education Bureau', isCorrect: true },
+      { text: 'Under Graduate Course - Department of Education Board', isCorrect: false },
+      { text: 'University Governance Council - Degree Evaluation Bureau', isCorrect: false },
+      { text: 'Union General Committee of Distance Exams', isCorrect: false },
+    ],
+  },
+  {
+    question: 'Which of the following is an example of an online undergraduate course?',
+    category: 'Online UG',
+    order: 12,
+    options: [
+      { text: 'BBA or BCA', isCorrect: true },
+      { text: 'Doctor of Medicine (MD)', isCorrect: false },
+      { text: 'PhD in Research', isCorrect: false },
+      { text: 'M.Tech in Nanotechnology', isCorrect: false },
+    ],
+  },
+  {
+    question: 'What is the main medium of instruction in most online UG courses in India?',
+    category: 'Online UG',
+    order: 13,
+    options: [
+      { text: 'English or regional language digital content', isCorrect: true },
+      { text: 'Only Sanskrit language lectures', isCorrect: false },
+      { text: 'Foreign languages like French', isCorrect: false },
+      { text: 'Physical classrooms only', isCorrect: false },
+    ],
+  },
+  {
+    question: 'Which of the following is a benefit of online UG programs over traditional programs?',
+    category: 'Online UG',
+    order: 14,
+    options: [
+      { text: 'Affordable fees and self-paced learning flexibility', isCorrect: true },
+      { text: 'Compulsory daily travel expenses', isCorrect: false },
+      { text: 'Requires full-time classroom sitting', isCorrect: false },
+      { text: 'No exams are required at all', isCorrect: false },
+    ],
+  },
+  {
+    question: 'What technology is essential for attending online UG classes?',
+    category: 'Online UG',
+    order: 15,
+    options: [
+      { text: 'A computer or smartphone with stable internet', isCorrect: true },
+      { text: 'A satellite television connection', isCorrect: false },
+      { text: 'A VR gaming console', isCorrect: false },
+      { text: 'No technology is needed', isCorrect: false },
+    ],
+  },
+  {
+    question: 'How do online UG programs verify student identity during exams?',
+    category: 'Online UG',
+    order: 16,
+    options: [
+      { text: 'Online proctoring using webcams and AI tools', isCorrect: true },
+      { text: 'Using physical signature on paper only', isCorrect: false },
+      { text: 'No verification is done', isCorrect: false },
+      { text: 'By submitting phone recordings', isCorrect: false },
+    ],
+  },
+  {
+    question: 'What is the minimum eligibility criteria for admission into a UG program in India?',
+    category: 'Online UG',
+    order: 17,
+    options: [
+      { text: '10+2 passing certificate', isCorrect: true },
+      { text: 'Bachelor\'s degree completion', isCorrect: false },
+      { text: '10 years of work experience', isCorrect: false },
+      { text: 'Post-graduation degree', isCorrect: false },
+    ],
+  },
+  {
+    question: 'Are printed textbooks usually provided in purely online UG courses?',
+    category: 'Online UG',
+    order: 18,
+    options: [
+      { text: 'They are optional, as digital study material is the norm', isCorrect: true },
+      { text: 'They are strictly compulsory for all students', isCorrect: false },
+      { text: 'Printed books are never allowed', isCorrect: false },
+      { text: 'Books are not used in online courses', isCorrect: false },
+    ],
+  },
+  {
+    question: 'Which of the following describes the interaction in online UG courses?',
+    category: 'Online UG',
+    order: 19,
+    options: [
+      { text: 'Asynchronous forum discussions and synchronous live classes', isCorrect: true },
+      { text: 'In-person classroom group projects only', isCorrect: false },
+      { text: 'No interaction is possible between students and faculty', isCorrect: false },
+      { text: 'Only via post letters', isCorrect: false },
+    ],
+  },
+  {
+    question: 'What is the maximum duration typically allowed to complete a 3-year online UG degree?',
+    category: 'Online UG',
+    order: 20,
+    options: [
+      { text: '5 to 6 years', isCorrect: true },
+      { text: 'Exactly 3 years only', isCorrect: false },
+      { text: '10 years', isCorrect: false },
+      { text: 'Infinite years', isCorrect: false },
+    ],
+  },
 ];
 
 const onlinePGQuestions = [
@@ -173,7 +283,7 @@ const onlinePGQuestions = [
     category: 'Online PG',
     order: 4,
     options: [
-      { text: 'MBA, M.Tech, M.Com, M.Sc, MA', isCorrect: true },
+      { text: 'MBA, MCA, M.Com, M.Sc, MA', isCorrect: true },
       { text: 'Only MBA programs', isCorrect: false },
       { text: 'Only Certificate courses', isCorrect: false },
       { text: 'Only Diploma programs', isCorrect: false },
@@ -243,6 +353,116 @@ const onlinePGQuestions = [
       { text: 'No career benefits from online PG degrees', isCorrect: false },
       { text: 'Career decline compared to undergraduate', isCorrect: false },
       { text: 'ROI is not applicable for PG degrees', isCorrect: false },
+    ],
+  },
+  {
+    question: 'Which organization approves distance and online PG courses in India?',
+    category: 'Online PG',
+    order: 11,
+    options: [
+      { text: 'UGC-DEB', isCorrect: true },
+      { text: 'NCERT', isCorrect: false },
+      { text: 'AICTE only', isCorrect: false },
+      { text: 'State Board only', isCorrect: false },
+    ],
+  },
+  {
+    question: 'What is the primary objective of an online MBA program?',
+    category: 'Online PG',
+    order: 12,
+    options: [
+      { text: 'To build advanced managerial and leadership capabilities', isCorrect: true },
+      { text: 'To teach basic coding skills', isCorrect: false },
+      { text: 'To prepare for physical security jobs', isCorrect: false },
+      { text: 'To avoid any professional training', isCorrect: false },
+    ],
+  },
+  {
+    question: 'What does the term "asynchronous learning" mean in online PG education?',
+    category: 'Online PG',
+    order: 13,
+    options: [
+      { text: 'Accessing pre-recorded lectures and materials at any time', isCorrect: true },
+      { text: 'Attending live classes strictly at 9 AM', isCorrect: false },
+      { text: 'Sitting in a laboratory in-person', isCorrect: false },
+      { text: 'Doing exams in groups', isCorrect: false },
+    ],
+  },
+  {
+    question: 'What is a major criteria for selecting a good online PG program?',
+    category: 'Online PG',
+    order: 14,
+    options: [
+      { text: 'Accreditation, NAAC grade, and placement support', isCorrect: true },
+      { text: 'The size of the university building', isCorrect: false },
+      { text: 'Whether they offer free lunch', isCorrect: false },
+      { text: 'Having no teachers in the department', isCorrect: false },
+    ],
+  },
+  {
+    question: 'How do online PG students interact with professors?',
+    category: 'Online PG',
+    order: 15,
+    options: [
+      { text: 'Via email, chat forums, and live query-resolution sessions', isCorrect: true },
+      { text: 'Only by visiting their homes', isCorrect: false },
+      { text: 'Interaction is strictly prohibited', isCorrect: false },
+      { text: 'Through local newspapers', isCorrect: false },
+    ],
+  },
+  {
+    question: 'Which PG course is best suited for working professionals aiming at software engineering management?',
+    category: 'Online PG',
+    order: 16,
+    options: [
+      { text: 'Online MCA', isCorrect: true },
+      { text: 'Online MA History', isCorrect: false },
+      { text: 'Online M.Com', isCorrect: false },
+      { text: 'Online B.Sc', isCorrect: false },
+    ],
+  },
+  {
+    question: 'Is an online PG degree valid for government job applications in India?',
+    category: 'Online PG',
+    order: 17,
+    options: [
+      { text: 'Yes, if the university is recognized by UGC-DEB', isCorrect: true },
+      { text: 'No, government jobs never accept online PG', isCorrect: false },
+      { text: 'Only if the candidate is already in a government job', isCorrect: false },
+      { text: 'Only in state government jobs', isCorrect: false },
+    ],
+  },
+  {
+    question: 'What type of projects are online PG students required to submit in the final semester?',
+    category: 'Online PG',
+    order: 18,
+    options: [
+      { text: 'Capstone projects or research dissertations', isCorrect: true },
+      { text: 'Simple homework exercises only', isCorrect: false },
+      { text: 'No projects are required', isCorrect: false },
+      { text: 'A report on campus visit', isCorrect: false },
+    ],
+  },
+  {
+    question: 'What is the significance of NAAC grading for a university offering online PG?',
+    category: 'Online PG',
+    order: 19,
+    options: [
+      { text: 'It indicates the overall quality and standards of the institution', isCorrect: true },
+      { text: 'It specifies the number of computer labs', isCorrect: false },
+      { text: 'It dictates the university holiday schedule', isCorrect: false },
+      { text: 'It is a state tax classification', isCorrect: false },
+    ],
+  },
+  {
+    question: 'Which of the following is crucial for managing coursework in an online PG program?',
+    category: 'Online PG',
+    order: 20,
+    options: [
+      { text: 'Effective time management and self-study habits', isCorrect: true },
+      { text: 'Frequent campus visits', isCorrect: false },
+      { text: 'Buying expensive printed encyclopedias', isCorrect: false },
+      { text: 'Having a high-speed gaming computer', isCorrect: false },
     ],
   },
 ];
@@ -358,6 +578,562 @@ const creditTransferQuestions = [
       { text: 'No transfer limit exists', isCorrect: false },
     ],
   },
+  {
+    question: 'What does "lateral entry" mean in credit transfer?',
+    category: 'Credit Transfer',
+    order: 11,
+    options: [
+      { text: 'Joining a program at an advanced level/year based on prior credits', isCorrect: true },
+      { text: 'Entering college via side doors', isCorrect: false },
+      { text: 'Studying creative lateral thinking courses', isCorrect: false },
+      { text: 'Getting a degree without passing secondary school', isCorrect: false },
+    ],
+  },
+  {
+    question: 'What is credit mapping?',
+    category: 'Credit Transfer',
+    order: 12,
+    options: [
+      { text: 'Matching courses taken at a previous college to courses at the new college', isCorrect: true },
+      { text: 'Drawing a map of the college campus layout', isCorrect: false },
+      { text: 'Calculating the interest rate on credit cards', isCorrect: false },
+      { text: 'Finding out where classrooms are located', isCorrect: false },
+    ],
+  },
+  {
+    question: 'Can a student transfer credits from a foreign university to an Indian university?',
+    category: 'Credit Transfer',
+    order: 13,
+    options: [
+      { text: 'Yes, subject to AIU recognition and host university approval', isCorrect: true },
+      { text: 'No, foreign credits are strictly illegal in India', isCorrect: false },
+      { text: 'Only if the student is a foreign national', isCorrect: false },
+      { text: 'Yes, but only in engineering fields', isCorrect: false },
+    ],
+  },
+  {
+    question: 'What is an official academic transcript?',
+    category: 'Credit Transfer',
+    order: 14,
+    options: [
+      { text: 'A certified record of a student\'s academic history issued by their previous institution', isCorrect: true },
+      { text: 'A photocopy of class notebook', isCorrect: false },
+      { text: 'A syllabus document of courses', isCorrect: false },
+      { text: 'A letter of recommendation from head of department', isCorrect: false },
+    ],
+  },
+  {
+    question: 'Which body helps in verifying compatibility of international credits in India?',
+    category: 'Credit Transfer',
+    order: 15,
+    options: [
+      { text: 'Association of Indian Universities (AIU)', isCorrect: true },
+      { text: 'Reserve Bank of India (RBI)', isCorrect: false },
+      { text: 'Ministry of External Affairs', isCorrect: false },
+      { text: 'Local State Municipal Office', isCorrect: false },
+    ],
+  },
+  {
+    question: 'What happens to credits of a course where the student received a failing grade?',
+    category: 'Credit Transfer',
+    order: 16,
+    options: [
+      { text: 'Failing grades are not eligible for credit transfer', isCorrect: true },
+      { text: 'They are transferred with bonus marks', isCorrect: false },
+      { text: 'They are converted to passing marks automatically', isCorrect: false },
+      { text: 'They require paying extra fees to transfer', isCorrect: false },
+    ],
+  },
+  {
+    question: 'Why might a university reject a credit transfer request?',
+    category: 'Credit Transfer',
+    order: 17,
+    options: [
+      { text: 'If the course syllabus or level does not match the new program requirements', isCorrect: true },
+      { text: 'If the student has not paid local city taxes', isCorrect: false },
+      { text: 'Because of too many students on campus', isCorrect: false },
+      { text: 'If the previous college had a different color building', isCorrect: false },
+    ],
+  },
+  {
+    question: 'What is the "residency requirement" in a transfer university?',
+    category: 'Credit Transfer',
+    order: 18,
+    options: [
+      { text: 'The minimum number of credits a student must earn at the new university to graduate', isCorrect: true },
+      { text: 'The type of hostel room the student must live in', isCorrect: false },
+      { text: 'The address proof certificate required for admission', isCorrect: false },
+      { text: 'Having a permanent home in the same state', isCorrect: false },
+    ],
+  },
+  {
+    question: 'Which of the following is a benefit of transferring credits?',
+    category: 'Credit Transfer',
+    order: 19,
+    options: [
+      { text: 'Saving money on repeating courses and graduating early', isCorrect: true },
+      { text: 'Getting free housing on campus', isCorrect: false },
+      { text: 'Automatic exemption from writing final exams', isCorrect: false },
+      { text: 'Receiving a scholarship with no eligibility criteria', isCorrect: false },
+    ],
+  },
+  {
+    question: 'What is the first step in applying for a credit transfer?',
+    category: 'Credit Transfer',
+    order: 20,
+    options: [
+      { text: 'Obtaining official transcripts and submitting them for credit evaluation', isCorrect: true },
+      { text: 'Paying the full tuition fee of 3 years', isCorrect: false },
+      { text: 'Booking a hostel room', isCorrect: false },
+      { text: 'Registering for sports events', isCorrect: false },
+    ],
+  },
+];
+
+const sidpQuestions = [
+  {
+    question: 'What is the primary focus of SIDP?',
+    category: 'SIDP (Skill Integrated Diploma Programs)',
+    order: 1,
+    options: [
+      { text: 'Integrating professional skills with academic programs for employment', isCorrect: true },
+      { text: 'Teaching classical music theory only', isCorrect: false },
+      { text: 'Completing a pure research PhD in science', isCorrect: false },
+      { text: 'Getting a degree with zero study elements', isCorrect: false },
+    ],
+  },
+  {
+    question: 'Which course is a popular choice under the SIDP stream?',
+    category: 'SIDP (Skill Integrated Diploma Programs)',
+    order: 2,
+    options: [
+      { text: 'BBA + HR Management', isCorrect: true },
+      { text: 'MBBS in Surgery', isCorrect: false },
+      { text: 'B.Sc in Astrophysics', isCorrect: false },
+      { text: 'MA in Ancient History', isCorrect: false },
+    ],
+  },
+  {
+    question: 'How does SIDP differ from traditional degrees?',
+    category: 'SIDP (Skill Integrated Diploma Programs)',
+    order: 3,
+    options: [
+      { text: 'It includes industry-recognized skill certifications alongside the degree', isCorrect: true },
+      { text: 'It is twice as long in duration', isCorrect: false },
+      { text: 'It has no final examinations', isCorrect: false },
+      { text: 'It requires daily physical lab presence', isCorrect: false },
+    ],
+  },
+  {
+    question: 'What is the eligibility for SIDP courses?',
+    category: 'SIDP (Skill Integrated Diploma Programs)',
+    order: 4,
+    options: [
+      { text: '10+2 passing certificate from any recognized board', isCorrect: true },
+      { text: 'Master\'s degree completion', isCorrect: false },
+      { text: '10 years of industrial experience', isCorrect: false },
+      { text: 'Pass in a PhD entrance exam', isCorrect: false },
+    ],
+  },
+  {
+    question: 'Which industry sector is heavily targeted by BBA + Logistics?',
+    category: 'SIDP (Skill Integrated Diploma Programs)',
+    order: 5,
+    options: [
+      { text: 'Supply Chain, Warehouse Management, and Shipping', isCorrect: true },
+      { text: 'Healthcare and Hospital operations', isCorrect: false },
+      { text: 'Software coding and app development', isCorrect: false },
+      { text: 'Agriculture and farming techniques', isCorrect: false },
+    ],
+  },
+  {
+    question: 'Who benefits most from a "BBA + Hospital Administration" program?',
+    category: 'SIDP (Skill Integrated Diploma Programs)',
+    order: 6,
+    options: [
+      { text: 'Individuals seeking management roles in healthcare and hospitals', isCorrect: true },
+      { text: 'Civil engineers designing bridges', isCorrect: false },
+      { text: 'Financial stock brokers', isCorrect: false },
+      { text: 'Agriculture specialists', isCorrect: false },
+    ],
+  },
+  {
+    question: 'What does BCOM + ACCA provide to students?',
+    category: 'SIDP (Skill Integrated Diploma Programs)',
+    order: 7,
+    options: [
+      { text: 'A Commerce degree integrated with an internationally recognized accounting qualification', isCorrect: true },
+      { text: 'A banking license', isCorrect: false },
+      { text: 'A degree in computer architecture', isCorrect: false },
+      { text: 'An internship in hospitality only', isCorrect: false },
+    ],
+  },
+  {
+    question: 'What does SIDP stand for?',
+    category: 'SIDP (Skill Integrated Diploma Programs)',
+    order: 8,
+    options: [
+      { text: 'Skill Integrated Diploma Programs', isCorrect: true },
+      { text: 'Student Internship Development Pathway', isCorrect: false },
+      { text: 'Secondary Industry Degree Programme', isCorrect: false },
+      { text: 'Structured Information Degree Plan', isCorrect: false },
+    ],
+  },
+  {
+    question: 'Are internships part of the SIDP curriculum?',
+    category: 'SIDP (Skill Integrated Diploma Programs)',
+    order: 9,
+    options: [
+      { text: 'Yes, practical training and internships are highly encouraged', isCorrect: true },
+      { text: 'No, internships are strictly forbidden', isCorrect: false },
+      { text: 'Internships are only for PG courses', isCorrect: false },
+      { text: 'Only observation sessions are allowed', isCorrect: false },
+    ],
+  },
+  {
+    question: 'What are the job prospects after completing BBA + Digital Marketing?',
+    category: 'SIDP (Skill Integrated Diploma Programs)',
+    order: 10,
+    options: [
+      { text: 'SEO specialist, Social Media Manager, or digital marketing executive', isCorrect: true },
+      { text: 'Laboratory analyst', isCorrect: false },
+      { text: 'Tax consultant or auditor', isCorrect: false },
+      { text: 'Software developer', isCorrect: false },
+    ],
+  },
+  {
+    question: 'Which tool is crucial for students studying digital marketing under SIDP?',
+    category: 'SIDP (Skill Integrated Diploma Programs)',
+    order: 11,
+    options: [
+      { text: 'Google Analytics and search engine marketing tools', isCorrect: true },
+      { text: 'AutoCAD software', isCorrect: false },
+      { text: 'Mongoose database connector', isCorrect: false },
+      { text: 'Excel tally templates only', isCorrect: false },
+    ],
+  },
+  {
+    question: 'What is the primary role of an HR Manager trained under BBA + HR?',
+    category: 'SIDP (Skill Integrated Diploma Programs)',
+    order: 12,
+    options: [
+      { text: 'Recruiting, training, and managing employee relations', isCorrect: true },
+      { text: 'Keeping database servers active', isCorrect: false },
+      { text: 'Balancing the balance sheet of the company', isCorrect: false },
+      { text: 'Designing advertisement flyers', isCorrect: false },
+    ],
+  },
+  {
+    question: 'What type of certification do students receive in addition to the degree in SIDP?',
+    category: 'SIDP (Skill Integrated Diploma Programs)',
+    order: 13,
+    options: [
+      { text: 'A professional skill diploma or certificate from partner bodies', isCorrect: true },
+      { text: 'A license to practice law', isCorrect: false },
+      { text: 'A government clearance certificate', isCorrect: false },
+      { text: 'No additional certificates are given', isCorrect: false },
+    ],
+  },
+  {
+    question: 'Why is logistics important in modern business?',
+    category: 'SIDP (Skill Integrated Diploma Programs)',
+    order: 14,
+    options: [
+      { text: 'It ensures efficient movement and storage of goods and services', isCorrect: true },
+      { text: 'It decreases the quality of products', isCorrect: false },
+      { text: 'It bypasses the need for customer service departments', isCorrect: false },
+      { text: 'It is a form of digital banking security', isCorrect: false },
+    ],
+  },
+  {
+    question: 'Which course combines computer application knowledge with business administration under SIDP?',
+    category: 'SIDP (Skill Integrated Diploma Programs)',
+    order: 15,
+    options: [
+      { text: 'BBA + Business Management with IT focus', isCorrect: true },
+      { text: 'BA Literature', isCorrect: false },
+      { text: 'B.Sc Physics', isCorrect: false },
+      { text: 'B.Com General', isCorrect: false },
+    ],
+  },
+  {
+    question: 'Is the skill diploma under SIDP recognized internationally?',
+    category: 'SIDP (Skill Integrated Diploma Programs)',
+    order: 16,
+    options: [
+      { text: 'Yes, many skills are globally certified by partner industry bodies', isCorrect: true },
+      { text: 'No, it is only valid in Kerala', isCorrect: false },
+      { text: 'Only in neighboring Asian countries', isCorrect: false },
+      { text: 'Accreditation depends on the host state university only', isCorrect: false },
+    ],
+  },
+  {
+    question: 'What is the typical duration of an SIDP course?',
+    category: 'SIDP (Skill Integrated Diploma Programs)',
+    order: 17,
+    options: [
+      { text: '3 Years for integrated bachelor\'s degrees', isCorrect: true },
+      { text: '6 months only', isCorrect: false },
+      { text: '5 to 6 years', isCorrect: false },
+      { text: '1 Year only', isCorrect: false },
+    ],
+  },
+  {
+    question: 'How does "BCOM + Advanced Accountants" help in employment?',
+    category: 'SIDP (Skill Integrated Diploma Programs)',
+    order: 18,
+    options: [
+      { text: 'Provides hands-on training in tally, taxation, and advanced accounting tools', isCorrect: true },
+      { text: 'Qualifies students to become hardware engineers', isCorrect: false },
+      { text: 'Teaches web graphics design', isCorrect: false },
+      { text: 'It does not help with placements', isCorrect: false },
+    ],
+  },
+  {
+    question: 'What is the primary goal of the "BA + MTTC" program under SIDP?',
+    category: 'SIDP (Skill Integrated Diploma Programs)',
+    order: 19,
+    options: [
+      { text: 'To train students in travel, tourism, and airline management', isCorrect: true },
+      { text: 'To teach advanced physics concepts', isCorrect: false },
+      { text: 'To build database architecture skills', isCorrect: false },
+      { text: 'To prepare students for corporate banking examinations', isCorrect: false },
+    ],
+  },
+  {
+    question: 'Can SIDP students transition to postgraduate studies easily?',
+    category: 'SIDP (Skill Integrated Diploma Programs)',
+    order: 20,
+    options: [
+      { text: 'Yes, they receive a fully recognized bachelor\'s degree eligible for PG', isCorrect: true },
+      { text: 'No, they must write extra UG courses first', isCorrect: false },
+      { text: 'Only if they complete a 1-year internship abroad', isCorrect: false },
+      { text: 'SIDP graduates are not eligible for post-graduation', isCorrect: false },
+    ],
+  },
+];
+
+const diplomaQuestions = [
+  {
+    question: 'What is the typical duration of a standalone professional diploma program?',
+    category: 'Diploma',
+    order: 1,
+    options: [
+      { text: '1 Year', isCorrect: true },
+      { text: '4 Years', isCorrect: false },
+      { text: '1 Month', isCorrect: false },
+      { text: '10 Years', isCorrect: false },
+    ],
+  },
+  {
+    question: 'Which of the following is a popular diploma course in the technology sector?',
+    category: 'Diploma',
+    order: 2,
+    options: [
+      { text: 'Diploma in IT or Cyber Security', isCorrect: true },
+      { text: 'Diploma in History', isCorrect: false },
+      { text: 'Diploma in General Arts', isCorrect: false },
+      { text: 'Diploma in Dental Surgery', isCorrect: false },
+    ],
+  },
+  {
+    question: 'What is the entry-level eligibility for most professional diploma courses?',
+    category: 'Diploma',
+    order: 3,
+    options: [
+      { text: '10th or 12th standard passing certificate', isCorrect: true },
+      { text: 'Bachelor\'s degree completion', isCorrect: false },
+      { text: 'A PhD degree', isCorrect: false },
+      { text: '15 years of industry experience', isCorrect: false },
+    ],
+  },
+  {
+    question: 'What is a major benefit of doing a Diploma in Data Science?',
+    category: 'Diploma',
+    order: 4,
+    options: [
+      { text: 'Acquiring key skills like data analysis, python, and statistical tools in a short time', isCorrect: true },
+      { text: 'No need to write assignments or exams', isCorrect: false },
+      { text: 'Guaranteed top management rank', isCorrect: false },
+      { text: 'Exemption from basic programming', isCorrect: false },
+    ],
+  },
+  {
+    question: 'Which area is covered under a Diploma in Cyber Security?',
+    category: 'Diploma',
+    order: 5,
+    options: [
+      { text: 'Ethical hacking, network security, and cryptography', isCorrect: true },
+      { text: 'Hardware building and chip manufacturing', isCorrect: false },
+      { text: 'Financial accounting systems', isCorrect: false },
+      { text: 'Marketing campaigns design', isCorrect: false },
+    ],
+  },
+  {
+    question: 'What does a Diploma in Fashion Design focus on?',
+    category: 'Diploma',
+    order: 6,
+    options: [
+      { text: 'Garment construction, textile design, and fashion illustration', isCorrect: true },
+      { text: 'Analyzing database algorithms', isCorrect: false },
+      { text: 'Healthcare management', isCorrect: false },
+      { text: 'Aerospace structural design', isCorrect: false },
+    ],
+  },
+  {
+    question: 'What is the main role of a supply chain manager trained in Diploma in Supply Chain?',
+    category: 'Diploma',
+    order: 7,
+    options: [
+      { text: 'Optimizing logistics, sourcing, and procurement strategies', isCorrect: true },
+      { text: 'Treating patients in hospitals', isCorrect: false },
+      { text: 'Writing code for mobile applications', isCorrect: false },
+      { text: 'Teaching primary school literature', isCorrect: false },
+    ],
+  },
+  {
+    question: 'What does a Diploma in Nutrition teach students?',
+    category: 'Diploma',
+    order: 8,
+    options: [
+      { text: 'Diet planning, human anatomy, and nutritional requirements', isCorrect: true },
+      { text: 'Computer database query tuning', isCorrect: false },
+      { text: 'Music composition systems', isCorrect: false },
+      { text: 'Fashion layout formatting', isCorrect: false },
+    ],
+  },
+  {
+    question: 'Can a diploma in IT lead to a direct entry into BCA or B.Sc IT?',
+    category: 'Diploma',
+    order: 9,
+    options: [
+      { text: 'Yes, often allows lateral entry or credit exemption', isCorrect: true },
+      { text: 'No, a diploma has no value for higher studies', isCorrect: false },
+      { text: 'Only in foreign universities', isCorrect: false },
+      { text: 'Only in post-graduate programs', isCorrect: false },
+    ],
+  },
+  {
+    question: 'Which software is commonly learned in a Diploma in IT?',
+    category: 'Diploma',
+    order: 10,
+    options: [
+      { text: 'Database management tools and programming environments', isCorrect: true },
+      { text: 'Fashion garment sketches software', isCorrect: false },
+      { text: 'Adobe Photoshop only', isCorrect: false },
+      { text: 'No software is used in IT diploma', isCorrect: false },
+    ],
+  },
+  {
+    question: 'What is the focus of a Diploma in Music?',
+    category: 'Diploma',
+    order: 11,
+    options: [
+      { text: 'Vocal training, instrument playing, and music theory', isCorrect: true },
+      { text: 'Network configuration systems', isCorrect: false },
+      { text: 'Business supply chain pathways', isCorrect: false },
+      { text: 'Garment pattern drafting', isCorrect: false },
+    ],
+  },
+  {
+    question: 'Are professional diplomas focused more on theory or practical skills?',
+    category: 'Diploma',
+    order: 12,
+    options: [
+      { text: 'Highly practical and skill-oriented to ensure immediate job readiness', isCorrect: true },
+      { text: 'Purely theoretical reading with no practicals', isCorrect: false },
+      { text: 'They do not focus on any skills', isCorrect: false },
+      { text: 'Based on history literature memorization', isCorrect: false },
+    ],
+  },
+  {
+    question: 'What is the typical fee range for a 1-year online diploma program?',
+    category: 'Diploma',
+    order: 13,
+    options: [
+      { text: '₹15,000 - ₹45,000', isCorrect: true },
+      { text: '₹5,00,000 - ₹10,00,000', isCorrect: false },
+      { text: '₹10,00,000 - ₹25,00,000', isCorrect: false },
+      { text: 'Always free', isCorrect: false },
+    ],
+  },
+  {
+    question: 'Who is eligible for a PG Diploma program?',
+    category: 'Diploma',
+    order: 14,
+    options: [
+      { text: 'Graduates in any discipline', isCorrect: true },
+      { text: '10th class pass only', isCorrect: false },
+      { text: 'Fresh high school pass candidate', isCorrect: false },
+      { text: 'No qualifications are required', isCorrect: false },
+    ],
+  },
+  {
+    question: 'Which diploma program is highly useful for entering the hospitality industry?',
+    category: 'Diploma',
+    order: 15,
+    options: [
+      { text: 'Diploma in Food and Nutrition or Hotel Management', isCorrect: true },
+      { text: 'Diploma in Cyber Security', isCorrect: false },
+      { text: 'Diploma in Supply Chain Management', isCorrect: false },
+      { text: 'Diploma in Music Theory', isCorrect: false },
+    ],
+  },
+  {
+    question: 'What is the significance of a Diploma in Cyber Security for corporate IT departments?',
+    category: 'Diploma',
+    order: 16,
+    options: [
+      { text: 'It trains personnel to protect company networks and databases from cyber attacks', isCorrect: true },
+      { text: 'It assists in writing accounting tally logs', isCorrect: false },
+      { text: 'It helps in organizing employee travel details', isCorrect: false },
+      { text: 'It is useful for cataloging printed library books', isCorrect: false },
+    ],
+  },
+  {
+    question: 'What coding language is most common in a Data Science diploma?',
+    category: 'Diploma',
+    order: 17,
+    options: [
+      { text: 'Python', isCorrect: true },
+      { text: 'Cobol', isCorrect: false },
+      { text: 'HTML', isCorrect: false },
+      { text: 'Assembly', isCorrect: false },
+    ],
+  },
+  {
+    question: 'Can you complete a professional diploma fully online?',
+    category: 'Diploma',
+    order: 18,
+    options: [
+      { text: 'Yes, many accredited boards offer them with online lectures and virtual labs', isCorrect: true },
+      { text: 'No, online diplomas are illegal in India', isCorrect: false },
+      { text: 'Only if the candidate is physically present for all exams', isCorrect: false },
+      { text: 'Diplomas are only offered in hybrid format', isCorrect: false },
+    ],
+  },
+  {
+    question: 'What is the first step to design garments in a Fashion Design course?',
+    category: 'Diploma',
+    order: 19,
+    options: [
+      { text: 'Sketching and pattern making', isCorrect: true },
+      { text: 'Running python data analytics scripts', isCorrect: false },
+      { text: 'Configuring network firewalls', isCorrect: false },
+      { text: 'Sourcing international shipping routes', isCorrect: false },
+    ],
+  },
+  {
+    question: 'Why do working professionals choose short-term diploma courses?',
+    category: 'Diploma',
+    order: 20,
+    options: [
+      { text: 'To upskill quickly in a new technology or industry domain', isCorrect: true },
+      { text: 'To enjoy college life again', isCorrect: false },
+      { text: 'To write fewer exams than a degree', isCorrect: false },
+      { text: 'Because they are forced by state government regulations', isCorrect: false },
+    ],
+  },
 ];
 
 async function seedQuestions() {
@@ -387,16 +1163,32 @@ async function seedQuestions() {
     );
     console.log(`✅ Added ${ctResult.length} Credit Transfer questions`);
 
+    // Seed SIDP questions
+    const sidpResult = await ScholarshipQuestion.insertMany(
+      sidpQuestions.map(q => ({ ...q, isActive: true }))
+    );
+    console.log(`✅ Added ${sidpResult.length} SIDP questions`);
+
+    // Seed Diploma questions
+    const diplomaResult = await ScholarshipQuestion.insertMany(
+      diplomaQuestions.map(q => ({ ...q, isActive: true }))
+    );
+    console.log(`✅ Added ${diplomaResult.length} Diploma questions`);
+
     console.log('\n📊 Question Bank Summary:');
     const counts = await Promise.all([
       ScholarshipQuestion.countDocuments({ category: 'Online UG' }),
       ScholarshipQuestion.countDocuments({ category: 'Online PG' }),
       ScholarshipQuestion.countDocuments({ category: 'Credit Transfer' }),
+      ScholarshipQuestion.countDocuments({ category: 'SIDP (Skill Integrated Diploma Programs)' }),
+      ScholarshipQuestion.countDocuments({ category: 'Diploma' }),
     ]);
     console.log(`  • Online UG: ${counts[0]} questions`);
     console.log(`  • Online PG: ${counts[1]} questions`);
     console.log(`  • Credit Transfer: ${counts[2]} questions`);
-    console.log(`  • Total: ${counts[0] + counts[1] + counts[2]} questions`);
+    console.log(`  • SIDP: ${counts[3]} questions`);
+    console.log(`  • Diploma: ${counts[4]} questions`);
+    console.log(`  • Total: ${counts.reduce((a, b) => a + b, 0)} questions`);
 
     console.log('\n✨ Scholarship question banks seeded successfully!');
     process.exit(0);

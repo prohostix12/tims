@@ -4,7 +4,7 @@ import { ScholarshipQuestion } from '@/models/ScholarshipQuestion';
 
 export const dynamic = 'force-dynamic';
 
-const VALID_CATEGORIES = ['Online UG', 'Online PG', 'Credit Transfer', 'General'];
+const VALID_CATEGORIES = ['Online UG', 'Online PG', 'Credit Transfer', 'SIDP (Skill Integrated Diploma Programs)', 'Diploma', 'General'];
 
 export async function GET() {
   try {

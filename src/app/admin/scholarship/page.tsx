@@ -13,7 +13,7 @@ interface ContentForm {
   description: string; buttonText: string; termsAndConditions: string;
 }
 
-type QuestionCategory = 'Online UG' | 'Online PG' | 'Credit Transfer' | 'General';
+type QuestionCategory = 'Online UG' | 'Online PG' | 'Credit Transfer' | 'SIDP (Skill Integrated Diploma Programs)' | 'Diploma' | 'General';
 
 interface OptionForm { text: string; isCorrect: boolean }
 interface QuestionForm {
@@ -33,7 +33,7 @@ interface ConfigForm {
 }
 
 type Tab = 'content' | 'questions' | 'config' | 'applications';
-const QUESTION_CATEGORIES: QuestionCategory[] = ['Online UG', 'Online PG', 'Credit Transfer', 'General'];
+const QUESTION_CATEGORIES: QuestionCategory[] = ['Online UG', 'Online PG', 'Credit Transfer', 'SIDP (Skill Integrated Diploma Programs)', 'Diploma', 'General'];
 
 const BLANK_Q: QuestionForm = {
   question: '', order: 1, isActive: true, category: 'General',
@@ -295,6 +295,8 @@ export default function AdminScholarshipPage() {
     'Online UG': '#3b82f6',
     'Online PG': '#8b5cf6',
     'Credit Transfer': '#059669',
+    'SIDP (Skill Integrated Diploma Programs)': '#d97706',
+    'Diploma': '#ec4899',
     'General': '#64748b',
   };
 
