@@ -41,7 +41,7 @@ const DEFAULT_DIRECTORS = [
 ];
 
 const DEFAULT_FAQS = [
-  { question: "What is TIMS Education?", answer: "TIMS Education is a distance and online education centre in Kerala focused on providing flexible, accessible academic programs." },
+  { question: "What is Find Your University?", answer: "Find Your University is a leading distance and online higher education platform that simplifies the university discovery process. We partner with over 90 UGC-approved universities to connect students with flexible, accessible, and high-quality academic programs that fit their career goals, eligibility, and budget." },
   { question: "Are degrees recognized?", answer: "Yes, we partner with UGC-recognized universities to ensure your degrees are valid for employment and higher studies." },
   { question: "Do you offer scholarships?", answer: "Yes, we offer scholarships for financially disadvantaged and high-achieving students." },
 ];

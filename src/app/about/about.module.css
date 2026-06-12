@@ -31,10 +31,11 @@
 .heroContent {
   max-width: 1300px;
   margin: 0 auto;
-  display: grid;
-  grid-template-columns: 1.2fr 0.8fr;
-  gap: 4rem;
+  display: flex;
+  flex-direction: column;
   align-items: center;
+  justify-content: center;
+  text-align: center;
   position: relative;
   z-index: 10;
 }
@@ -42,6 +43,8 @@
 .heroLeft {
   display: flex;
   flex-direction: column;
+  align-items: center;
+  text-align: center;
   gap: 1.5rem;
 }
 
@@ -109,11 +112,11 @@
 
 /* ===== Stats Grid ===== */
 .statsContainer {
-  max-width: 1300px;
+  max-width: 1000px;
   margin: -40px auto 0;
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 1.5rem;
+  gap: 1.25rem;
   padding: 0 5%;
   position: relative;
   z-index: 20;
@@ -123,8 +126,8 @@
   background: rgba(255, 255, 255, 0.4);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  padding: 2.5rem 2rem;
-  border-radius: 20px;
+  padding: 1.5rem 1.25rem;
+  border-radius: 16px;
   border: 1px solid rgba(255, 255, 255, 0.6);
   text-align: center;
   transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.4s ease, border-color 0.4s ease;
@@ -141,18 +144,18 @@
 
 .statNumber {
   display: block;
-  font-size: 2.8rem;
+  font-size: 2.2rem;
   font-weight: 900;
   color: #E8502A;
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.3rem;
 }
 
 .statLabel {
-  font-size: 0.9rem;
+  font-size: 0.8rem;
   color: #1C0D07;
   font-weight: 800;
   text-transform: uppercase;
-  letter-spacing: 1.5px;
+  letter-spacing: 1px;
 }
 
 /* ===== Get To Know Us Section ===== */

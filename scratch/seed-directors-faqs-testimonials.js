@@ -62,8 +62,8 @@ async function main() {
   // ── FAQs ──────────────────────────────────────────────────
   const faqs = [
     {
-      question: "What is TIMS Education?",
-      answer: "TIMS Education is a distance and online education centre in Kerala focused on providing flexible, accessible academic programs.",
+      question: "What is Find Your University?",
+      answer: "Find Your University is a leading distance and online higher education platform that simplifies the university discovery process. We partner with over 90 UGC-approved universities to connect students with flexible, accessible, and high-quality academic programs that fit their career goals, eligibility, and budget.",
       order: 1,
     },
     {
