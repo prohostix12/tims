@@ -25,9 +25,9 @@ type Phase = 'landing' | 'form' | 'otp' | 'exam' | 'result';
 
 function getVoucherBrand(program: string): string {
   const p = program.toLowerCase();
-  if (p.includes('online ug')) return 'TIMS Education';
+  if (p.includes('online ug') || p.includes('online pg')) return 'TIMS Education';
   if (p.includes('credit transfer')) return 'Edumentora';
-  if (p.includes('skill')) return 'Professional Skill Campus';
+  if (p.includes('skill') || p.includes('diploma')) return 'Professional Skill Campus';
   return '';
 }
 
@@ -80,8 +80,24 @@ export default function ScholarshipPage() {
         { name: 'B.Tech Credit Transfer' }, { name: 'UG Credit Transfer' },
         { name: 'PG Credit Transfer' }, { name: 'Diploma Credit Transfer' },
       ],
+      'SIDP (Skill Integrated Diploma Programs)': [
+        { name: 'BBA + HR MANAGEMENT' }, { name: 'BBA + HOSPITAL ADMINISTRATION' },
+        { name: 'BBA + DIGITAL MARKETING' }, { name: 'BBA + LOGISTICS' },
+        { name: 'BBA + BUSINESS MANAGEMENT' }, { name: 'BA + MTTC' },
+        { name: 'BCOM + ACCA' }, { name: 'BCOM + ADVANCED ACCOUNTANTS' },
+      ],
+      'Diploma': [
+        { name: 'Data Science' }, { name: 'Cyber Security' }, { name: 'Fashion Design' },
+        { name: 'Supply Chain' }, { name: 'Nutrition' }, { name: 'Music' }, { name: 'IT' },
+      ],
     });
-    setProgramCategories(['Online PG', 'Online UG', 'Credit Transfer Programme']);
+    setProgramCategories([
+      'Online PG',
+      'Online UG',
+      'Credit Transfer Programme',
+      'SIDP (Skill Integrated Diploma Programs)',
+      'Diploma',
+    ]);
 
     fetch('/api/public/program-sections')
       .then(r => r.ok ? r.json() : [])
