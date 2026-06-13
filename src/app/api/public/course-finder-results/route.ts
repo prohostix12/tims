@@ -54,10 +54,16 @@ function getCategoryFilter(val: string): Record<string, any> | null {
   if (!val) return null;
   if (val === 'online_ug') return { $or: [{ level: 'UG' }, { category: { $regex: 'UG|Degree', $options: 'i' } }] };
   if (val === 'online_pg') return { $or: [{ level: 'PG' }, { category: { $regex: 'PG|Post Graduate', $options: 'i' } }] };
-  if (val === 'credit_transfer_program') return { category: 'Credit Transfer' };
-  if (val === 'diploma') return { category: 'Diploma' };
-  if (val === 'sslc') return { category: 'SSLC' };
-  if (val === 'plus_two') return { category: '+2' };
+  if (val === 'credit_transfer_program') return { category: { $regex: 'Credit Transfer', $options: 'i' } };
+  if (val === 'diploma') return { level: 'Diploma' };
+  if (val === 'sslc_plus_two' || val === 'sslc,plus_two' || val === 'sslc' || val === 'plus_two') {
+    return {
+      $or: [
+        { category: { $in: ['SSLC', '+2', 'Others'] } },
+        { level: { $in: ['Secondary', 'Sr Secondary', 'Senior Secondary'] } }
+      ]
+    };
+  }
   return null;
 }
 
@@ -67,7 +73,7 @@ function getInterestFilter(val: string): Record<string, any> | null {
     management: 'Management|Commerce',
     technology: 'IT',
     'arts-science': 'Arts|Science',
-    foundation: 'Others',
+    foundation: 'Others|Arts|Science|Commerce',
     skill: 'Others'
   };
   const type = map[val];
@@ -79,19 +85,30 @@ function getModeFilter(val: string): Record<string, any> | null {
   if (!val) return null;
   if (val === 'online') return { type: 'Online' };
   if (val === 'distance') return { type: { $regex: 'Distance|Open', $options: 'i' } };
+  if (val === 'campus') return { type: { $regex: 'Campus|Offline|Credit Transfer', $options: 'i' } };
   return null;
 }
 
 function getBudgetFilter(val: string, budgetQ: any): Record<string, any> | null {
   if (!val || val === 'any') return null;
   const opt = budgetQ?.options?.find((o: any) => o.value === val);
-  if (!opt) return null;
+  
+  // Hardcoded fallback limits for robustness
+  const fallbackOpts: Record<string, { min?: number, max?: number }> = {
+    low: { max: 50000 },
+    mid1: { min: 50000, max: 100000 },
+    mid2: { min: 100000, max: 200000 },
+    high: { min: 200000 },
+  };
+
+  const limits = opt || fallbackOpts[val];
+  if (!limits) return null;
+
   const feeQ: Record<string, number> = {};
-  if (opt.min != null) feeQ.$gte = opt.min;
-  if (opt.max != null) feeQ.$lte = opt.max;
+  if (limits.min != null) feeQ.$gte = limits.min;
+  if (limits.max != null) feeQ.$lte = limits.max;
   return Object.keys(feeQ).length ? { fee: feeQ } : null;
 }
-
 function merge(...filters: (Record<string, any> | null)[]): Record<string, any> {
   const active = filters.filter(Boolean) as Record<string, any>[];
   if (active.length === 0) return {};
@@ -138,46 +155,98 @@ export async function POST(req: Request) {
         .limit(50) as any[];
     } catch { /* universities unavailable — return empty list */ }
 
-    // ── Progressive relaxation: most specific → least specific ───────────────
-    const stages: Array<Record<string, any>> = [];
+    const dedup = (qs: (Record<string, any> | null)[]) => {
+      const seen = new Set<string>();
+      return qs.filter((q): q is Record<string, any> => {
+        if (!q) return false;
+        const k = JSON.stringify(q);
+        if (seen.has(k) || k === '{}') return false;
+        seen.add(k);
+        return true;
+      });
+    };
 
-    stages.push(merge(catF, eduF, interestF, modeF, budgetF));
-    stages.push(merge(catF, eduF, interestF, budgetF));
-    stages.push(merge(catF, eduF, interestF));
-    stages.push(merge(catF, eduF));
-    if (catF) stages.push(catF);
-    if (eduF) stages.push(eduF);
+    const firstMatch = async (stages: Record<string, any>[], limit: number) => {
+      for (const q of stages) {
+        const res = await queryPrograms(q, limit).catch(() => []);
+        if (res.length > 0) return res;
+      }
+      return [];
+    };
 
-    // Deduplicate identical query objects before running them
-    const seen = new Set<string>();
-    const uniqueStages = stages.filter(q => {
-      const k = JSON.stringify(q);
-      if (seen.has(k) || k === '{}') return false;
-      seen.add(k);
-      return true;
+    // ── Step 1: fetch programs that match the selected price range ──────────
+    let inRangePrograms: any[] = [];
+    if (budgetF) {
+      inRangePrograms = await firstMatch(dedup([
+        merge(catF, eduF, interestF, modeF, budgetF),
+        merge(catF, eduF, interestF, budgetF),
+        merge(catF, budgetF),
+        budgetF,
+      ]), 20);
+    }
+
+    // ── Step 2: fetch programs without budget constraint (broader pool) ──────
+    const broadPrograms = await firstMatch(dedup([
+      merge(catF, eduF, interestF, modeF),
+      merge(catF, eduF, interestF),
+      merge(catF, eduF),
+      catF,
+      eduF,
+    ]), 30);
+
+    // ── Step 3: merge — in-range first, then the rest (deduped) ─────────────
+    const seenIds = new Set<string>();
+    const merged: any[] = [];
+    const addAll = (list: any[]) => {
+      for (const p of list) {
+        const id = String(p._id);
+        if (!seenIds.has(id)) { seenIds.add(id); merged.push(p); }
+      }
+    };
+    addAll(inRangePrograms);
+    addAll(broadPrograms);
+
+    programs = merged.length > 0 ? merged : await queryPrograms({}, 12).catch(() => []);
+
+    // ── Step 4: sort — in-range → priority unis → featured ──────────────────
+    const inRangeIds = new Set(inRangePrograms.map((p: any) => String(p._id)));
+    const PRIORITY_UNIS = ['gla', 'manipur international'];
+    const uniPriority = (p: any) =>
+      PRIORITY_UNIS.some(u => (p.university?.name || '').toLowerCase().includes(u)) ? 1 : 0;
+
+    programs.sort((a: any, b: any) => {
+      const aIn = inRangeIds.has(String(a._id)) ? 1 : 0;
+      const bIn = inRangeIds.has(String(b._id)) ? 1 : 0;
+      if (bIn !== aIn) return bIn - aIn;
+      const byPriority = uniPriority(b) - uniPriority(a);
+      if (byPriority !== 0) return byPriority;
+      return (b.featured ? 1 : 0) - (a.featured ? 1 : 0);
     });
-
-    for (const q of uniqueStages) {
-      if (programs.length > 0) break;
-      try { programs = await queryPrograms(q, 20); } catch { /* try next stage */ }
-    }
-
-    // Final fallback: ALL programs (never empty if DB has data)
-    if (programs.length === 0) {
-      try { programs = await queryPrograms({}, 12); } catch { /* DB may be down */ }
-    }
-
-    programs.sort((a: any, b: any) => (b.featured ? 1 : 0) - (a.featured ? 1 : 0));
     const finalPrograms = programs.slice(0, 8);
 
     // ── Build university list: matched universities first, then all others ────
+    // Deduplicate by name to resolve duplicates in the database
     const uniMap = new Map<string, any>();
+    
+    const addUni = (u: any) => {
+      if (!u || !u.name) return;
+      const key = u.name.trim().toLowerCase();
+      const existing = uniMap.get(key);
+      if (!existing) {
+        uniMap.set(key, u);
+      } else {
+        const preferNew = (!existing.slug && u.slug) || (existing.status !== 'active' && u.status === 'active');
+        if (preferNew) {
+          uniMap.set(key, u);
+        }
+      }
+    };
+
     finalPrograms.forEach((p: any) => {
-      const u = p.university;
-      if (u?._id) uniMap.set(String(u._id), u);
+      addUni(p.university);
     });
     allUnis.forEach((u: any) => {
-      if (u?._id && !uniMap.has(String(u._id))) uniMap.set(String(u._id), u);
+      addUni(u);
     });
 
     const universities = Array.from(uniMap.values());

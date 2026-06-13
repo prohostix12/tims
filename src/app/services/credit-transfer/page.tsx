@@ -224,13 +224,13 @@ export default function CreditTransferPage() {
               Explore our Credit Transfer Services and make the most of your academic achievements. Your progress matters, and we’re here to support your educational aspirations! We work closely with leading institutions to ensure your credits are mapped accurately and recognized globally.
             </p>
             <div style={{ marginTop: '2.5rem' }}>
-              <Link 
-                href="https://www.glocaluniversity.edu.in/" 
-                target="_blank" 
-                rel="noopener noreferrer" 
+              <Link
+                href="https://miu.edu.in"
+                target="_blank"
+                rel="noopener noreferrer"
                 className={styles.heroPrimaryBtn}
               >
-                GLOCAL UNIVERSITY <ArrowRight size={20} style={{ marginLeft: '10px' }} />
+                MANIPUR INTERNATIONAL UNIVERSITY <ArrowRight size={20} style={{ marginLeft: '10px' }} />
               </Link>
             </div>
           </div>
