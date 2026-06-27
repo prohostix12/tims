@@ -1,7 +1,7 @@
 // seed.mjs — Run with: node seed.mjs
 // Seeds universities + programs into the running Next.js app via its own API.
 
-const BASE = 'http://localhost:3000';
+const BASE = process.env.BASE_URL || 'http://localhost:3001';
 
 async function post(url, body) {
   const res = await fetch(`${BASE}${url}`, {

@@ -8,7 +8,7 @@ export async function GET() {
   try {
     await connectDB();
     const universities = await University.find({ status: { $ne: 'inactive' } })
-      .select('name _id')
+      .select('name _id slug location type logo')
       .sort({ name: 1 });
     return NextResponse.json(universities);
   } catch (error: any) {

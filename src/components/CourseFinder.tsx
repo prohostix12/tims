@@ -170,6 +170,59 @@ const IconTimer = () => (
     <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
   </svg>
 );
+const IconUserCard = () => (
+  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <rect x="3" y="4" width="18" height="16" rx="2" />
+    <circle cx="9" cy="12" r="2.5" />
+    <line x1="14" y1="10" x2="18" y2="10" />
+    <line x1="14" y1="14" x2="18" y2="14" />
+  </svg>
+);
+const IconArrowUp = () => (
+  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <line x1="12" y1="19" x2="12" y2="5" />
+    <polyline points="5 12 12 5 19 12" />
+  </svg>
+);
+const IconStore = () => (
+  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M3 9h18M3 9l1.24-4.96A2 2 0 0 1 6.18 3h11.64a2 2 0 0 1 1.94 1.54L21 9M3 9v10a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V9M9 21V13h6v8" />
+  </svg>
+);
+const IconBrain = () => (
+  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96-.44 2.5 2.5 0 0 1 0-3.12 3 3 0 0 1 0-4.88 2.5 2.5 0 0 1 0-3.12A2.5 2.5 0 0 1 9.5 2zM14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96-.44 2.5 2.5 0 0 0 0-3.12 3 3 0 0 0 0-4.88 2.5 2.5 0 0 0 0-3.12A2.5 2.5 0 0 0 14.5 2z" />
+  </svg>
+);
+const IconWallet = () => (
+  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M20 12V8H6a2 2 0 0 1-2-2c0-1.1.9-2 2-2h12v4" />
+    <path d="M4 6v12c0 1.1.9 2 2 2h14v-4" />
+    <path d="M18 12a2 2 0 0 0-2-2v2a2 2 0 0 0 2 2h4v-6Z" />
+  </svg>
+);
+const IconBill = () => (
+  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <rect x="2" y="5" width="20" height="14" rx="2" />
+    <line x1="2" y1="10" x2="22" y2="10" />
+    <circle cx="12" cy="14" r="2" />
+  </svg>
+);
+const IconStackCash = () => (
+  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <rect x="2" y="9" width="20" height="10" rx="2" />
+    <path d="M4 9V7c0-1.1.9-2 2-2h12c1.1 0 2 .9 2 2v2" />
+    <circle cx="12" cy="14" r="2" />
+  </svg>
+);
+const IconDiamond = () => (
+  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M6 3h12l4 6-10 12L2 9Z" />
+    <path d="M11 3 8 9l4 12 4-12-3-6" />
+    <path d="M2 9h20" />
+  </svg>
+);
+
 
 // ── Option icon map (value → icon component) ───────────────────────────────────
 const OPTION_ICON_MAP: Record<string, React.ReactNode> = {
@@ -183,6 +236,11 @@ const OPTION_ICON_MAP: Record<string, React.ReactNode> = {
   working: <IconBriefcase />,
   fresher: <IconTarget />,
   other: <IconStar />,
+  // Career Goal
+  job_switch: <IconUserCard />,
+  promotion: <IconArrowUp />,
+  business: <IconStore />,
+  knowledge: <IconBrain />,
   // Mode
   online: <IconWifi />,
   distance: <IconMap />,
@@ -227,9 +285,10 @@ const OPTION_ICON_MAP: Record<string, React.ReactNode> = {
   two_three_years: <IconTimer />,
   flexible: <IconStar />,
   // Budget
-  low: <IconCoin />,
-  mid1: <IconCoin />,
-  mid2: <IconCoin />,
+  low: <IconWallet />,
+  mid1: <IconBill />,
+  mid2: <IconStackCash />,
+  high: <IconDiamond />,
   any: <IconStar />,
 };
 
@@ -314,34 +373,19 @@ function EnquiryGate({ onSuccess }: { onSuccess: (data: { name: string, email: s
 // ── Fallback questions (6 steps) — used when DB has no questions ──────────────
 export const FALLBACK_QUESTIONS = [
   {
-    _id: 'fq1', stepId: 'qualification', field: 'qualification', order: 1, isActive: true,
-    question: "What's your highest qualification?",
-    subtitle: "We use this to find programs you are eligible for.",
-    emoji: "🎓",
-    options: [
-      { value: 'sslc', label: '10th Pass (SSLC)', desc: 'Looking for 11th, 12th or foundation courses' },
-      { value: 'plus-two', label: '12th Pass (Plus Two)', desc: 'Ready for undergraduate programs' },
-      { value: 'graduate', label: 'Bachelor\'s Degree', desc: 'Looking for PG, MBA or professional programs' },
-      { value: 'postgraduate', label: 'Master\'s Degree', desc: 'Advanced certifications or research programs' }
-    ],
-  },
-  {
-    _id: 'fq2', stepId: 'category', field: 'category', order: 2, isActive: true,
+    _id: 'fq1', stepId: 'category', field: 'category', order: 1, isActive: true,
     question: 'Which program category interests you?',
     subtitle: 'Choose the type of course you want to pursue.',
     emoji: '📋',
     options: [
+      { value: 'sslc,plus_two', label: 'SSLC/Plus Two' },
       { value: 'online_ug', label: 'Online UG' },
       { value: 'online_pg', label: 'Online PG' },
-      { value: 'credit_transfer_program', label: 'Credit Transfer Program' },
-      { value: 'skill_integrated_diploma_programs', label: 'Skill Integrated Diploma Programs' },
-      { value: 'diploma', label: 'Diploma' },
-      { value: 'plus_two', label: 'Plus Two' },
-      { value: 'sslc', label: 'SSLC' }
+      { value: 'credit_transfer_program', label: 'Credit Transfer Program' }
     ],
   },
   {
-    _id: 'fq3', stepId: 'interest', field: 'interest', order: 3, isActive: true,
+    _id: 'fq2', stepId: 'interest', field: 'interest', order: 2, isActive: true,
     question: 'Which subject area do you prefer?',
     subtitle: 'Pick the field you want to build your career in.',
     emoji: '💡',
@@ -355,48 +399,47 @@ export const FALLBACK_QUESTIONS = [
     ],
   },
   {
-    _id: 'fq4', stepId: 'mode', field: 'mode', order: 4, isActive: true,
+    _id: 'fq3', stepId: 'mode', field: 'mode', order: 3, isActive: true,
     question: 'How do you prefer to study?',
     subtitle: 'Choose what fits your schedule and lifestyle.',
     emoji: '💻',
     options: [
-      { value: 'online', label: 'Online (Live & Interactive)', desc: 'Study from home with real-time classes' },
-      { value: 'distance', label: 'Distance Learning', desc: 'Self-paced study with materials' },
-      { value: 'hybrid', label: 'Hybrid (Both)', desc: 'Mix of online and offline study' }
+      { value: 'online', label: 'Online', desc: 'Study from home with digital classes' },
+      { value: 'campus', label: 'On Campus', desc: 'Study at the university campus' }
     ],
   },
   {
-    _id: 'fq5', stepId: 'goal', field: 'goal', order: 5, isActive: true,
-    question: "What's your main goal?",
-    subtitle: "This helps us rank the most relevant programs for you.",
-    emoji: '🎯',
+    _id: 'fq4', stepId: 'career_goal', field: 'career_goal', order: 4, isActive: true,
+    question: "What is your primary career goal?",
+    subtitle: "Select the option that best fits your current career plans.",
+    emoji: "🎯",
     options: [
-      { value: 'degree', label: 'Get a Recognised Degree', desc: 'For govt jobs, higher studies, or career growth' },
-      { value: 'career-upgrade', label: 'Upgrade My Career', desc: 'A better job, promotion, or pay hike' },
-      { value: 'skill', label: 'Learn a Specific Skill', desc: 'Practical, job-ready skills fast' },
-      { value: 'govt-job', label: 'Prepare for Govt Jobs', desc: 'Eligibility for PSC, SSC, or banking exams' }
+      { value: 'job_switch', label: 'Get a Job / Career Switch' },
+      { value: 'promotion', label: 'Get Promotion / Salary Hike' },
+      { value: 'business', label: 'Start Own Business' },
+      { value: 'knowledge', label: 'Gain Knowledge & Skills' }
     ],
   },
   {
-    _id: 'fq6', stepId: 'budget', field: 'budget', order: 6, isActive: true,
-    question: 'What is your annual budget?',
+    _id: 'fq5', stepId: 'budget', field: 'budget', order: 5, isActive: true,
+    question: "What is your preferred budget range?",
     subtitle: 'We will filter out programs outside your range.',
     emoji: '💰',
     options: [
-      { value: 'low', label: 'Under ₹20,000 / year', desc: 'Very affordable options', max: 20000 },
-      { value: 'medium', label: '₹20,000 – ₹75,000 / year', desc: 'Mid-range programs', min: 20000, max: 75000 },
-      { value: 'high', label: 'Above ₹75,000 / year', desc: 'Premium universities', min: 75000 }
+      { value: 'low', label: 'Under ₹50,000', max: 50000 },
+      { value: 'mid1', label: '₹50,000 - ₹1,00,000', min: 50000, max: 100000 },
+      { value: 'mid2', label: '₹1,00,000 - ₹2,00,000', min: 100000, max: 200000 },
+      { value: 'high', label: 'Above ₹2,00,000', min: 200000 }
     ],
   },
 ];
 
 // ── Step label map ─────────────────────────────────────────────────────────────
 const STEP_LABELS = [
-  'Qualification',
   'Category Interest',
   'Subject Area',
   'Study Mode',
-  'Career Goal',
+  'Primary Career Goal',
   'Budget',
 ];
 
@@ -528,8 +571,14 @@ export default function CourseFinder() {
 
   const currentQ = questions[step - 1];
 
-  // Determine options based on education selection
+  // Determine options based on category selection
   let currentOptions = currentQ?.options || [];
+  if (currentQ?.field === 'interest' || currentQ?.stepId === 'interest') {
+    const categoryAnswer = answers['category'];
+    if (categoryAnswer === 'sslc,plus_two' || categoryAnswer === 'sslc' || categoryAnswer === 'plus_two') {
+      currentOptions = currentOptions.filter((opt: any) => opt.value === 'foundation' || opt.value === 'skill');
+    }
+  }
 
   const allAnswered = currentQ && answers[currentQ.field || currentQ.stepId];
 
@@ -634,55 +683,17 @@ export default function CourseFinder() {
                 <div className="cf-results-header">
                   <div className="cf-results-icon"><IconStar /></div>
                   <h2 className="cf-results-title">
-                    {results.length > 0
-                      ? 'Recommended Courses For You!'
-                      : matchedUniversities.length > 0
-                        ? 'Explore These Universities'
-                        : fallbackResults.length > 0
-                          ? 'Similar Courses You May Like'
-                          : 'Browse Our Catalog'}
+                    {results.length > 0 ? 'Recommended Courses For You!' : 'Similar Courses You May Like'}
                   </h2>
                   <p className="cf-results-subtitle">
                     {results.length > 0
                       ? `Found ${results.length} course${results.length > 1 ? 's' : ''} matching your preferences`
-                      : matchedUniversities.length > 0
-                        ? 'These universities offer programs that match your interests'
-                        : fallbackResults.length > 0
-                          ? 'Here are some similar courses based on your choices'
-                          : 'Explore our full range of programs and universities'}
+                      : 'Explore our range of programs based on your choices'}
                   </p>
                 </div>
                 <div className="cf-results-list">
-                  {/* University results — shown first */}
-                  {/* University results — shown first */}
-                  {matchedUniversities.length > 0 && (
-                    <div className="cf-universities-section">
-                      <p className="cf-section-heading">{results.length > 0 ? 'Matched Universities' : 'Related Universities'}</p>
-                      {matchedUniversities.map((uni: any) => (
-                        <Link 
-                          key={uni._id} 
-                          href={`/universities/${uni.slug || uni._id}`} 
-                          className="cf-result-card" 
-                          onClick={() => {
-                            try { sessionStorage.setItem(`uni_${uni.slug || uni._id}`, JSON.stringify(uni)); } catch (e) {}
-                            setIsOpen(false);
-                          }}
-                        >
-                          <div className="cf-result-info">
-                            <h4 className="cf-result-name">{uni.name}</h4>
-                            {uni.location && <p className="cf-result-university"><IconBuilding /> {uni.location}</p>}
-                            <div className="cf-result-meta">
-                              {uni.type && <span className="cf-result-badge">{uni.type}</span>}
-                            </div>
-                          </div>
-                          <div style={{ color: '#E8502A', flexShrink: 0, marginLeft: 10 }}><IconChevronRight /></div>
-                        </Link>
-                      ))}
-                    </div>
-                  )}
-
                   {/* Course results */}
-                  {(results.length > 0 ? results : (matchedUniversities.length === 0 ? fallbackResults : [])).map(program => {
+                  {results.map(program => {
                     const uniName = program.university?.name || program.university || program.universityId?.name || 'University';
                     const courseHref = `/courses/${program.slug || program._id}`;
                     return (
@@ -704,7 +715,7 @@ export default function CourseFinder() {
                             <span className="cf-result-badge"><IconMonitor /> {program.mode || program.type || program.level || 'Program'}</span>
                           </div>
                         </div>
-                        {(
+                        {program.fee > 0 && (
                           <div className="cf-result-price">
                             <span className="cf-price-label">Fee</span>
                             <span className="cf-price-value">₹{Number(program.fee).toLocaleString('en-IN')}</span>
@@ -715,7 +726,7 @@ export default function CourseFinder() {
                   })}
 
                   {/* No results at all — show helpful navigation, never a dead end */}
-                  {results.length === 0 && fallbackResults.length === 0 && matchedUniversities.length === 0 && (
+                  {results.length === 0 && (
                     <div className="cf-no-results">
                       <span className="cf-no-results-icon"><IconFrown /></span>
                       <p style={{ fontWeight: 600, color: '#1e293b', marginBottom: 4 }}>We couldn't load personalised results right now.</p>
@@ -723,9 +734,6 @@ export default function CourseFinder() {
                       <div style={{ display: 'flex', flexDirection: 'column', gap: 10, width: '100%' }}>
                         <Link href="/courses" className="cf-browse-all-btn" onClick={() => setIsOpen(false)} style={{ textAlign: 'center' }}>
                           Browse All Programs
-                        </Link>
-                        <Link href="/universities" className="cf-browse-all-btn" onClick={() => setIsOpen(false)} style={{ textAlign: 'center', background: '#fff', color: '#E8502A', border: '2px solid #E8502A' }}>
-                          Browse All Universities
                         </Link>
                       </div>
                     </div>

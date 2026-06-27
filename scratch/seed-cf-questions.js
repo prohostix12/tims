@@ -7,34 +7,19 @@ const CourseFinderQuestion = mongoose.models.CourseFinderQuestion || mongoose.mo
 
 const FALLBACK_QUESTIONS = [
   {
-    stepId: 'qualification', field: 'qualification', order: 1, isActive: true,
-    question: "What's your highest qualification?",
-    subtitle: "We use this to find programs you are eligible for.",
-    emoji: "🎓",
-    options: [
-      { value: 'sslc', label: '10th Pass (SSLC)', desc: 'Looking for 11th, 12th or foundation courses' },
-      { value: 'plus-two', label: '12th Pass (Plus Two)', desc: 'Ready for undergraduate programs' },
-      { value: 'graduate', label: 'Bachelor\'s Degree', desc: 'Looking for PG, MBA or professional programs' },
-      { value: 'postgraduate', label: 'Master\'s Degree', desc: 'Advanced certifications or research programs' }
-    ],
-  },
-  {
-    stepId: 'category', field: 'category', order: 2, isActive: true,
+    stepId: 'category', field: 'category', order: 1, isActive: true,
     question: 'Which program category interests you?',
     subtitle: 'Choose the type of course you want to pursue.',
     emoji: '📋',
     options: [
+      { value: 'sslc,plus_two', label: 'SSLC/Plus Two' },
       { value: 'online_ug', label: 'Online UG' },
       { value: 'online_pg', label: 'Online PG' },
-      { value: 'credit_transfer_program', label: 'Credit Transfer Program' },
-      { value: 'skill_integrated_diploma_programs', label: 'Skill Integrated Diploma Programs' },
-      { value: 'diploma', label: 'Diploma' },
-      { value: 'plus_two', label: 'Plus Two' },
-      { value: 'sslc', label: 'SSLC' }
+      { value: 'credit_transfer_program', label: 'Credit Transfer Program' }
     ],
   },
   {
-    stepId: 'interest', field: 'interest', order: 3, isActive: true,
+    stepId: 'interest', field: 'interest', order: 2, isActive: true,
     question: 'Which subject area do you prefer?',
     subtitle: 'Pick the field you want to build your career in.',
     emoji: '💡',
@@ -48,37 +33,37 @@ const FALLBACK_QUESTIONS = [
     ],
   },
   {
-    stepId: 'mode', field: 'mode', order: 4, isActive: true,
+    stepId: 'mode', field: 'mode', order: 3, isActive: true,
     question: 'How do you prefer to study?',
     subtitle: 'Choose what fits your schedule and lifestyle.',
     emoji: '💻',
     options: [
-      { value: 'online', label: 'Online (Live & Interactive)', desc: 'Study from home with real-time classes' },
-      { value: 'distance', label: 'Distance Learning', desc: 'Self-paced study with materials' },
-      { value: 'hybrid', label: 'Hybrid (Both)', desc: 'Mix of online and offline study' }
+      { value: 'online', label: 'Online', desc: 'Study from home with digital classes' },
+      { value: 'campus', label: 'On Campus', desc: 'Study at the university campus' }
     ],
   },
   {
-    stepId: 'goal', field: 'goal', order: 5, isActive: true,
-    question: "What's your main goal?",
-    subtitle: "This helps us rank the most relevant programs for you.",
-    emoji: '🎯',
+    stepId: 'career_goal', field: 'career_goal', order: 4, isActive: true,
+    question: "What is your primary career goal?",
+    subtitle: "Select the option that best fits your current career plans.",
+    emoji: "🎯",
     options: [
-      { value: 'degree', label: 'Get a Recognised Degree', desc: 'For govt jobs, higher studies, or career growth' },
-      { value: 'career-upgrade', label: 'Upgrade My Career', desc: 'A better job, promotion, or pay hike' },
-      { value: 'skill', label: 'Learn a Specific Skill', desc: 'Practical, job-ready skills fast' },
-      { value: 'govt-job', label: 'Prepare for Govt Jobs', desc: 'Eligibility for PSC, SSC, or banking exams' }
+      { value: 'job_switch', label: 'Get a Job / Career Switch' },
+      { value: 'promotion', label: 'Get Promotion / Salary Hike' },
+      { value: 'business', label: 'Start Own Business' },
+      { value: 'knowledge', label: 'Gain Knowledge & Skills' }
     ],
   },
   {
-    stepId: 'budget', field: 'budget', order: 6, isActive: true,
-    question: 'What is your annual budget?',
+    stepId: 'budget', field: 'budget', order: 5, isActive: true,
+    question: "What is your preferred budget range?",
     subtitle: 'We will filter out programs outside your range.',
     emoji: '💰',
     options: [
-      { value: 'low', label: 'Under ₹20,000 / year', desc: 'Very affordable options', min: 0, max: 20000 },
-      { value: 'medium', label: '₹20,000 – ₹75,000 / year', desc: 'Mid-range programs', min: 20000, max: 75000 },
-      { value: 'high', label: 'Above ₹75,000 / year', desc: 'Premium universities', min: 75000 }
+      { value: 'low', label: 'Under ₹50,000', max: 50000 },
+      { value: 'mid1', label: '₹50,000 - ₹1,00,000', min: 50000, max: 100000 },
+      { value: 'mid2', label: '₹1,00,000 - ₹2,00,000', min: 100000, max: 200000 },
+      { value: 'high', label: 'Above ₹2,00,000', min: 200000 }
     ],
   },
 ];
