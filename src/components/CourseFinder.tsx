@@ -681,18 +681,18 @@ export default function CourseFinder() {
             {showResults && (
               <>
                 <div className="cf-results-header">
-                  <div className="cf-results-header-left">
-                    <div className="cf-results-icon-small"><IconCompass /></div>
-                    <div>
+                  <div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 4 }}>
                       <h2 className="cf-results-title">
-                        {results.length > 0 ? 'Recommended Courses For You' : 'Similar Courses You May Like'}
+                        {results.length > 0 ? 'Recommended Courses' : 'Similar Courses You May Like'}
                       </h2>
-                      <p className="cf-results-subtitle">
-                        {results.length > 0
-                          ? `We found ${results.length} program${results.length > 1 ? 's' : ''} matching your preferences`
-                          : 'Explore our range of programs based on your choices'}
-                      </p>
+                      {results.length > 0 && (
+                        <span className="cf-results-badge-count">{results.length} matches</span>
+                      )}
                     </div>
+                    <p className="cf-results-subtitle">
+                      Based on your quiz preferences and career goals
+                    </p>
                   </div>
                 </div>
                 <div className="cf-results-list">
