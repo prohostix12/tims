@@ -1,5 +1,7 @@
 'use client';
 
+export const dynamic = 'force-dynamic';
+
 import { useState, useEffect, useRef } from 'react';
 import styles from './universities.module.css';
 import Link from 'next/link';
