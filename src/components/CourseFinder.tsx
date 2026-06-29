@@ -681,15 +681,19 @@ export default function CourseFinder() {
             {showResults && (
               <>
                 <div className="cf-results-header">
-                  <div className="cf-results-icon"><IconStar /></div>
-                  <h2 className="cf-results-title">
-                    {results.length > 0 ? 'Recommended Courses For You!' : 'Similar Courses You May Like'}
-                  </h2>
-                  <p className="cf-results-subtitle">
-                    {results.length > 0
-                      ? `Found ${results.length} course${results.length > 1 ? 's' : ''} matching your preferences`
-                      : 'Explore our range of programs based on your choices'}
-                  </p>
+                  <div className="cf-results-header-left">
+                    <div className="cf-results-icon-small"><IconCompass /></div>
+                    <div>
+                      <h2 className="cf-results-title">
+                        {results.length > 0 ? 'Recommended Courses For You' : 'Similar Courses You May Like'}
+                      </h2>
+                      <p className="cf-results-subtitle">
+                        {results.length > 0
+                          ? `We found ${results.length} program${results.length > 1 ? 's' : ''} matching your preferences`
+                          : 'Explore our range of programs based on your choices'}
+                      </p>
+                    </div>
+                  </div>
                 </div>
                 <div className="cf-results-list">
                   {/* Course results */}
