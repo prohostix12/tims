@@ -696,6 +696,7 @@ export default function CourseFinder() {
                   {results.map(program => {
                     const uniName = program.university?.name || program.university || program.universityId?.name || 'University';
                     const courseHref = `/courses/${program.slug || program._id}`;
+                    const logoSrc = program.university?.logo || program.universityId?.logo;
                     return (
                       <Link 
                         key={program._id} 
@@ -707,6 +708,14 @@ export default function CourseFinder() {
                           setIsOpen(false); 
                         }}
                       >
+                        <div className="cf-result-logo-container">
+                          <img 
+                            src={logoSrc || `https://ui-avatars.com/api/?name=${encodeURIComponent(uniName)}&background=E8502A&color=fff&size=128&bold=true`} 
+                            alt={`${uniName} logo`} 
+                            className="cf-result-logo" 
+                            onError={(e) => { e.currentTarget.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(uniName)}&background=E8502A&color=fff&size=128&bold=true`; }}
+                          />
+                        </div>
                         <div className="cf-result-info">
                           <h4 className="cf-result-name">{program.name}</h4>
                           <p className="cf-result-university"><IconBuilding /> {uniName}</p>

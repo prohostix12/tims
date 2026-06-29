@@ -197,6 +197,25 @@
 .cf-universities-section { border-top: 1px solid #F1F5F9; padding-top: 14px; margin-top: 6px; }
 .cf-result-card { display: flex; justify-content: space-between; align-items: center; padding: 16px; background: #F8FAFC; border-radius: 12px; margin-bottom: 10px; text-decoration: none; transition: all 0.2s; border: 2px solid transparent; }
 .cf-result-card:hover { border-color: #E8502A; background: #fff; transform: translateX(4px); box-shadow: 0 4px 15px rgba(0,0,0,0.07); }
+.cf-result-logo-container {
+  width: 48px;
+  height: 48px;
+  border-radius: 8px;
+  background: #fff;
+  border: 1px solid #E2E8F0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 14px;
+  flex-shrink: 0;
+  overflow: hidden;
+}
+.cf-result-logo {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  padding: 2px;
+}
 .cf-result-info { flex: 1; min-width: 0; }
 .cf-result-name { color: #1C0D07; font-size: 1rem; font-weight: 700; margin-bottom: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .cf-result-university { color: #64748B; font-size: 0.82rem; margin-bottom: 8px; display: flex; align-items: center; gap: 5px; }
