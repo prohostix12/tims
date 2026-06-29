@@ -110,7 +110,7 @@ export default function OnlineCoursesSection() {
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState('');
   const [logos, setLogos] = useState<UniversityLogo[]>([]);
-  const [isLogosLoaded, setIsLogosLoaded] = useState(false);
+  const [isFading, setIsFading] = useState(false);
 
   useEffect(() => {
     fetch('/api/public/program-sections')
@@ -130,12 +130,15 @@ export default function OnlineCoursesSection() {
     fetch('/api/public/university-logos')
       .then(r => r.ok ? r.json() : [])
       .then(data => {
-        if (Array.isArray(data) && data.length > 0) setLogos(data);
-        setIsLogosLoaded(true);
+        if (Array.isArray(data) && data.length > 0) {
+          setIsFading(true);
+          setTimeout(() => {
+            setLogos(data);
+            setIsFading(false);
+          }, 300);
+        }
       })
-      .catch(() => {
-        setIsLogosLoaded(true);
-      });
+      .catch(() => {});
   }, []);
 
   const openModal = (courseName: string) => {
@@ -209,7 +212,7 @@ export default function OnlineCoursesSection() {
 
           {/* Moving logo banner */}
           <div className={styles.logoBannerWrapper}>
-            <div className={`${styles.logoBannerTrack} ${isLogosLoaded ? styles.loaded : ''}`}>
+            <div className={`${styles.logoBannerTrack} ${isFading ? styles.fading : ''}`}>
               {(() => {
                 const displayLogos = logos.length > 0 ? logos : DEFAULT_UNI_LOGOS;
                 return [...displayLogos, ...displayLogos, ...displayLogos].map((logo, i) => (
