@@ -157,68 +157,19 @@ export async function POST(req: Request) {
         .limit(50) as any[];
     } catch { /* universities unavailable — return empty list */ }
 
-    const dedup = (qs: (Record<string, any> | null)[]) => {
-      const seen = new Set<string>();
-      return qs.filter((q): q is Record<string, any> => {
-        if (!q) return false;
-        const k = JSON.stringify(q);
-        if (seen.has(k) || k === '{}') return false;
-        seen.add(k);
-        return true;
-      });
-    };
-
-    const firstMatch = async (stages: Record<string, any>[], limit: number) => {
-      for (const q of stages) {
-        const res = await queryPrograms(q, limit).catch(() => []);
-        if (res.length > 0) return res;
+    // Fetch all programs matching the category/education constraint
+    const query = merge(catF, eduF);
+    let rawPrograms = await queryPrograms(query, 100).catch(() => []);
+    
+    // Fallback logic if query returned nothing
+    if (rawPrograms.length === 0) {
+      if (catF) {
+        rawPrograms = await queryPrograms(catF, 100).catch(() => []);
+      } else {
+        rawPrograms = await queryPrograms({}, 100).catch(() => []);
       }
-      return [];
-    };
-
-    // ── Step 1: fetch programs that match the selected price range ──────────
-    let inRangePrograms: any[] = [];
-    if (budgetF) {
-      const stages = [
-        merge(catF, eduF, interestF, modeF, budgetF),
-        merge(catF, eduF, interestF, budgetF),
-        merge(catF, budgetF),
-      ];
-      if (!catF) {
-        stages.push(budgetF);
-      }
-      inRangePrograms = await firstMatch(dedup(stages), 20);
     }
 
-    // ── Step 2: fetch programs without budget constraint (broader pool) ──────
-    const broadStages = [
-      merge(catF, eduF, interestF, modeF),
-      merge(catF, eduF, interestF),
-      merge(catF, eduF),
-    ];
-    if (catF) {
-      broadStages.push(catF);
-    } else {
-      if (eduF) broadStages.push(eduF);
-    }
-    const broadPrograms = await firstMatch(dedup(broadStages), 30);
-
-    // ── Step 3: merge — in-range first, then the rest (deduped) ─────────────
-    const seenIds = new Set<string>();
-    const merged: any[] = [];
-    const addAll = (list: any[]) => {
-      for (const p of list) {
-        const id = String(p._id);
-        if (!seenIds.has(id)) { seenIds.add(id); merged.push(p); }
-      }
-    };
-    addAll(inRangePrograms);
-    addAll(broadPrograms);
-
-    programs = merged.length > 0 ? merged : await queryPrograms(catF || {}, 12).catch(() => []);
-
-    // ── Step 4: sort — in-range → priority unis → featured ──────────────────
-    const inRangeIds = new Set(inRangePrograms.map((p: any) => String(p._id)));
     const PRIORITY_UNIS = ['gla', 'manipur international'];
     const uniPriority = (p: any) => {
       const name = (p.university?.name || '').toLowerCase();
@@ -227,14 +178,75 @@ export async function POST(req: Request) {
       return 0;
     };
 
-    programs.sort((a: any, b: any) => {
-      const aIn = inRangeIds.has(String(a._id)) ? 1 : 0;
-      const bIn = inRangeIds.has(String(b._id)) ? 1 : 0;
-      if (bIn !== aIn) return bIn - aIn;
-      const byPriority = uniPriority(b) - uniPriority(a);
-      if (byPriority !== 0) return byPriority;
-      return (b.featured ? 1 : 0) - (a.featured ? 1 : 0);
+    const matchesBudget = (p: any) => {
+      if (!budgetF) return true;
+      const fee = p.fee || 0;
+      const query = budgetF.fee || {};
+      if (query.$gte != null && fee < query.$gte) return false;
+      if (query.$lte != null && fee > query.$lte) return false;
+      return true;
+    };
+
+    const matchesInterest = (p: any) => {
+      if (!interestF) return true;
+      const regexQuery = interestF.courseType;
+      if (regexQuery && regexQuery.$regex) {
+        const rx = new RegExp(regexQuery.$regex, regexQuery.$options || 'i');
+        return rx.test(p.courseType || '');
+      }
+      return true;
+    };
+
+    const matchesMode = (p: any) => {
+      if (!modeF) return true;
+      const typeQuery = modeF.type;
+      if (typeQuery) {
+        if (typeof typeQuery === 'string') {
+          return (p.type || '').toLowerCase() === typeQuery.toLowerCase();
+        }
+        if (typeQuery.$regex) {
+          const rx = new RegExp(typeQuery.$regex, typeQuery.$options || 'i');
+          return rx.test(p.type || '');
+        }
+      }
+      return true;
+    };
+
+    // Calculate match score for each program
+    const scoredPrograms = rawPrograms.map((p: any) => {
+      let score = 0;
+      
+      // 1. Budget matches get massive priority (10000 points)
+      if (matchesBudget(p)) {
+        score += 10000;
+      }
+      
+      // 2. University priority
+      score += uniPriority(p) * 1000;
+      
+      // 3. Interest matches
+      if (matchesInterest(p)) {
+        score += 100;
+      }
+      
+      // 4. Mode matches
+      if (matchesMode(p)) {
+        score += 50;
+      }
+      
+      // 5. Featured courses
+      if (p.featured) {
+        score += 1;
+      }
+      
+      return { program: p, score };
     });
+
+    // Sort by score descending
+    scoredPrograms.sort((a: any, b: any) => b.score - a.score);
+
+    // Map back to programs list
+    programs = scoredPrograms.map((sp: any) => sp.program);
     const finalPrograms = programs.slice(0, 16);
 
     // ── Build university list: matched universities first, then all others ────
