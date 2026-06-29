@@ -220,8 +220,12 @@ export async function POST(req: Request) {
     // ── Step 4: sort — in-range → priority unis → featured ──────────────────
     const inRangeIds = new Set(inRangePrograms.map((p: any) => String(p._id)));
     const PRIORITY_UNIS = ['gla', 'manipur international'];
-    const uniPriority = (p: any) =>
-      PRIORITY_UNIS.some(u => (p.university?.name || '').toLowerCase().includes(u)) ? 1 : 0;
+    const uniPriority = (p: any) => {
+      const name = (p.university?.name || '').toLowerCase();
+      if (name.includes('jamia')) return 2;
+      if (PRIORITY_UNIS.some(u => name.includes(u))) return 1;
+      return 0;
+    };
 
     programs.sort((a: any, b: any) => {
       const aIn = inRangeIds.has(String(a._id)) ? 1 : 0;
