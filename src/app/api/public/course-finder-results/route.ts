@@ -141,10 +141,12 @@ export async function POST(req: Request) {
 
     const budgetQ  = questions.find((q: any) => q.field === 'budget' || q.stepId === 'budget');
 
+    const isSslcPlusTwo = ['sslc_plus_two', 'sslc,plus_two', 'sslc', 'plus_two'].includes(categoryAns);
+
     const eduF      = getEduFilter(eduAns);
     const catF      = getCategoryFilter(categoryAns);
-    const interestF = getInterestFilter(interestAns);
-    const modeF     = getModeFilter(modeAns);
+    const interestF = isSslcPlusTwo ? null : getInterestFilter(interestAns);
+    const modeF     = isSslcPlusTwo ? null : getModeFilter(modeAns);
     const budgetF   = getBudgetFilter(budgetAns, budgetQ);
 
     // ── Fetch universities independently (always returned even if programs fail) ──
@@ -177,22 +179,29 @@ export async function POST(req: Request) {
     // ── Step 1: fetch programs that match the selected price range ──────────
     let inRangePrograms: any[] = [];
     if (budgetF) {
-      inRangePrograms = await firstMatch(dedup([
+      const stages = [
         merge(catF, eduF, interestF, modeF, budgetF),
         merge(catF, eduF, interestF, budgetF),
         merge(catF, budgetF),
-        budgetF,
-      ]), 20);
+      ];
+      if (!catF) {
+        stages.push(budgetF);
+      }
+      inRangePrograms = await firstMatch(dedup(stages), 20);
     }
 
     // ── Step 2: fetch programs without budget constraint (broader pool) ──────
-    const broadPrograms = await firstMatch(dedup([
+    const broadStages = [
       merge(catF, eduF, interestF, modeF),
       merge(catF, eduF, interestF),
       merge(catF, eduF),
-      catF,
-      eduF,
-    ]), 30);
+    ];
+    if (catF) {
+      broadStages.push(catF);
+    } else {
+      if (eduF) broadStages.push(eduF);
+    }
+    const broadPrograms = await firstMatch(dedup(broadStages), 30);
 
     // ── Step 3: merge — in-range first, then the rest (deduped) ─────────────
     const seenIds = new Set<string>();
@@ -206,7 +215,7 @@ export async function POST(req: Request) {
     addAll(inRangePrograms);
     addAll(broadPrograms);
 
-    programs = merged.length > 0 ? merged : await queryPrograms({}, 12).catch(() => []);
+    programs = merged.length > 0 ? merged : await queryPrograms(catF || {}, 12).catch(() => []);
 
     // ── Step 4: sort — in-range → priority unis → featured ──────────────────
     const inRangeIds = new Set(inRangePrograms.map((p: any) => String(p._id)));
