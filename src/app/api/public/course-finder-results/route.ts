@@ -235,7 +235,7 @@ export async function POST(req: Request) {
       if (byPriority !== 0) return byPriority;
       return (b.featured ? 1 : 0) - (a.featured ? 1 : 0);
     });
-    const finalPrograms = programs.slice(0, 8);
+    const finalPrograms = programs.slice(0, 16);
 
     // ── Build university list: matched universities first, then all others ────
     // Deduplicate by name to resolve duplicates in the database
