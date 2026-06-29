@@ -10,6 +10,9 @@ export async function GET() {
     let content = await ScholarshipContent.findOne({});
     if (!content) {
       content = await ScholarshipContent.create({});
+    } else if (!content.tickerText) {
+      content.tickerText = '₹20,000 Maximum Scholarship Available • Free Exam • Instant Results • Downloadable Voucher • Score High & Earn More • UGC-DEB Approved Universities';
+      await content.save();
     }
     return NextResponse.json(content);
   } catch (error: any) {

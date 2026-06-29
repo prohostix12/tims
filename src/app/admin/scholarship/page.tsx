@@ -97,7 +97,7 @@ export default function AdminScholarshipPage() {
       badge: d.badge || '', heading: d.heading || '', subheading: d.subheading || '',
       description: d.description || '', buttonText: d.buttonText || '',
       termsAndConditions: d.termsAndConditions || '',
-      tickerText: d.tickerText || '',
+      tickerText: d.tickerText || '₹20,000 Maximum Scholarship Available • Free Exam • Instant Results • Downloadable Voucher • Score High & Earn More • UGC-DEB Approved Universities',
     }));
     fetchQuestions();
     fetch('/api/admin/scholarship/config').then(r => r.json()).then(d => setConfig({
