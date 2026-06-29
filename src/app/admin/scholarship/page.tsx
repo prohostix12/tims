@@ -11,6 +11,7 @@ import {
 interface ContentForm {
   badge: string; heading: string; subheading: string;
   description: string; buttonText: string; termsAndConditions: string;
+  tickerText: string;
 }
 
 type QuestionCategory = 'Online UG' | 'Online PG' | 'Credit Transfer' | 'SIDP (Skill Integrated Diploma Programs)' | 'Diploma' | 'General';
@@ -51,7 +52,7 @@ export default function AdminScholarshipPage() {
 
   /* Content */
   const [content, setContent] = useState<ContentForm>({
-    badge: '', heading: '', subheading: '', description: '', buttonText: '', termsAndConditions: '',
+    badge: '', heading: '', subheading: '', description: '', buttonText: '', termsAndConditions: '', tickerText: '',
   });
   const [contentSaving, setContentSaving] = useState(false);
   const [contentMsg, setContentMsg] = useState('');
@@ -96,6 +97,7 @@ export default function AdminScholarshipPage() {
       badge: d.badge || '', heading: d.heading || '', subheading: d.subheading || '',
       description: d.description || '', buttonText: d.buttonText || '',
       termsAndConditions: d.termsAndConditions || '',
+      tickerText: d.tickerText || '',
     }));
     fetchQuestions();
     fetch('/api/admin/scholarship/config').then(r => r.json()).then(d => setConfig({
@@ -335,6 +337,7 @@ export default function AdminScholarshipPage() {
             { label: 'Main Heading', key: 'heading' },
             { label: 'Sub Heading', key: 'subheading' },
             { label: 'Start Button Text', key: 'buttonText' },
+            { label: 'Moving Banner (Ticker Text)', key: 'tickerText' },
           ].map(({ label, key }) => (
             <div key={key} style={{ marginBottom: '1.25rem' }}>
               <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 600, color: '#374151', marginBottom: '0.4rem' }}>{label}</label>

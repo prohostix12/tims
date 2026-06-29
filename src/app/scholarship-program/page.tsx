@@ -37,6 +37,7 @@ export default function ScholarshipPage() {
   const [phase, setPhase] = useState<Phase>('landing');
   const [token, setToken] = useState('');
   const [termsAndConditions, setTermsAndConditions] = useState('');
+  const [tickerText, setTickerText] = useState('₹20,000 Maximum Scholarship Available • Free Exam • Instant Results • Downloadable Voucher • Score High & Earn More • UGC-DEB Approved Universities');
 
   const [form, setForm] = useState({ name: '', phone: '', email: '', course: '', program: '' });
   const [formError, setFormError] = useState('');
@@ -115,6 +116,7 @@ export default function ScholarshipPage() {
       .then(r => r.ok ? r.json() : {})
       .then((d: any) => {
         if (d?.termsAndConditions) setTermsAndConditions(d.termsAndConditions);
+        if (d?.tickerText) setTickerText(d.tickerText);
       })
       .catch(() => {});
   }, []);
@@ -378,7 +380,7 @@ export default function ScholarshipPage() {
           <div className={styles.tickerTrack}>
             {Array.from({ length: 2 }).map((_, i) => (
               <span key={i} className={styles.tickerContent}>
-                ₹20,000 Maximum Scholarship Available &nbsp;&nbsp;•&nbsp;&nbsp; Free Exam &nbsp;&nbsp;•&nbsp;&nbsp; Instant Results &nbsp;&nbsp;•&nbsp;&nbsp; Downloadable Voucher &nbsp;&nbsp;•&nbsp;&nbsp; Score High & Earn More &nbsp;&nbsp;•&nbsp;&nbsp; UGC-DEB Approved Universities &nbsp;&nbsp;•&nbsp;&nbsp;&nbsp;&nbsp;
+                {tickerText} &nbsp;&nbsp;•&nbsp;&nbsp;&nbsp;&nbsp;
               </span>
             ))}
           </div>
