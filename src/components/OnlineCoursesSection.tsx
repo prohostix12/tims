@@ -110,6 +110,7 @@ export default function OnlineCoursesSection() {
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState('');
   const [logos, setLogos] = useState<UniversityLogo[]>([]);
+  const [isLogosLoaded, setIsLogosLoaded] = useState(false);
 
   useEffect(() => {
     fetch('/api/public/program-sections')
@@ -128,8 +129,13 @@ export default function OnlineCoursesSection() {
 
     fetch('/api/public/university-logos')
       .then(r => r.ok ? r.json() : [])
-      .then(data => { if (Array.isArray(data) && data.length > 0) setLogos(data); })
-      .catch(() => {});
+      .then(data => {
+        if (Array.isArray(data) && data.length > 0) setLogos(data);
+        setIsLogosLoaded(true);
+      })
+      .catch(() => {
+        setIsLogosLoaded(true);
+      });
   }, []);
 
   const openModal = (courseName: string) => {
@@ -203,19 +209,23 @@ export default function OnlineCoursesSection() {
 
           {/* Moving logo banner */}
           <div className={styles.logoBannerWrapper}>
-            <div className={styles.logoBannerTrack}>
-              {[...logos, ...logos, ...logos].map((logo, i) => (
-                <div key={i} className={styles.logoItem}>
-                  <img
-                    src={logo.logoUrl}
-                    alt={logo.name}
-                    className={styles.logoImg}
-                    onError={(e) => {
-                      (e.currentTarget as HTMLImageElement).style.display = 'none';
-                    }}
-                  />
-                </div>
-              ))}
+            <div className={`${styles.logoBannerTrack} ${isLogosLoaded ? styles.loaded : ''}`}>
+              {(() => {
+                const displayLogos = logos.length > 0 ? logos : DEFAULT_UNI_LOGOS;
+                return [...displayLogos, ...displayLogos, ...displayLogos].map((logo, i) => (
+                  <div key={i} className={styles.logoItem}>
+                    <img
+                      src={logo.logoUrl}
+                      alt={logo.name}
+                      className={styles.logoImg}
+                      decoding="async"
+                      onError={(e) => {
+                        (e.currentTarget as HTMLImageElement).style.display = 'none';
+                      }}
+                    />
+                  </div>
+                ));
+              })()}
             </div>
           </div>
 
